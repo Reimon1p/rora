@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>RORA</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        .panel {
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            width: 330px;
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            z-index: 1000;
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.25);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+        }
+
+        .location-label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .suggestions {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            box-shadow:
+                0 4px 10px
+                rgba(0, 0, 0, 0.15);
+            z-index: 2000;
+            max-height: 220px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+        .suggestion:hover {
+            background: #eeeeee;
+        }
+
+        #locationButton {
+            width: 100%;
+            background: #eeeeee;
+            margin-bottom: 12px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 9px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .active {
+            background: #4285F4;
+            color: white;
+        }
+
+        #routeButton {
+            width: 100%;
+            background: #0B1F3A;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .route-card {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .recommended-card {
+            border: 3px solid #0B1F3A;
+        }
+
+        .alternate-card {
+            border: 2px solid #4DA3FF;
+        }
+
+        .warning {
+            margin-top: 6px;
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        #hazardStatus {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #eeeeee;
+        }
+
+        #errorMessage {
+            color: #c62828;
+            margin-top: 8px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="panel">
+
+    <h2>RORA</h2>
+
+
+    <label class="location-label">
+        Start
+    </label>
+
+
+    <div class="input-container">
+
+        <input
+            id="startInput"
+            type="text"
+            value="Beach 67th St, Queens, NY"
+            placeholder="Enter starting location"
+            autocomplete="off"
+        >
+
+        <div
+            id="startSuggestions"
+            class="suggestions">
+        </div>
+
+    </div>
+
+
+    <button
+        id="locationButton"
+        onclick="useCurrentLocation()">
+
+        ◎ Use my current location
+
+    </button>
+
+
+    <label class="location-label">
+        Destination
+    </label>
+
+
+    <div class="input-container">
+
+        <input
+            id="destinationInput"
+            type="text"
+            value="Beach 44th St, Queens, NY"
+            placeholder="Where are you going?"
+            autocomplete="off"
+        >
+
+        <div
+            id="destinationSuggestions"
+            class="suggestions">
+        </div>
+
+    </div>
+
+
+    <div class="mode-buttons">
+
+        <button
+            id="driveButton"
+            class="active"
+            onclick="changeMode('driving')">
+
+            🚗 Drive
+
+        </button>
+
+
+        <button
+            id="walkButton"
+            onclick="changeMode('walking')">
+
+            🚶 Walk
+
+        </button>
+
+    </div>
+
+
+    <button
+        id="routeButton"
+        onclick="loadRoutes()">
+
+        Find route
+
+    </button>
+
+
+    <div id="errorMessage"></div>
+
+
+    <div
+        id="safeCard"
+        class="route-card alternate-card">
+
+        <strong id="safeTitle">
+            Flood-avoidance route
+        </strong>
+
+        <div id="safeInfo">
+            --
+        </div>
+
+    </div>
+
+
+    <div
+        id="normalCard"
+        class="route-card recommended-card">
+
+        <strong id="normalTitle">
+            Recommended route
+        </strong>
+
+        <div id="normalInfo">
+            --
+        </div>
+
+
+        <div
+            id="normalWarning"
+            class="warning"
+            style="display: none;">
+
+            ⚠ This route crosses the flood hazard
+
+        </div>
+
+    </div>
+
+
+    <div id="hazardStatus">
+
+        FloodNet sensor loading...
+
+    </div>
+
+
+</div>
+
+
+<div id="map"></div>
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+    const map =
+        L.map("map").setView(
+            [40.59408, -73.78921],
+            15
+        );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            attribution:
+                "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+
+    const sensorLocation = [
+        40.59408,
+        -73.78921
+    ];
+
+
+    const floodZoneCoordinates = [
+
+        [40.59375, -73.78960],
+
+        [40.59375, -73.78882],
+
+        [40.59441, -73.78882],
+
+        [40.59441, -73.78960]
+
+    ];
+
+
+    const redDestinationIcon =
+        L.icon({
+
+            iconUrl:
+                "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+
+            shadowUrl:
+                "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+
+            iconSize:
+                [25, 41],
+
+            iconAnchor:
+                [12, 41],
+
+            popupAnchor:
+                [1, -34],
+
+            shadowSize:
+                [41, 41]
+
+        });
+
+
+    const sensorMarker =
+        L.circleMarker(
+            sensorLocation,
+            {
+                radius: 7,
+                color: "#8B0000",
+                weight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 1
+            }
+        )
+        .addTo(map);
+
+
+    let startCoordinates = null;
+
+    let destinationCoordinates = null;
+
+    let currentLocationMarker;
+
+    let destinationMarker;
+
+    let floodZone = null;
+
+    let normalRoute;
+
+    let safeRoute;
+
+    let currentMode = "driving";
+
+    let floodActive = false;
+
+    let routeIntersectsFlood = false;
+
+
+    function setupAutocomplete(
+        inputId,
+        suggestionId,
+        type
+    ) {
+
+        const input =
+            document.getElementById(
+                inputId
+            );
+
+
+        const suggestions =
+            document.getElementById(
+                suggestionId
+            );
+
+
+        let timer;
+
+
+        input.addEventListener(
+            "input",
+            function () {
+
+                clearTimeout(
+                    timer
+                );
+
+
+                if (
+                    type === "start"
+                ) {
+
+                    startCoordinates =
+                        null;
+
+                }
+
+                else {
+
+                    destinationCoordinates =
+                        null;
+
+                }
+
+
+                const text =
+                    input.value.trim();
+
+
+                if (
+                    text.length < 2
+                ) {
+
+                    suggestions.style.display =
+                        "none";
+
+                    return;
+
+                }
+
+
+                timer =
+                    setTimeout(
+                        function () {
+
+
+                            fetch(
+                                "/autocomplete?text="
+                                + encodeURIComponent(
+                                    text
+                                )
+                            )
+
+                            .then(
+                                response =>
+                                    response.json()
+                            )
+
+                            .then(
+                                results => {
+
+
+                                    suggestions.innerHTML =
+                                        "";
+
+
+                                    if (
+                                        results.length === 0
+                                    ) {
+
+                                        suggestions.style.display =
+                                            "none";
+
+                                        return;
+
+                                    }
+
+
+                                    results.forEach(
+                                        result => {
+
+
+                                            const item =
+                                                document.createElement(
+                                                    "div"
+                                                );
+
+
+                                            item.className =
+                                                "suggestion";
+
+
+                                            item.innerText =
+                                                result.label;
+
+
+                                            item.onclick =
+                                                function () {
+
+
+                                                    input.value =
+                                                        result.label;
+
+
+                                                    if (
+                                                        type === "start"
+                                                    ) {
+
+                                                        startCoordinates = {
+
+                                                            latitude:
+                                                                result.latitude,
+
+                                                            longitude:
+                                                                result.longitude
+
+                                                        };
+
+                                                    }
+
+                                                    else {
+
+                                                        destinationCoordinates = {
+
+                                                            latitude:
+                                                                result.latitude,
+
+                                                            longitude:
+                                                                result.longitude
+
+                                                        };
+
+                                                    }
+
+
+                                                    suggestions.style.display =
+                                                        "none";
+
+                                                };
+
+
+                                            suggestions.appendChild(
+                                                item
+                                            );
+
+                                        }
+                                    );
+
+
+                                    suggestions.style.display =
+                                        "block";
+
+                                }
+                            );
+
+                        },
+
+                        300
+                    );
+
+            }
+        );
+
+    }
+
+
+    setupAutocomplete(
+        "startInput",
+        "startSuggestions",
+        "start"
+    );
+
+
+    setupAutocomplete(
+        "destinationInput",
+        "destinationSuggestions",
+        "destination"
+    );
+
+
+    function useCurrentLocation() {
+
+        const errorBox =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        errorBox.innerHTML =
+            "";
+
+
+        if (
+            !navigator.geolocation
+        ) {
+
+            errorBox.innerHTML =
+                "Your browser does not support location.";
+
+            return;
+
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function (position) {
+
+
+                startCoordinates = {
+
+                    latitude:
+                        position.coords.latitude,
+
+                    longitude:
+                        position.coords.longitude
+
+                };
+
+
+                document.getElementById(
+                    "startInput"
+                ).value =
+                    "Current location";
+
+
+                if (
+                    currentLocationMarker
+                ) {
+
+                    map.removeLayer(
+                        currentLocationMarker
+                    );
+
+                }
+
+
+                currentLocationMarker =
+                    L.circleMarker(
+                        [
+                            startCoordinates.latitude,
+
+                            startCoordinates.longitude
+                        ],
+                        {
+                            radius: 8,
+
+                            color: "white",
+
+                            weight: 3,
+
+                            fillColor:
+                                "#4285F4",
+
+                            fillOpacity: 1
+                        }
+                    )
+                    .addTo(map)
+                    .bindPopup(
+                        "Current Location"
+                    );
+
+
+                map.setView(
+                    [
+                        startCoordinates.latitude,
+
+                        startCoordinates.longitude
+                    ],
+                    15
+                );
+
+            },
+
+
+            function () {
+
+                errorBox.innerHTML =
+                    "Location permission was not granted.";
+
+            }
+
+        );
+
+    }
+
+
+    function loadRoutes() {
+
+        const startText =
+            document.getElementById(
+                "startInput"
+            ).value;
+
+
+        const destinationText =
+            document.getElementById(
+                "destinationInput"
+            ).value;
+
+
+        document.getElementById(
+            "errorMessage"
+        ).innerHTML =
+            "";
+
+
+        let url =
+            "/routes?mode="
+            + encodeURIComponent(
+                currentMode
+            )
+
+            + "&start="
+            + encodeURIComponent(
+                startText
+            )
+
+            + "&destination="
+            + encodeURIComponent(
+                destinationText
+            );
+
+
+        if (
+            startCoordinates
+        ) {
+
+            url +=
+                "&start_lat="
+                + startCoordinates.latitude
+
+                + "&start_lon="
+                + startCoordinates.longitude;
+
+        }
+
+
+        if (
+            destinationCoordinates
+        ) {
+
+            url +=
+                "&destination_lat="
+                + destinationCoordinates.latitude
+
+                + "&destination_lon="
+                + destinationCoordinates.longitude;
+
+        }
+
+
+        fetch(
+            url
+        )
+
+        .then(
+            async response => {
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Route could not be calculated."
+                    );
+
+                }
+
+
+                return data;
+
+            }
+        )
+
+        .then(
+            data => {
+
+
+                routeIntersectsFlood =
+                    data.intersects_flood;
+
+
+                if (
+                    normalRoute
+                ) {
+
+                    map.removeLayer(
+                        normalRoute
+                    );
+
+                }
+
+
+                if (
+                    safeRoute
+                ) {
+
+                    map.removeLayer(
+                        safeRoute
+                    );
+
+                }
+
+
+                if (
+                    currentLocationMarker
+                ) {
+
+                    map.removeLayer(
+                        currentLocationMarker
+                    );
+
+                }
+
+
+                if (
+                    destinationMarker
+                ) {
+
+                    map.removeLayer(
+                        destinationMarker
+                    );
+
+                }
+
+
+                const start =
+                    data.start.coordinates;
+
+
+                const destination =
+                    data.destination.coordinates;
+
+
+                currentLocationMarker =
+                    L.circleMarker(
+                        [
+                            start[1],
+                            start[0]
+                        ],
+                        {
+                            radius: 8,
+
+                            color:
+                                "white",
+
+                            weight: 3,
+
+                            fillColor:
+                                "#4285F4",
+
+                            fillOpacity: 1
+                        }
+                    )
+                    .addTo(map)
+                    .bindPopup(
+                        data.start.label
+                    );
+
+
+                destinationMarker =
+                    L.marker(
+                        [
+                            destination[1],
+                            destination[0]
+                        ],
+                        {
+                            icon:
+                                redDestinationIcon
+                        }
+                    )
+                    .addTo(map)
+                    .bindPopup(
+                        data.destination.label
+                    );
+
+
+                normalRoute =
+                    L.geoJSON(
+                        data.normal,
+                        {
+                            style: {
+
+                                color:
+                                    "#4DA3FF",
+
+                                weight: 4,
+
+                                opacity: 1
+
+                            }
+                        }
+                    )
+                    .addTo(map);
+
+
+                safeRoute =
+                    L.geoJSON(
+                        data.safe,
+                        {
+                            style: {
+
+                                color:
+                                    "#0B1F3A",
+
+                                weight: 5,
+
+                                opacity: 1
+
+                            }
+                        }
+                    )
+                    .addTo(map);
+
+
+                const normalSummary =
+                    data.normal
+                        .features[0]
+                        .properties
+                        .summary;
+
+
+                const safeSummary =
+                    data.safe
+                        .features[0]
+                        .properties
+                        .summary;
+
+
+                document.getElementById(
+                    "normalInfo"
+                ).innerHTML =
+
+                    Math.round(
+                        normalSummary.duration
+                        / 60
+                    )
+
+                    + " min • "
+
+                    + (
+                        normalSummary.distance
+                        / 1609.34
+                    ).toFixed(1)
+
+                    + " mi";
+
+
+                document.getElementById(
+                    "safeInfo"
+                ).innerHTML =
+
+                    Math.round(
+                        safeSummary.duration
+                        / 60
+                    )
+
+                    + " min • "
+
+                    + (
+                        safeSummary.distance
+                        / 1609.34
+                    ).toFixed(1)
+
+                    + " mi";
+
+
+                updateRecommendation();
+
+
+                const bounds =
+                    L.featureGroup([
+                        normalRoute,
+                        safeRoute,
+                        currentLocationMarker,
+                        destinationMarker
+                    ])
+                    .getBounds();
+
+
+                map.fitBounds(
+                    bounds,
+                    {
+                        padding:
+                            [50, 50]
+                    }
+                );
+
+            }
+        )
+
+        .catch(
+            error => {
+
+                document.getElementById(
+                    "errorMessage"
+                ).innerHTML =
+                    error.message;
+
+            }
+        );
+
+    }
+
+
+    function updateRecommendation() {
+
+        const hazardAffectsRoute =
+            floodActive
+            &&
+            routeIntersectsFlood;
+
+
+        const safeCard =
+            document.getElementById(
+                "safeCard"
+            );
+
+
+        const normalCard =
+            document.getElementById(
+                "normalCard"
+            );
+
+
+        if (
+            hazardAffectsRoute
+        ) {
+
+
+            document.getElementById(
+                "safeTitle"
+            ).innerHTML =
+                "Recommended safer route";
+
+
+            document.getElementById(
+                "normalTitle"
+            ).innerHTML =
+                "Normal route";
+
+
+            document.getElementById(
+                "normalWarning"
+            ).style.display =
+                "block";
+
+
+            safeCard.className =
+                "route-card recommended-card";
+
+
+            normalCard.className =
+                "route-card alternate-card";
+
+
+            if (
+                safeRoute
+            ) {
+
+                safeRoute.bringToFront();
+
+            }
+
+
+        }
+
+        else {
+
+
+            document.getElementById(
+                "normalTitle"
+            ).innerHTML =
+                "Recommended route";
+
+
+            document.getElementById(
+                "safeTitle"
+            ).innerHTML =
+                "Flood-avoidance route";
+
+
+            document.getElementById(
+                "normalWarning"
+            ).style.display =
+                "none";
+
+
+            normalCard.className =
+                "route-card recommended-card";
+
+
+            safeCard.className =
+                "route-card alternate-card";
+
+
+            if (
+                normalRoute
+            ) {
+
+                normalRoute.bringToFront();
+
+            }
+
+        }
+
+    }
+
+
+    function updateHazard() {
+
+        fetch(
+            "/hazard"
+        )
+
+        .then(
+            response =>
+                response.json()
+        )
+
+        .then(
+            data => {
+
+
+                floodActive =
+                    data.flood_active;
+
+
+                document.getElementById(
+                    "hazardStatus"
+                ).innerHTML =
+
+                    "<strong>FloodNet Live Demo</strong>"
+
+                    + "<br>"
+
+                    + data.depth_inches.toFixed(2)
+
+                    + " inches"
+
+                    + "<br>"
+
+                    + "Severity: "
+
+                    + data.severity;
+
+
+                sensorMarker.bindPopup(
+
+                    "<strong>FloodNet Sensor</strong>"
+
+                    + "<br>"
+
+                    + data.sensor_name
+
+                    + "<br><br>"
+
+                    + "Current depth: "
+
+                    + data.depth_inches.toFixed(2)
+
+                    + " inches"
+
+                );
+
+
+                if (
+                    floodActive
+                ) {
+
+
+                    if (
+                        !floodZone
+                    ) {
+
+
+                        floodZone =
+                            L.polygon(
+                                floodZoneCoordinates,
+                                {
+                                    color:
+                                        "#d32f2f",
+
+                                    fillColor:
+                                        "#f44336",
+
+                                    fillOpacity:
+                                        0.25,
+
+                                    weight:
+                                        2
+                                }
+                            )
+                            .addTo(map);
+
+                    }
+
+
+                }
+
+                else {
+
+
+                    if (
+                        floodZone
+                    ) {
+
+                        map.removeLayer(
+                            floodZone
+                        );
+
+
+                        floodZone =
+                            null;
+
+                    }
+
+                }
+
+
+                updateRecommendation();
+
+            }
+        );
+
+    }
+
+
+    function changeMode(
+        mode
+    ) {
+
+        currentMode =
+            mode;
+
+
+        document.getElementById(
+            "driveButton"
+        ).classList.remove(
+            "active"
+        );
+
+
+        document.getElementById(
+            "walkButton"
+        ).classList.remove(
+            "active"
+        );
+
+
+        if (
+            mode ===
+            "driving"
+        ) {
+
+            document.getElementById(
+                "driveButton"
+            ).classList.add(
+                "active"
+            );
+
+        }
+
+        else {
+
+            document.getElementById(
+                "walkButton"
+            ).classList.add(
+                "active"
+            );
+
+        }
+
+
+        loadRoutes();
+
+    }
+
+
+    updateHazard();
+
+    loadRoutes();
+
+
+    setInterval(
+        updateHazard,
+        2000
+    );
+
+</script>
+
+
+</body>
+
+</html>

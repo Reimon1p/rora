@@ -228,12 +228,13 @@ def geocode_address(address):
         "Authorization": api_key
     }
 
-
     params = {
 
         "text": address,
 
         "size": 1,
+
+        "boundary.country": "US",
 
         "focus.point.lat":
             SENSOR_LAT,
@@ -414,12 +415,13 @@ def autocomplete():
         "Authorization": api_key
     }
 
-
     params = {
 
         "text": text,
 
         "size": 5,
+
+        "boundary.country": "US",
 
         "focus.point.lat":
             SENSOR_LAT,
@@ -470,14 +472,33 @@ def autocomplete():
             {}
         )
 
+        country_code = properties.get(
+            "country_a",
+            ""
+        )
+
+        if country_code != "USA":
+            continue
+
+        label = properties.get(
+            "label",
+            "Unknown location"
+        )
+
+        label = label.replace(
+            ", United States",
+            ""
+        )
+
+        label = label.replace(
+            ", USA",
+            ""
+        )
 
         results.append({
 
             "label":
-                properties.get(
-                    "label",
-                    "Unknown location"
-                ),
+                label,
 
             "longitude":
                 coordinates[0],

@@ -355,9 +355,7 @@
     </div>
 
 
-    <div id="hazardStatus">
-        FloodNet sensors loading...
-    </div>
+
 
 </div>
 
@@ -1227,64 +1225,6 @@
 
                     floodActive =
                         activeHazards.length > 0;
-
-
-                    let statusText =
-                        "<strong>Historical FloodNet Replay</strong>"
-
-                        + "<br>"
-
-                        + hazards.length
-
-                        + " sensors loaded"
-
-                        + "<br>"
-
-                        + activeHazards.length
-
-                        + " active flood areas";
-
-
-                    if (
-                        activeHazards.length > 0
-                    ) {
-
-                        statusText +=
-                            "<br><br>";
-
-
-                        activeHazards.forEach(
-                            hazard => {
-
-                                statusText +=
-                                    hazard.sensor_name
-
-                                    + ": "
-
-                                    + Number(
-                                        hazard.depth_inches
-                                    ).toFixed(2)
-
-                                    + " in"
-
-                                    + " ("
-
-                                    + hazard.severity
-
-                                    + ")"
-
-                                    + "<br>";
-
-                            }
-                        );
-
-                    }
-
-
-                    document.getElementById(
-                        "hazardStatus"
-                    ).innerHTML =
-                        statusText;
 
 
                     hazards.forEach(

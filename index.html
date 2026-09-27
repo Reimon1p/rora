@@ -3,13 +3,17 @@
 <html>
 
 <head>
-<title>RORA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>RORA</title>
 
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
     <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
     <style>
@@ -25,20 +29,20 @@
         }
 
         .panel {
-    position: absolute;
-    top: 20px;
-    left: 60px;
-    width: 330px;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    z-index: 1000;
-    box-shadow:
-        0 3px 12px
-        rgba(0, 0, 0, 0.25);
-}
+            position: absolute;
+            top: 20px;
+            left: 60px;
+            width: 330px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            z-index: 1000;
+            box-shadow:
+                    0 3px 12px
+                    rgba(0, 0, 0, 0.25);
+        }
 
         .panel h2 {
             margin-top: 0;
@@ -72,8 +76,8 @@
             border: 1px solid #dddddd;
             border-radius: 8px;
             box-shadow:
-                0 4px 10px
-                rgba(0, 0, 0, 0.15);
+                    0 4px 10px
+                    rgba(0, 0, 0, 0.15);
             z-index: 2000;
             max-height: 220px;
             overflow-y: auto;
@@ -154,61 +158,64 @@
             color: #c62828;
             margin-top: 8px;
         }
+
         @media (max-width: 600px) {
 
-    .panel {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+            .panel {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                width: 100%;
 
-    height: 62vh;
-    max-height: 62vh;
+                height: 62vh;
+                max-height: 62vh;
 
-    box-sizing: border-box;
-    border-radius: 22px 22px 0 0;
-    padding: 12px 14px 20px 14px;
+                box-sizing: border-box;
+                border-radius: 22px 22px 0 0;
+                padding: 12px 14px 20px 14px;
 
-    overflow-y: auto;
+                overflow-y: auto;
 
-    transform: translateY(0);
-    transition: transform 0.35s ease;
-    touch-action: pan-y;
-}
+                transform: translateY(0);
+                transition: transform 0.35s ease;
+                touch-action: pan-y;
+            }
+
             .panel.collapsed {
-    transform: translateY(calc(62vh - 105px));
-}
+                transform: translateY(calc(62vh - 105px));
+            }
 
-    .panel h2 {
-        margin-bottom: 10px;
-    }
+            .panel h2 {
+                margin-bottom: 10px;
+            }
 
-    .mode-buttons {
-        gap: 8px;
-    }
+            .mode-buttons {
+                gap: 8px;
+            }
 
-    .mode-buttons button {
-        flex: 1;
-    }
+            .mode-buttons button {
+                flex: 1;
+            }
 
-    #locationButton,
-    #routeButton {
-        width: 100%;
-    }
+            #locationButton,
+            #routeButton {
+                width: 100%;
+            }
 
-    input {
-        font-size: 16px;
-    }
+            input {
+                font-size: 16px;
+            }
 
-    .route-card {
-        font-size: 14px;
-    }
+            .route-card {
+                font-size: 14px;
+            }
 
-    #hazardStatus {
-        font-size: 14px;
-    }
+            #hazardStatus {
+                font-size: 14px;
+            }
 
-}
+        }
+
     </style>
 
 </head>
@@ -230,24 +237,24 @@
     <div class="input-container">
 
         <input
-            id="startInput"
-            type="text"
-            value="Beach 67th St, Queens, NY"
-            placeholder="Enter starting location"
-            autocomplete="off"
+                id="startInput"
+                type="text"
+                value="Beach 67th St, Queens, NY"
+                placeholder="Enter starting location"
+                autocomplete="off"
         >
 
         <div
-            id="startSuggestions"
-            class="suggestions">
+                id="startSuggestions"
+                class="suggestions">
         </div>
 
     </div>
 
 
     <button
-        id="locationButton"
-        onclick="useCurrentLocation()"
+            id="locationButton"
+            onclick="useCurrentLocation()"
     >
         ◎ Use my current location
     </button>
@@ -261,16 +268,16 @@
     <div class="input-container">
 
         <input
-            id="destinationInput"
-            type="text"
-            value="Beach 44th St, Queens, NY"
-            placeholder="Where are you going?"
-            autocomplete="off"
+                id="destinationInput"
+                type="text"
+                value="Beach 44th St, Queens, NY"
+                placeholder="Where are you going?"
+                autocomplete="off"
         >
 
         <div
-            id="destinationSuggestions"
-            class="suggestions">
+                id="destinationSuggestions"
+                class="suggestions">
         </div>
 
     </div>
@@ -279,17 +286,17 @@
     <div class="mode-buttons">
 
         <button
-            id="driveButton"
-            class="active"
-            onclick="changeMode('driving')"
+                id="driveButton"
+                class="active"
+                onclick="changeMode('driving')"
         >
             🚗 Drive
         </button>
 
 
         <button
-            id="walkButton"
-            onclick="changeMode('walking')"
+                id="walkButton"
+                onclick="changeMode('walking')"
         >
             🚶 Walk
         </button>
@@ -298,8 +305,8 @@
 
 
     <button
-        id="routeButton"
-        onclick="loadRoutes()"
+            id="routeButton"
+            onclick="loadRoutes()"
     >
         Find route
     </button>
@@ -309,8 +316,8 @@
 
 
     <div
-        id="safeCard"
-        class="route-card alternate-card"
+            id="safeCard"
+            class="route-card alternate-card"
     >
 
         <strong id="safeTitle">
@@ -325,8 +332,8 @@
 
 
     <div
-        id="normalCard"
-        class="route-card recommended-card"
+            id="normalCard"
+            class="route-card recommended-card"
     >
 
         <strong id="normalTitle">
@@ -338,18 +345,18 @@
         </div>
 
         <div
-            id="normalWarning"
-            class="warning"
-            style="display: none;"
+                id="normalWarning"
+                class="warning"
+                style="display: none;"
         >
-            ⚠ This route crosses the flood hazard
+            ⚠ This route crosses a flood hazard
         </div>
 
     </div>
 
 
     <div id="hazardStatus">
-        FloodNet sensor loading...
+        FloodNet sensors loading...
     </div>
 
 </div>
@@ -359,7 +366,7 @@
 
 
 <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 
@@ -368,7 +375,7 @@
     const map =
         L.map("map").setView(
             [40.59408, -73.78921],
-            15
+            14
         );
 
 
@@ -379,25 +386,6 @@
                 "&copy; OpenStreetMap contributors"
         }
     ).addTo(map);
-
-
-    const sensorLocation = [
-        40.59408,
-        -73.78921
-    ];
-
-
-    const floodZoneCoordinates = [
-
-        [40.59375, -73.78960],
-
-        [40.59375, -73.78882],
-
-        [40.59441, -73.78882],
-
-        [40.59441, -73.78960]
-
-    ];
 
 
     const redDestinationIcon =
@@ -424,24 +412,6 @@
         });
 
 
-    const sensorMarker =
-        L.circleMarker(
-            sensorLocation,
-            {
-                radius: 7,
-
-                color: "#8B0000",
-
-                weight: 2,
-
-                fillColor: "#FF0000",
-
-                fillOpacity: 1
-            }
-        )
-        .addTo(map);
-
-
     let startCoordinates = null;
 
     let destinationCoordinates = null;
@@ -450,7 +420,7 @@
 
     let destinationMarker;
 
-    let floodZone = null;
+    let hazardLayers = [];
 
     let normalRoute;
 
@@ -539,108 +509,108 @@
                                 )
                             )
 
-                            .then(
-                                response =>
-                                    response.json()
-                            )
+                                .then(
+                                    response =>
+                                        response.json()
+                                )
 
-                            .then(
-                                results => {
-
-
-                                    suggestions.innerHTML =
-                                        "";
+                                .then(
+                                    results => {
 
 
-                                    if (
-                                        results.length === 0
-                                    ) {
-
-                                        suggestions.style.display =
-                                            "none";
-
-                                        return;
-
-                                    }
+                                        suggestions.innerHTML =
+                                            "";
 
 
-                                    results.forEach(
-                                        result => {
+                                        if (
+                                            results.length === 0
+                                        ) {
 
+                                            suggestions.style.display =
+                                                "none";
 
-                                            const item =
-                                                document.createElement(
-                                                    "div"
-                                                );
-
-
-                                            item.className =
-                                                "suggestion";
-
-
-                                            item.innerText =
-                                                result.label;
-
-
-                                            item.onclick =
-                                                function () {
-
-
-                                                    input.value =
-                                                        result.label;
-
-
-                                                    if (
-                                                        type ===
-                                                        "start"
-                                                    ) {
-
-                                                        startCoordinates = {
-
-                                                            latitude:
-                                                                result.latitude,
-
-                                                            longitude:
-                                                                result.longitude
-
-                                                        };
-
-                                                    }
-
-                                                    else {
-
-                                                        destinationCoordinates = {
-
-                                                            latitude:
-                                                                result.latitude,
-
-                                                            longitude:
-                                                                result.longitude
-
-                                                        };
-
-                                                    }
-
-
-                                                    suggestions.style.display =
-                                                        "none";
-
-                                                };
-
-
-                                            suggestions.appendChild(
-                                                item
-                                            );
+                                            return;
 
                                         }
-                                    );
 
 
-                                    suggestions.style.display =
-                                        "block";
+                                        results.forEach(
+                                            result => {
 
-                                }
-                            );
+
+                                                const item =
+                                                    document.createElement(
+                                                        "div"
+                                                    );
+
+
+                                                item.className =
+                                                    "suggestion";
+
+
+                                                item.innerText =
+                                                    result.label;
+
+
+                                                item.onclick =
+                                                    function () {
+
+
+                                                        input.value =
+                                                            result.label;
+
+
+                                                        if (
+                                                            type ===
+                                                            "start"
+                                                        ) {
+
+                                                            startCoordinates = {
+
+                                                                latitude:
+                                                                result.latitude,
+
+                                                                longitude:
+                                                                result.longitude
+
+                                                            };
+
+                                                        }
+
+                                                        else {
+
+                                                            destinationCoordinates = {
+
+                                                                latitude:
+                                                                result.latitude,
+
+                                                                longitude:
+                                                                result.longitude
+
+                                                            };
+
+                                                        }
+
+
+                                                        suggestions.style.display =
+                                                            "none";
+
+                                                    };
+
+
+                                                suggestions.appendChild(
+                                                    item
+                                                );
+
+                                            }
+                                        );
+
+
+                                        suggestions.style.display =
+                                            "block";
+
+                                    }
+                                );
 
                         },
 
@@ -699,10 +669,10 @@
                 startCoordinates = {
 
                     latitude:
-                        position.coords.latitude,
+                    position.coords.latitude,
 
                     longitude:
-                        position.coords.longitude
+                    position.coords.longitude
 
                 };
 
@@ -744,10 +714,10 @@
 
                         }
                     )
-                    .addTo(map)
-                    .bindPopup(
-                        "Current Location"
-                    );
+                        .addTo(map)
+                        .bindPopup(
+                            "Current Location"
+                        );
 
 
                 map.setView(
@@ -842,263 +812,263 @@
             url
         )
 
-        .then(
-            async response => {
+            .then(
+                async response => {
 
 
-                const data =
-                    await response.json();
+                    const data =
+                        await response.json();
 
 
-                if (
-                    !response.ok
-                ) {
+                    if (
+                        !response.ok
+                    ) {
 
-                    throw new Error(
-                        data.error
-                        ||
-                        "Route could not be calculated."
-                    );
+                        throw new Error(
+                            data.error
+                            ||
+                            "Route could not be calculated."
+                        );
 
-                }
-
-
-                return data;
-
-            }
-        )
-
-        .then(
-            data => {
-
-
-                routeIntersectsFlood =
-                    data.intersects_flood;
-
-
-                if (
-                    normalRoute
-                ) {
-
-                    map.removeLayer(
-                        normalRoute
-                    );
-
-                }
-
-
-                if (
-                    safeRoute
-                ) {
-
-                    map.removeLayer(
-                        safeRoute
-                    );
-
-                }
-
-
-                if (
-                    currentLocationMarker
-                ) {
-
-                    map.removeLayer(
-                        currentLocationMarker
-                    );
-
-                }
-
-
-                if (
-                    destinationMarker
-                ) {
-
-                    map.removeLayer(
-                        destinationMarker
-                    );
-
-                }
-
-
-                const start =
-                    data.start.coordinates;
-
-
-                const destination =
-                    data.destination.coordinates;
-
-
-                currentLocationMarker =
-                    L.circleMarker(
-                        [
-                            start[1],
-                            start[0]
-                        ],
-                        {
-
-                            radius: 8,
-
-                            color: "white",
-
-                            weight: 3,
-
-                            fillColor: "#4285F4",
-
-                            fillOpacity: 1
-
-                        }
-                    )
-                    .addTo(map)
-                    .bindPopup(
-                        data.start.label
-                    );
-
-
-                destinationMarker =
-                    L.marker(
-                        [
-                            destination[1],
-                            destination[0]
-                        ],
-                        {
-                            icon:
-                                redDestinationIcon
-                        }
-                    )
-                    .addTo(map)
-                    .bindPopup(
-                        data.destination.label
-                    );
-
-
-                normalRoute =
-                    L.geoJSON(
-                        data.normal,
-                        {
-
-                            style: {
-
-                                color:
-                                    "#4DA3FF",
-
-                                weight: 4,
-
-                                opacity: 1
-
-                            }
-
-                        }
-                    )
-                    .addTo(map);
-
-
-                safeRoute =
-                    L.geoJSON(
-                        data.safe,
-                        {
-
-                            style: {
-
-                                color:
-                                    "#0B1F3A",
-
-                                weight: 5,
-
-                                opacity: 1
-
-                            }
-
-                        }
-                    )
-                    .addTo(map);
-
-
-                const normalSummary =
-                    data.normal
-                        .features[0]
-                        .properties
-                        .summary;
-
-
-                const safeSummary =
-                    data.safe
-                        .features[0]
-                        .properties
-                        .summary;
-
-
-                document.getElementById(
-                    "normalInfo"
-                ).innerHTML =
-
-                    Math.round(
-                        normalSummary.duration
-                        / 60
-                    )
-
-                    + " min • "
-
-                    + (
-                        normalSummary.distance
-                        / 1609.34
-                    ).toFixed(1)
-
-                    + " mi";
-
-
-                document.getElementById(
-                    "safeInfo"
-                ).innerHTML =
-
-                    Math.round(
-                        safeSummary.duration
-                        / 60
-                    )
-
-                    + " min • "
-
-                    + (
-                        safeSummary.distance
-                        / 1609.34
-                    ).toFixed(1)
-
-                    + " mi";
-
-
-                updateRecommendation();
-
-
-                const bounds =
-                    L.featureGroup([
-                        normalRoute,
-                        safeRoute,
-                        currentLocationMarker,
-                        destinationMarker
-                    ])
-                    .getBounds();
-
-
-                map.fitBounds(
-                    bounds,
-                    {
-                        padding:
-                            [50, 50]
                     }
-                );
 
-            }
-        )
 
-        .catch(
-            error => {
+                    return data;
 
-                document.getElementById(
-                    "errorMessage"
-                ).innerHTML =
-                    error.message;
+                }
+            )
 
-            }
-        );
+            .then(
+                data => {
+
+
+                    routeIntersectsFlood =
+                        data.intersects_flood;
+
+
+                    if (
+                        normalRoute
+                    ) {
+
+                        map.removeLayer(
+                            normalRoute
+                        );
+
+                    }
+
+
+                    if (
+                        safeRoute
+                    ) {
+
+                        map.removeLayer(
+                            safeRoute
+                        );
+
+                    }
+
+
+                    if (
+                        currentLocationMarker
+                    ) {
+
+                        map.removeLayer(
+                            currentLocationMarker
+                        );
+
+                    }
+
+
+                    if (
+                        destinationMarker
+                    ) {
+
+                        map.removeLayer(
+                            destinationMarker
+                        );
+
+                    }
+
+
+                    const start =
+                        data.start.coordinates;
+
+
+                    const destination =
+                        data.destination.coordinates;
+
+
+                    currentLocationMarker =
+                        L.circleMarker(
+                            [
+                                start[1],
+                                start[0]
+                            ],
+                            {
+
+                                radius: 8,
+
+                                color: "white",
+
+                                weight: 3,
+
+                                fillColor: "#4285F4",
+
+                                fillOpacity: 1
+
+                            }
+                        )
+                            .addTo(map)
+                            .bindPopup(
+                                data.start.label
+                            );
+
+
+                    destinationMarker =
+                        L.marker(
+                            [
+                                destination[1],
+                                destination[0]
+                            ],
+                            {
+                                icon:
+                                redDestinationIcon
+                            }
+                        )
+                            .addTo(map)
+                            .bindPopup(
+                                data.destination.label
+                            );
+
+
+                    normalRoute =
+                        L.geoJSON(
+                            data.normal,
+                            {
+
+                                style: {
+
+                                    color:
+                                        "#4DA3FF",
+
+                                    weight: 4,
+
+                                    opacity: 1
+
+                                }
+
+                            }
+                        )
+                            .addTo(map);
+
+
+                    safeRoute =
+                        L.geoJSON(
+                            data.safe,
+                            {
+
+                                style: {
+
+                                    color:
+                                        "#0B1F3A",
+
+                                    weight: 5,
+
+                                    opacity: 1
+
+                                }
+
+                            }
+                        )
+                            .addTo(map);
+
+
+                    const normalSummary =
+                        data.normal
+                            .features[0]
+                            .properties
+                            .summary;
+
+
+                    const safeSummary =
+                        data.safe
+                            .features[0]
+                            .properties
+                            .summary;
+
+
+                    document.getElementById(
+                        "normalInfo"
+                    ).innerHTML =
+
+                        Math.round(
+                            normalSummary.duration
+                            / 60
+                        )
+
+                        + " min • "
+
+                        + (
+                            normalSummary.distance
+                            / 1609.34
+                        ).toFixed(1)
+
+                        + " mi";
+
+
+                    document.getElementById(
+                        "safeInfo"
+                    ).innerHTML =
+
+                        Math.round(
+                            safeSummary.duration
+                            / 60
+                        )
+
+                        + " min • "
+
+                        + (
+                            safeSummary.distance
+                            / 1609.34
+                        ).toFixed(1)
+
+                        + " mi";
+
+
+                    updateRecommendation();
+
+
+                    const bounds =
+                        L.featureGroup([
+                            normalRoute,
+                            safeRoute,
+                            currentLocationMarker,
+                            destinationMarker
+                        ])
+                            .getBounds();
+
+
+                    map.fitBounds(
+                        bounds,
+                        {
+                            padding:
+                                [50, 50]
+                        }
+                    );
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    document.getElementById(
+                        "errorMessage"
+                    ).innerHTML =
+                        error.message;
+
+                }
+            );
 
     }
 
@@ -1206,131 +1176,274 @@
     }
 
 
-    function updateHazard() {
+    function updateHazards() {
 
         fetch(
-            "/hazard"
+            "/hazards"
         )
 
-        .then(
-            response =>
-                response.json()
-        )
-
-        .then(
-            data => {
-
-
-                floodActive =
-                    data.flood_active;
-
-
-                document.getElementById(
-                    "hazardStatus"
-                ).innerHTML =
-
-                    "<strong>Historical FloodNet Replay</strong>"
-
-                    + "<br>"
-
-                    + data.depth_inches.toFixed(2)
-
-                    + " inches"
-
-                    + "<br>"
-
-                    + "Severity: "
-
-                    + data.severity;
-
-
-                sensorMarker.bindPopup(
-
-                    "<strong>FloodNet Sensor</strong>"
-
-                    + "<br>"
-
-                    + data.sensor_name
-
-                    + "<br><br>"
-
-                    + "Flood depth: "
-
-                    + data.depth_inches.toFixed(2)
-
-                    + " inches"
-
-                    + "<br>"
-
-                    + "Severity: "
-
-                    + data.severity
-
-                );
-
-
-                if (
-                    floodActive
-                ) {
-
+            .then(
+                response => {
 
                     if (
-                        !floodZone
+                        !response.ok
                     ) {
 
-
-                        floodZone =
-                            L.polygon(
-                                floodZoneCoordinates,
-                                {
-
-                                    color:
-                                        "#d32f2f",
-
-                                    fillColor:
-                                        "#f44336",
-
-                                    fillOpacity:
-                                        0.25,
-
-                                    weight:
-                                        2
-
-                                }
-                            )
-                            .addTo(map)
-                            .bindPopup(
-                                "Flood hazard routing buffer"
-                            );
+                        throw new Error(
+                            "Hazard data could not be loaded."
+                        );
 
                     }
 
+                    return response.json();
+
                 }
+            )
 
-                else {
+            .then(
+                hazards => {
 
 
-                    if (
-                        floodZone
-                    ) {
+                    hazardLayers.forEach(
+                        layer => {
 
-                        map.removeLayer(
-                            floodZone
+                            map.removeLayer(
+                                layer
+                            );
+
+                        }
+                    );
+
+
+                    hazardLayers = [];
+
+
+                    const activeHazards =
+                        hazards.filter(
+                            hazard =>
+                                hazard.flood_active
                         );
 
 
-                        floodZone =
-                            null;
+                    floodActive =
+                        activeHazards.length > 0;
+
+
+                    let statusText =
+                        "<strong>Historical FloodNet Replay</strong>"
+
+                        + "<br>"
+
+                        + hazards.length
+
+                        + " sensors loaded"
+
+                        + "<br>"
+
+                        + activeHazards.length
+
+                        + " active flood areas";
+
+
+                    if (
+                        activeHazards.length > 0
+                    ) {
+
+                        statusText +=
+                            "<br><br>";
+
+
+                        activeHazards.forEach(
+                            hazard => {
+
+                                statusText +=
+                                    hazard.sensor_name
+
+                                    + ": "
+
+                                    + Number(
+                                        hazard.depth_inches
+                                    ).toFixed(2)
+
+                                    + " in"
+
+                                    + " ("
+
+                                    + hazard.severity
+
+                                    + ")"
+
+                                    + "<br>";
+
+                            }
+                        );
 
                     }
 
+
+                    document.getElementById(
+                        "hazardStatus"
+                    ).innerHTML =
+                        statusText;
+
+
+                    hazards.forEach(
+                        hazard => {
+
+
+                            const marker =
+                                L.circleMarker(
+                                    [
+                                        hazard.latitude,
+                                        hazard.longitude
+                                    ],
+                                    {
+
+                                        radius: 7,
+
+                                        color:
+                                            hazard.flood_active
+                                                ? "#8B0000"
+                                                : "#666666",
+
+                                        weight: 2,
+
+                                        fillColor:
+                                            hazard.flood_active
+                                                ? "#FF0000"
+                                                : "#AAAAAA",
+
+                                        fillOpacity: 1
+
+                                    }
+                                )
+                                    .addTo(map)
+                                    .bindPopup(
+
+                                        "<strong>FloodNet Sensor</strong>"
+
+                                        + "<br>"
+
+                                        + hazard.sensor_name
+
+                                        + "<br><br>"
+
+                                        + "Flood depth: "
+
+                                        + Number(
+                                            hazard.depth_inches
+                                        ).toFixed(2)
+
+                                        + " inches"
+
+                                        + "<br>"
+
+                                        + "Severity: "
+
+                                        + hazard.severity
+
+                                    );
+
+
+                            hazardLayers.push(
+                                marker
+                            );
+
+
+                            if (
+                                hazard.flood_active
+                                &&
+                                hazard.polygon
+                            ) {
+
+
+                                const leafletPolygon =
+                                    hazard.polygon.map(
+                                        coordinate => [
+
+                                            coordinate[1],
+
+                                            coordinate[0]
+
+                                        ]
+                                    );
+
+
+                                const zone =
+                                    L.polygon(
+                                        leafletPolygon,
+                                        {
+
+                                            color:
+                                                "#d32f2f",
+
+                                            fillColor:
+                                                "#f44336",
+
+                                            fillOpacity:
+                                                0.25,
+
+                                            weight:
+                                                2
+
+                                        }
+                                    )
+                                        .addTo(map)
+                                        .bindPopup(
+
+                                            "<strong>Flood Hazard</strong>"
+
+                                            + "<br>"
+
+                                            + hazard.sensor_name
+
+                                            + "<br>"
+
+                                            + Number(
+                                                hazard.depth_inches
+                                            ).toFixed(2)
+
+                                            + " inches"
+
+                                        );
+
+
+                                hazardLayers.push(
+                                    zone
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    updateRecommendation();
+
                 }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "Hazard loading error:",
+                        error
+                    );
 
 
-                updateRecommendation();
+                    document.getElementById(
+                        "hazardStatus"
+                    ).innerHTML =
 
-            }
-        );
+                        "<strong>FloodNet</strong>"
+
+                        + "<br>"
+
+                        + "Hazard data could not be loaded.";
+
+                }
+            );
 
     }
 
@@ -1385,15 +1498,16 @@
     }
 
 
-    updateHazard();
+    updateHazards();
 
     loadRoutes();
 
 
     setInterval(
-        updateHazard,
+        updateHazards,
         2000
     );
+
 
 </script>
 

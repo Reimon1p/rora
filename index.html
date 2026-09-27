@@ -165,6 +165,36 @@
         .panel-handle {
             display: none;
         }
+        #directionsBox {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #dddddd;
+        }
+
+        #directionsBox h3 {
+            margin: 5px 0 10px 0;
+        }
+
+        .direction-step {
+            padding: 10px 4px;
+            border-bottom: 1px solid #eeeeee;
+            cursor: pointer;
+        }
+
+        .direction-step:hover {
+            background: #f5f5f5;
+        }
+
+        .direction-instruction {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .direction-distance {
+            font-size: 12px;
+            color: #666666;
+            margin-top: 3px;
+        }
         @media (max-width: 600px) {
 
             .panel {
@@ -371,6 +401,13 @@
 
         <div id="normalInfo">
             --
+        </div>
+        <div
+                id="directionsBox"
+                style="display: none;"
+        >
+            <h3>Directions</h3>
+            <div id="directionsList"></div>
         </div>
 
         <div
@@ -871,6 +908,19 @@
 
                     routeIntersectsFlood =
                         data.intersects_flood;
+                    const routeForDirections =
+                        (
+                            floodActive
+                            &&
+                            routeIntersectsFlood
+                        )
+                            ? data.safe
+                            : data.normal;
+
+
+                    showDirections(
+                        routeForDirections
+                    );
 
 
                     if (
@@ -1079,8 +1129,24 @@
                         bounds,
                         {
                             padding:
-                                [50, 50]
+                                [40, 40]
                         }
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            map.setView(
+                                [
+                                    start[1],
+                                    start[0]
+                                ],
+                                17
+                            );
+
+                        },
+                        450
                     );
                     collapsePanel();
 
@@ -1200,6 +1266,174 @@
             }
 
         }
+
+    }
+    function showDirections(routeData) {
+
+        const directionsBox =
+            document.getElementById(
+                "directionsBox"
+            );
+
+        const directionsList =
+            document.getElementById(
+                "directionsList"
+            );
+
+
+        directionsList.innerHTML =
+            "";
+
+
+        if (
+            !routeData
+            ||
+            !routeData.features
+            ||
+            routeData.features.length === 0
+        ) {
+
+            directionsBox.style.display =
+                "none";
+
+            return;
+
+        }
+
+
+        const feature =
+            routeData.features[0];
+
+
+        const coordinates =
+            feature.geometry.coordinates;
+
+
+        const segments =
+            feature.properties.segments;
+
+
+        if (
+            !segments
+            ||
+            segments.length === 0
+        ) {
+
+            directionsBox.style.display =
+                "none";
+
+            return;
+
+        }
+
+
+        segments.forEach(
+            segment => {
+
+                segment.steps.forEach(
+                    step => {
+
+                        const item =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        item.className =
+                            "direction-step";
+
+
+                        const miles =
+                            step.distance
+                            / 1609.34;
+
+
+                        let distanceText;
+
+
+                        if (
+                            miles < 0.1
+                        ) {
+
+                            distanceText =
+                                Math.round(
+                                    step.distance
+                                    * 3.28084
+                                )
+                                + " ft";
+
+                        }
+
+                        else {
+
+                            distanceText =
+                                miles.toFixed(1)
+                                + " mi";
+
+                        }
+
+
+                        item.innerHTML =
+
+                            "<div class='direction-instruction'>"
+
+                            + step.instruction
+
+                            + "</div>"
+
+                            + "<div class='direction-distance'>"
+
+                            + distanceText
+
+                            + "</div>";
+
+
+                        item.onclick =
+                            function () {
+
+                                if (
+                                    !step.way_points
+                                    ||
+                                    step.way_points.length === 0
+                                ) {
+                                    return;
+                                }
+
+
+                                const pointIndex =
+                                    step.way_points[0];
+
+
+                                const point =
+                                    coordinates[
+                                        pointIndex
+                                        ];
+
+
+                                map.setView(
+                                    [
+                                        point[1],
+                                        point[0]
+                                    ],
+                                    18
+                                );
+
+                            };
+
+
+                        directionsList.appendChild(
+                            item
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        directionsBox.style.display =
+            "block";
 
     }
     function isMobile() {

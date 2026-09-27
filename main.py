@@ -14,12 +14,11 @@ app = Flask(__name__)
 
 api_key = os.getenv("ORS_API_KEY")
 
-# Center autocomplete/geocoding around the Rockaways.
 FOCUS_LAT = 40.59408
 FOCUS_LON = -73.78921
 
-# Number of real FloodNet sensors to use in the demo.
-DEMO_SENSOR_COUNT = 8
+# Use 6 real FloodNet sensors for the demo.
+DEMO_SENSOR_COUNT = 6
 
 EVENTS_URL = (
     "https://data.cityofnewyork.us/resource/aq7i-eu5q.json"
@@ -53,13 +52,18 @@ def get_severity(depth):
 
 
 # ---------------------------------------------------------
-# HAZARD POLYGONS
+# DEMONSTRATION HAZARD AREA
 # ---------------------------------------------------------
 
-def make_hazard_polygon(latitude, longitude):
+def make_hazard_polygon(
+    latitude,
+    longitude
+):
 
-    # Small demonstration routing buffer around a sensor.
-    # This is NOT claiming FloodNet measured this exact area.
+    # Demonstration routing buffer around the real sensor.
+    # The sensor location and measurements are real.
+    # This polygon is not claiming FloodNet measured
+    # the exact geographic extent of the flood.
 
     lat_size = 0.00033
     lon_size = 0.00039
@@ -88,19 +92,6 @@ def make_hazard_polygon(latitude, longitude):
     ]
 
 
-def find_replay_start(depths):
-
-    # Begin each historical replay when flooding first reaches
-    # the demo threshold so hazards are visible immediately.
-
-    for index, depth in enumerate(depths):
-
-        if depth >= 0.4:
-            return index
-
-    return 0
-
-
 # ---------------------------------------------------------
 # LOAD REAL FLOODNET HISTORICAL EVENTS
 # ---------------------------------------------------------
@@ -119,7 +110,7 @@ def load_demo_sensors():
                 "$order":
                     "flood_start_time DESC",
                 "$limit":
-                    200
+                    250
             },
             timeout=15
         )
@@ -154,8 +145,10 @@ def load_demo_sensors():
 
         if (
             not sensor_id
-            or sensor_id in used_sensor_ids
+            or
+            sensor_id in used_sensor_ids
         ):
+
             continue
 
 
@@ -190,22 +183,28 @@ def load_demo_sensors():
             ]
 
 
-            if len(depths) == 0:
-                continue
-
-
-            if max(depths) < 0.4:
-                continue
-
-
         except Exception as error:
 
             print(
-                "Flood profile parsing error:",
+                "Flood profile error:",
                 sensor_id,
                 error
             )
 
+            continue
+
+
+        # Keep only actual recorded flood measurements
+        # that reached our demonstration threshold.
+
+        flood_depths = [
+            depth
+            for depth in depths
+            if depth >= 0.4
+        ]
+
+
+        if len(flood_depths) == 0:
             continue
 
 
@@ -224,22 +223,31 @@ def load_demo_sensors():
 
             metadata_response.raise_for_status()
 
-            metadata = metadata_response.json()
+            metadata = (
+                metadata_response.json()
+            )
 
 
             if len(metadata) == 0:
                 continue
 
 
-            sensor_metadata = metadata[0]
+            sensor_metadata = (
+                metadata[0]
+            )
 
 
             latitude = float(
-                sensor_metadata["latitude"]
+                sensor_metadata[
+                    "latitude"
+                ]
             )
 
+
             longitude = float(
-                sensor_metadata["longitude"]
+                sensor_metadata[
+                    "longitude"
+                ]
             )
 
 
@@ -252,11 +260,6 @@ def load_demo_sensors():
             )
 
             continue
-
-
-        replay_start = find_replay_start(
-            depths
-        )
 
 
         sensors.append({
@@ -279,14 +282,13 @@ def load_demo_sensors():
             "longitude":
                 longitude,
 
+            # Only actual readings from this
+            # historical flood event.
             "depths":
-                depths,
+                flood_depths,
 
             "index":
-                replay_start,
-
-            "replay_start":
-                replay_start,
+                0,
 
             "polygon":
                 make_hazard_polygon(
@@ -310,7 +312,7 @@ def load_demo_sensors():
     print(
         "Loaded",
         len(sensors),
-        "FloodNet demo sensors"
+        "real FloodNet demo sensors"
     )
 
 
@@ -442,6 +444,7 @@ def segments_intersect(
         and
         o3 != o4
     ):
+
         return True
 
 
@@ -454,6 +457,7 @@ def segments_intersect(
             q1
         )
     ):
+
         return True
 
 
@@ -466,6 +470,7 @@ def segments_intersect(
             q1
         )
     ):
+
         return True
 
 
@@ -478,6 +483,7 @@ def segments_intersect(
             q2
         )
     ):
+
         return True
 
 
@@ -490,6 +496,7 @@ def segments_intersect(
             q2
         )
     ):
+
         return True
 
 
@@ -497,7 +504,7 @@ def segments_intersect(
 
 
 # ---------------------------------------------------------
-# ACTIVE FLOOD POLYGONS
+# CURRENT FLOOD AREAS
 # ---------------------------------------------------------
 
 def get_active_polygons():
@@ -507,13 +514,19 @@ def get_active_polygons():
 
     for sensor in demo_sensors:
 
-        if len(sensor["depths"]) == 0:
+        if len(
+            sensor["depths"]
+        ) == 0:
+
             continue
 
 
-        depth = sensor["depths"][
-            sensor["index"]
-        ]
+        depth = (
+            sensor["depths"]
+            [
+                sensor["index"]
+            ]
+        )
 
 
         if depth >= 0.4:
@@ -527,7 +540,7 @@ def get_active_polygons():
 
 
 # ---------------------------------------------------------
-# CHECK WHETHER ROUTE CROSSES ANY FLOOD AREA
+# ROUTE / FLOOD INTERSECTION
 # ---------------------------------------------------------
 
 def route_intersects_flood(
@@ -603,7 +616,9 @@ def route_intersects_flood(
 # GEOCODING
 # ---------------------------------------------------------
 
-def geocode_address(address):
+def geocode_address(
+    address
+):
 
     if not api_key:
 
@@ -621,8 +636,10 @@ def geocode_address(address):
 
 
     headers = {
+
         "Authorization":
             api_key
+
     }
 
 
@@ -696,7 +713,8 @@ def geocode_address(address):
 
 
     label = (
-        feature["properties"].get(
+        feature["properties"]
+        .get(
             "label",
             address
         )
@@ -718,8 +736,11 @@ def geocode_address(address):
     return {
 
         "coordinates":
-            feature["geometry"]
-            ["coordinates"],
+            feature[
+                "geometry"
+            ][
+                "coordinates"
+            ],
 
         "label":
             label
@@ -728,7 +749,7 @@ def geocode_address(address):
 
 
 # ---------------------------------------------------------
-# OPENROUTESERVICE ROUTING
+# ROUTING
 # ---------------------------------------------------------
 
 def get_route(
@@ -806,7 +827,9 @@ def get_route(
     if avoid_polygons:
 
 
-        if len(avoid_polygons) == 1:
+        if len(
+            avoid_polygons
+        ) == 1:
 
             geometry = {
 
@@ -828,9 +851,12 @@ def get_route(
                     "MultiPolygon",
 
                 "coordinates": [
+
                     [polygon]
+
                     for polygon
                     in avoid_polygons
+
                 ]
 
             }
@@ -881,7 +907,7 @@ def get_route(
 
 
 # ---------------------------------------------------------
-# HOME PAGE
+# HOME
 # ---------------------------------------------------------
 
 @app.route("/")
@@ -914,7 +940,6 @@ def autocomplete():
 
 
     if not api_key:
-
         return jsonify([])
 
 
@@ -964,7 +989,7 @@ def autocomplete():
     except Exception as error:
 
         print(
-            "Autocomplete request error:",
+            "Autocomplete error:",
             error
         )
 
@@ -972,15 +997,6 @@ def autocomplete():
 
 
     if response.status_code != 200:
-
-        print(
-            "Autocomplete error:",
-            response.status_code
-        )
-
-        print(
-            response.text
-        )
 
         return jsonify([])
 
@@ -996,11 +1012,8 @@ def autocomplete():
     ):
 
         coordinates = (
-            feature[
-                "geometry"
-            ][
-                "coordinates"
-            ]
+            feature["geometry"]
+            ["coordinates"]
         )
 
 
@@ -1109,10 +1122,6 @@ def routes():
     )
 
 
-    # -----------------------------------------------------
-    # START LOCATION
-    # -----------------------------------------------------
-
     if (
         start_lat
         and
@@ -1120,8 +1129,15 @@ def routes():
     ):
 
         start = [
-            float(start_lon),
-            float(start_lat)
+
+            float(
+                start_lon
+            ),
+
+            float(
+                start_lat
+            )
+
         ]
 
 
@@ -1165,10 +1181,6 @@ def routes():
         )
 
 
-    # -----------------------------------------------------
-    # DESTINATION
-    # -----------------------------------------------------
-
     if (
         destination_lat
         and
@@ -1176,12 +1188,15 @@ def routes():
     ):
 
         destination = [
+
             float(
                 destination_lon
             ),
+
             float(
                 destination_lat
             )
+
         ]
 
 
@@ -1225,10 +1240,6 @@ def routes():
         )
 
 
-    # -----------------------------------------------------
-    # NORMAL ROUTE
-    # -----------------------------------------------------
-
     normal_route = get_route(
         start,
         destination,
@@ -1246,10 +1257,6 @@ def routes():
         }), 500
 
 
-    # -----------------------------------------------------
-    # CURRENT ACTIVE FLOOD AREAS
-    # -----------------------------------------------------
-
     active_polygons = (
         get_active_polygons()
     )
@@ -1263,11 +1270,14 @@ def routes():
     )
 
 
-    # -----------------------------------------------------
-    # SAFE ROUTE
-    # -----------------------------------------------------
+    # Only calculate the safe route if
+    # the normal route actually crosses a hazard.
 
-    if active_polygons:
+    if (
+        intersects_flood
+        and
+        active_polygons
+    ):
 
         safe_route = get_route(
             start,
@@ -1277,14 +1287,14 @@ def routes():
         )
 
 
+        if safe_route is None:
+
+            safe_route = (
+                normal_route
+            )
+
+
     else:
-
-        safe_route = (
-            normal_route
-        )
-
-
-    if safe_route is None:
 
         safe_route = (
             normal_route
@@ -1331,7 +1341,7 @@ def routes():
 
 
 # ---------------------------------------------------------
-# MULTIPLE FLOOD HAZARDS
+# HAZARDS
 # ---------------------------------------------------------
 
 @app.route("/hazards")
@@ -1350,12 +1360,9 @@ def hazards():
 
 
         depth = (
-            sensor[
-                "depths"
-            ][
-                sensor[
-                    "index"
-                ]
+            sensor["depths"]
+            [
+                sensor["index"]
             ]
         )
 
@@ -1391,7 +1398,7 @@ def hazards():
                 ),
 
             "flood_active":
-                depth >= 0.4,
+                True,
 
             "polygon":
                 sensor[
@@ -1406,15 +1413,21 @@ def hazards():
         })
 
 
+        sensor["index"] += 1
+
+
+        # Loop through the REAL recorded
+        # flood measurements for the demo.
+
         if (
             sensor["index"]
-            <
+            >=
             len(
                 sensor["depths"]
-            ) - 1
+            )
         ):
 
-            sensor["index"] += 1
+            sensor["index"] = 0
 
 
     return jsonify(
@@ -1423,7 +1436,7 @@ def hazards():
 
 
 # ---------------------------------------------------------
-# RESET HISTORICAL REPLAY
+# RESET
 # ---------------------------------------------------------
 
 @app.route("/reset")
@@ -1431,17 +1444,13 @@ def reset():
 
     for sensor in demo_sensors:
 
-        sensor["index"] = (
-            sensor[
-                "replay_start"
-            ]
-        )
+        sensor["index"] = 0
 
 
     return jsonify({
 
         "message":
-            "Flood simulations reset",
+            "Flood demonstrations reset",
 
         "sensor_count":
             len(
@@ -1452,7 +1461,7 @@ def reset():
 
 
 # ---------------------------------------------------------
-# DEBUG / HEALTH CHECK
+# HEALTH
 # ---------------------------------------------------------
 
 @app.route("/health")
@@ -1477,7 +1486,7 @@ def health():
 
 
 # ---------------------------------------------------------
-# START SERVER
+# RUN
 # ---------------------------------------------------------
 
 if __name__ == "__main__":

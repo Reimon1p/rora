@@ -936,58 +936,7 @@
                     showDirections(
                         routeForDirections
                     );
-                    function chooseRoute(type) {
 
-                        if (
-                            type === "safe"
-                            &&
-                            safeRoute
-                        ) {
-
-                            safeRoute.bringToFront();
-
-                            document.getElementById(
-                                "safeCard"
-                            ).className =
-                                "route-card recommended-card";
-
-                            document.getElementById(
-                                "normalCard"
-                            ).className =
-                                "route-card alternate-card";
-
-                            showDirections(
-                                lastRouteData.safe
-                            );
-
-                        }
-
-                        else if (
-                            type === "normal"
-                            &&
-                            normalRoute
-                        ) {
-
-                            normalRoute.bringToFront();
-
-                            document.getElementById(
-                                "normalCard"
-                            ).className =
-                                "route-card recommended-card";
-
-                            document.getElementById(
-                                "safeCard"
-                            ).className =
-                                "route-card alternate-card";
-
-                            showDirections(
-                                lastRouteData.normal
-                            );
-
-                        }
-
-                        collapsePanel();
-                    }
 
 
                     if (
@@ -1231,6 +1180,60 @@
                 }
             );
 
+    }
+    function chooseRoute(type) {
+
+        if (!lastRouteData) {
+            return;
+        }
+
+        if (
+            type === "safe"
+            &&
+            safeRoute
+        ) {
+
+            safeRoute.bringToFront();
+
+            document.getElementById(
+                "safeCard"
+            ).className =
+                "route-card recommended-card";
+
+            document.getElementById(
+                "normalCard"
+            ).className =
+                "route-card alternate-card";
+
+            showDirections(
+                lastRouteData.safe
+            );
+        }
+
+        else if (
+            type === "normal"
+            &&
+            normalRoute
+        ) {
+
+            normalRoute.bringToFront();
+
+            document.getElementById(
+                "normalCard"
+            ).className =
+                "route-card recommended-card";
+
+            document.getElementById(
+                "safeCard"
+            ).className =
+                "route-card alternate-card";
+
+            showDirections(
+                lastRouteData.normal
+            );
+        }
+
+        collapsePanel();
     }
 
 
@@ -1747,17 +1750,7 @@
                         "Hazard loading error:",
                         error
                     );
-
-
-                    document.getElementById(
-                        "hazardStatus"
-                    ).innerHTML =
-
-                        "<strong>FloodNet</strong>"
-
-                        + "<br>"
-
-                        + "Hazard data could not be loaded.";
+                    
 
                 }
             );

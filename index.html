@@ -3,7 +3,8 @@
 <html>
 
 <head>
-
+<title>RORA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RORA</title>
 
     <link
@@ -24,18 +25,20 @@
         }
 
         .panel {
-            position: absolute;
-            top: 20px;
-            left: 60px;
-            width: 330px;
-            background: white;
-            padding: 18px;
-            border-radius: 14px;
-            z-index: 1000;
-            box-shadow:
-                0 3px 12px
-                rgba(0, 0, 0, 0.25);
-        }
+    position: absolute;
+    top: 20px;
+    left: 60px;
+    width: 330px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    z-index: 1000;
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.25);
+}
 
         .panel h2 {
             margin-top: 0;
@@ -81,8 +84,7 @@
             padding: 10px;
             cursor: pointer;
             font-size: 13px;
-            border-bottom:
-                1px solid #eeeeee;
+            border-bottom: 1px solid #eeeeee;
         }
 
         .suggestion:hover {
@@ -152,7 +154,61 @@
             color: #c62828;
             margin-top: 8px;
         }
+        @media (max-width: 600px) {
 
+    .panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    height: 62vh;
+    max-height: 62vh;
+
+    box-sizing: border-box;
+    border-radius: 22px 22px 0 0;
+    padding: 12px 14px 20px 14px;
+
+    overflow-y: auto;
+
+    transform: translateY(0);
+    transition: transform 0.35s ease;
+    touch-action: pan-y;
+}
+            .panel.collapsed {
+    transform: translateY(calc(62vh - 105px));
+}
+
+    .panel h2 {
+        margin-bottom: 10px;
+    }
+
+    .mode-buttons {
+        gap: 8px;
+    }
+
+    .mode-buttons button {
+        flex: 1;
+    }
+
+    #locationButton,
+    #routeButton {
+        width: 100%;
+    }
+
+    input {
+        font-size: 16px;
+    }
+
+    .route-card {
+        font-size: 14px;
+    }
+
+    #hazardStatus {
+        font-size: 14px;
+    }
+
+}
     </style>
 
 </head>
@@ -191,10 +247,9 @@
 
     <button
         id="locationButton"
-        onclick="useCurrentLocation()">
-
+        onclick="useCurrentLocation()"
+    >
         ◎ Use my current location
-
     </button>
 
 
@@ -226,19 +281,17 @@
         <button
             id="driveButton"
             class="active"
-            onclick="changeMode('driving')">
-
+            onclick="changeMode('driving')"
+        >
             🚗 Drive
-
         </button>
 
 
         <button
             id="walkButton"
-            onclick="changeMode('walking')">
-
+            onclick="changeMode('walking')"
+        >
             🚶 Walk
-
         </button>
 
     </div>
@@ -246,10 +299,9 @@
 
     <button
         id="routeButton"
-        onclick="loadRoutes()">
-
+        onclick="loadRoutes()"
+    >
         Find route
-
     </button>
 
 
@@ -258,7 +310,8 @@
 
     <div
         id="safeCard"
-        class="route-card alternate-card">
+        class="route-card alternate-card"
+    >
 
         <strong id="safeTitle">
             Flood-avoidance route
@@ -273,7 +326,8 @@
 
     <div
         id="normalCard"
-        class="route-card recommended-card">
+        class="route-card recommended-card"
+    >
 
         <strong id="normalTitle">
             Recommended route
@@ -283,25 +337,20 @@
             --
         </div>
 
-
         <div
             id="normalWarning"
             class="warning"
-            style="display: none;">
-
+            style="display: none;"
+        >
             ⚠ This route crosses the flood hazard
-
         </div>
 
     </div>
 
 
     <div id="hazardStatus">
-
         FloodNet sensor loading...
-
     </div>
-
 
 </div>
 
@@ -380,9 +429,13 @@
             sensorLocation,
             {
                 radius: 7,
+
                 color: "#8B0000",
+
                 weight: 2,
+
                 fillColor: "#FF0000",
+
                 fillOpacity: 1
             }
         )
@@ -434,6 +487,7 @@
         input.addEventListener(
             "input",
             function () {
+
 
                 clearTimeout(
                     timer
@@ -537,7 +591,8 @@
 
 
                                                     if (
-                                                        type === "start"
+                                                        type ===
+                                                        "start"
                                                     ) {
 
                                                         startCoordinates = {
@@ -673,20 +728,20 @@
                     L.circleMarker(
                         [
                             startCoordinates.latitude,
-
                             startCoordinates.longitude
                         ],
                         {
+
                             radius: 8,
 
                             color: "white",
 
                             weight: 3,
 
-                            fillColor:
-                                "#4285F4",
+                            fillColor: "#4285F4",
 
                             fillOpacity: 1
+
                         }
                     )
                     .addTo(map)
@@ -698,7 +753,6 @@
                 map.setView(
                     [
                         startCoordinates.latitude,
-
                         startCoordinates.longitude
                     ],
                     15
@@ -881,17 +935,17 @@
                             start[0]
                         ],
                         {
+
                             radius: 8,
 
-                            color:
-                                "white",
+                            color: "white",
 
                             weight: 3,
 
-                            fillColor:
-                                "#4285F4",
+                            fillColor: "#4285F4",
 
                             fillOpacity: 1
+
                         }
                     )
                     .addTo(map)
@@ -921,6 +975,7 @@
                     L.geoJSON(
                         data.normal,
                         {
+
                             style: {
 
                                 color:
@@ -931,6 +986,7 @@
                                 opacity: 1
 
                             }
+
                         }
                     )
                     .addTo(map);
@@ -940,6 +996,7 @@
                     L.geoJSON(
                         data.safe,
                         {
+
                             style: {
 
                                 color:
@@ -950,6 +1007,7 @@
                                 opacity: 1
 
                             }
+
                         }
                     )
                     .addTo(map);
@@ -1104,7 +1162,6 @@
 
             }
 
-
         }
 
         else {
@@ -1172,7 +1229,7 @@
                     "hazardStatus"
                 ).innerHTML =
 
-                    "<strong>FloodNet Live Demo</strong>"
+                    "<strong>Historical FloodNet Replay</strong>"
 
                     + "<br>"
 
@@ -1197,11 +1254,17 @@
 
                     + "<br><br>"
 
-                    + "Current depth: "
+                    + "Flood depth: "
 
                     + data.depth_inches.toFixed(2)
 
                     + " inches"
+
+                    + "<br>"
+
+                    + "Severity: "
+
+                    + data.severity
 
                 );
 
@@ -1220,6 +1283,7 @@
                             L.polygon(
                                 floodZoneCoordinates,
                                 {
+
                                     color:
                                         "#d32f2f",
 
@@ -1231,12 +1295,15 @@
 
                                     weight:
                                         2
+
                                 }
                             )
-                            .addTo(map);
+                            .addTo(map)
+                            .bindPopup(
+                                "Flood hazard routing buffer"
+                            );
 
                     }
-
 
                 }
 
@@ -1291,8 +1358,7 @@
 
 
         if (
-            mode ===
-            "driving"
+            mode === "driving"
         ) {
 
             document.getElementById(

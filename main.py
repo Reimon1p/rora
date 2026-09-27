@@ -10,7 +10,6 @@ api_key = os.getenv("ORS_API_KEY")
 
 
 SENSOR_ID = "Q-beach-59th-st-beach-channel-dr-1zbc0d"
-
 SENSOR_LAT = 40.59408
 SENSOR_LON = -73.78921
 
@@ -34,21 +33,32 @@ params = {
     "$limit": 1
 }
 
-response = requests.get(
-    events_url,
-    params=params
-)
 
-events = response.json()
+try:
 
-
-if len(events) == 0:
-    flood_depths = [0.0]
-
-else:
-    flood_depths = ast.literal_eval(
-        events[0]["flood_profile_depth_inches"]
+    response = requests.get(
+        events_url,
+        params=params,
+        timeout=10
     )
+
+    events = response.json()
+
+    if len(events) == 0:
+
+        flood_depths = [0.0]
+
+    else:
+
+        flood_depths = ast.literal_eval(
+            events[0]["flood_profile_depth_inches"]
+        )
+
+except Exception as error:
+
+    print("FloodNet loading error:", error)
+
+    flood_depths = [0.0]
 
 
 current_depth_index = 0
@@ -111,37 +121,41 @@ def orientation(a, b, c):
     return 2
 
 
-def segments_intersect(p1, q1, p2, q2):
-
-    o1 = orientation(
-        p1,
-        q1,
-        p2
-    )
-
-    o2 = orientation(
-        p1,
-        q1,
-        q2
-    )
-
-    o3 = orientation(
-        p2,
-        q2,
-        p1
-    )
-
-    o4 = orientation(
-        p2,
-        q2,
-        q1
-    )
+def on_segment(a, b, c):
 
     return (
-        o1 != o2
+        min(a[0], c[0]) <= b[0] <= max(a[0], c[0])
         and
-        o3 != o4
+        min(a[1], c[1]) <= b[1] <= max(a[1], c[1])
     )
+
+
+def segments_intersect(p1, q1, p2, q2):
+
+    o1 = orientation(p1, q1, p2)
+    o2 = orientation(p1, q1, q2)
+    o3 = orientation(p2, q2, p1)
+    o4 = orientation(p2, q2, q1)
+
+
+    if o1 != o2 and o3 != o4:
+        return True
+
+
+    if o1 == 0 and on_segment(p1, p2, q1):
+        return True
+
+    if o2 == 0 and on_segment(p1, q2, q1):
+        return True
+
+    if o3 == 0 and on_segment(p2, p1, q2):
+        return True
+
+    if o4 == 0 and on_segment(p2, q1, q2):
+        return True
+
+
+    return False
 
 
 def route_intersects_flood(route):
@@ -149,19 +163,23 @@ def route_intersects_flood(route):
     if route is None:
         return False
 
+
     features = route.get(
         "features",
         []
     )
 
+
     if len(features) == 0:
         return False
+
 
     coordinates = (
         features[0]
         ["geometry"]
         ["coordinates"]
     )
+
 
     for point in coordinates:
 
@@ -174,7 +192,6 @@ def route_intersects_flood(route):
     ):
 
         route_start = coordinates[i]
-
         route_end = coordinates[i + 1]
 
 
@@ -182,13 +199,8 @@ def route_intersects_flood(route):
             len(FLOOD_POLYGON) - 1
         ):
 
-            flood_start = (
-                FLOOD_POLYGON[j]
-            )
-
-            flood_end = (
-                FLOOD_POLYGON[j + 1]
-            )
+            flood_start = FLOOD_POLYGON[j]
+            flood_end = FLOOD_POLYGON[j + 1]
 
 
             if segments_intersect(
@@ -203,70 +215,7 @@ def route_intersects_flood(route):
 
     return False
 
-def point_inside_flood(point):
 
-    longitude = point[0]
-    latitude = point[1]
-
-    longitudes = [coordinate[0] for coordinate in FLOOD_POLYGON]
-    latitudes = [coordinate[1] for coordinate in FLOOD_POLYGON]
-
-    return (
-        min(longitudes) <= longitude <= max(longitudes)
-        and
-        min(latitudes) <= latitude <= max(latitudes)
-    )
-
-
-def orientation(a, b, c):
-
-    value = (
-        (b[1] - a[1]) * (c[0] - b[0])
-        -
-        (b[0] - a[0]) * (c[1] - b[1])
-    )
-
-    if abs(value) < 0.000000001:
-        return 0
-
-    if value > 0:
-        return 1
-
-    return 2
-
-
-def segments_intersect(p1, q1, p2, q2):
-
-    o1 = orientation(p1, q1, p2)
-    o2 = orientation(p1, q1, q2)
-    o3 = orientation(p2, q2, p1)
-    o4 = orientation(p2, q2, q1)
-
-    return o1 != o2 and o3 != o4
-
-
-def route_intersects_flood(route):
-
-    coordinates = route["features"][0]["geometry"]["coordinates"]
-
-    for point in coordinates:
-
-        if point_inside_flood(point):
-            return True
-
-    for i in range(len(coordinates) - 1):
-
-        for j in range(len(FLOOD_POLYGON) - 1):
-
-            if segments_intersect(
-                coordinates[i],
-                coordinates[i + 1],
-                FLOOD_POLYGON[j],
-                FLOOD_POLYGON[j + 1]
-            ):
-                return True
-
-    return False
 def geocode_address(address):
 
     url = (
@@ -274,22 +223,33 @@ def geocode_address(address):
         "pelias/v1/search"
     )
 
+
     headers = {
         "Authorization": api_key
     }
 
+
     params = {
+
         "text": address,
+
         "size": 1,
-        "focus.point.lat": SENSOR_LAT,
-        "focus.point.lon": SENSOR_LON
+
+        "focus.point.lat":
+            SENSOR_LAT,
+
+        "focus.point.lon":
+            SENSOR_LON
+
     }
+
 
     response = requests.get(
         url,
         headers=headers,
         params=params
     )
+
 
     if response.status_code != 200:
 
@@ -330,6 +290,7 @@ def geocode_address(address):
                 "label",
                 address
             )
+
     }
 
 
@@ -587,11 +548,14 @@ def routes():
             start_text
         )
 
+
         if start_result is None:
 
             return jsonify({
+
                 "error":
                     "Starting location could not be found."
+
             }), 400
 
 
@@ -631,8 +595,10 @@ def routes():
         if destination_result is None:
 
             return jsonify({
+
                 "error":
                     "Destination could not be found."
+
             }), 400
 
 
@@ -656,22 +622,13 @@ def routes():
     )
 
 
-    safe_route = get_route(
-        start,
-        destination,
-        mode,
-        True
-    )
-
-
-    if (
-        normal_route is None
-        or safe_route is None
-    ):
+    if normal_route is None:
 
         return jsonify({
+
             "error":
-                "The route could not be calculated."
+                "The normal route could not be calculated."
+
         }), 500
 
 
@@ -680,6 +637,19 @@ def routes():
             normal_route
         )
     )
+
+
+    safe_route = get_route(
+        start,
+        destination,
+        mode,
+        True
+    )
+
+
+    if safe_route is None:
+
+        safe_route = normal_route
 
 
     return jsonify({
@@ -788,7 +758,9 @@ def reset():
 
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
 
     app.run(
-        debug=True
+        host="0.0.0.0",
+        port=port
     )

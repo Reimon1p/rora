@@ -8,113 +8,61 @@ app = Flask(__name__)
 
 api_key = os.getenv("ORS_API_KEY")
 
-FOCUS_LAT = 40.60
-FOCUS_LON = -73.79
 
-DEMO_SENSORS = [
-    {
-        "sensor_id": "Q-beach-59th-st-beach-channel-dr-1zbc0d",
-        "event_time": "2026-04-20T01:35:56.000"
-    },
-    {
-        "sensor_id": "Q-beach-84-st-0me680",
-        "event_time": "2023-10-30T12:00:39.000"
-    },
-    {
-        "sensor_id": "Q-beach-72nd-st-almeda-ave-1a5hw0",
-        "event_time": "2023-09-29T02:19:06.000"
-    }
+SENSOR_ID = "Q-beach-59th-st-beach-channel-dr-1zbc0d"
+SENSOR_LAT = 40.59408
+SENSOR_LON = -73.78921
+
+
+FLOOD_POLYGON = [
+    [-73.78960, 40.59375],
+    [-73.78882, 40.59375],
+    [-73.78882, 40.59441],
+    [-73.78960, 40.59441],
+    [-73.78960, 40.59375]
 ]
 
-EVENTS_URL = "https://data.cityofnewyork.us/resource/aq7i-eu5q.json"
-METADATA_URL = "https://data.cityofnewyork.us/resource/kb2e-tjy3.json"
+
+events_url = "https://data.cityofnewyork.us/resource/aq7i-eu5q.json"
+
+params = {
+    "$where": (
+        f"sensor_id='{SENSOR_ID}' "
+        "AND flood_start_time='2026-04-20T01:35:56.000'"
+    ),
+    "$limit": 1
+}
 
 
-def make_hazard_polygon(latitude, longitude):
+try:
 
-    lat_size = 0.00033
-    lon_size = 0.00039
+    response = requests.get(
+        events_url,
+        params=params,
+        timeout=10
+    )
 
-    return [
-        [longitude - lon_size, latitude - lat_size],
-        [longitude + lon_size, latitude - lat_size],
-        [longitude + lon_size, latitude + lat_size],
-        [longitude - lon_size, latitude + lat_size],
-        [longitude - lon_size, latitude - lat_size]
-    ]
+    events = response.json()
 
+    if len(events) == 0:
 
-def load_demo_sensors():
+        flood_depths = [0.0]
 
-    sensors = []
+    else:
 
-    for config in DEMO_SENSORS:
+        flood_depths = ast.literal_eval(
+            events[0]["flood_profile_depth_inches"]
+        )
 
-        try:
+except Exception as error:
 
-            sensor_id = config["sensor_id"]
+    print("FloodNet loading error:", error)
 
-            metadata_response = requests.get(
-                METADATA_URL,
-                params={
-                    "$where": f"sensor_id='{sensor_id}'",
-                    "$limit": 1
-                },
-                timeout=10
-            )
-
-            metadata = metadata_response.json()
-
-            event_response = requests.get(
-                EVENTS_URL,
-                params={
-                    "$where": (
-                        f"sensor_id='{sensor_id}' "
-                        f"AND flood_start_time='{config['event_time']}'"
-                    ),
-                    "$limit": 1
-                },
-                timeout=10
-            )
-
-            events = event_response.json()
-
-            if not metadata or not events:
-                print("Could not load sensor:", sensor_id)
-                continue
-
-            latitude = float(metadata[0]["latitude"])
-            longitude = float(metadata[0]["longitude"])
-
-            depths = ast.literal_eval(
-                events[0]["flood_profile_depth_inches"]
-            )
-
-            sensors.append({
-                "sensor_id": sensor_id,
-                "sensor_name": metadata[0]["sensor_name"],
-                "latitude": latitude,
-                "longitude": longitude,
-                "depths": depths,
-                "index": 0,
-                "polygon": make_hazard_polygon(
-                    latitude,
-                    longitude
-                )
-            })
-
-        except Exception as error:
-
-            print(
-                "Sensor loading error:",
-                config["sensor_id"],
-                error
-            )
-
-    return sensors
+    flood_depths = [0.0]
 
 
-demo_sensors = load_demo_sensors()
+current_depth_index = 0
+
 
 def get_severity(depth):
 
@@ -134,20 +82,19 @@ def get_severity(depth):
         return "severe"
 
 
-def point_inside_polygon(point, polygon):
+def point_inside_flood(point):
 
     longitude = point[0]
     latitude = point[1]
 
     longitudes = [
         coordinate[0]
-        for coordinate in polygon
+        for coordinate in FLOOD_POLYGON
     ]
 
     latitudes = [
         coordinate[1]
-        for coordinate in polygon
-
+        for coordinate in FLOOD_POLYGON
     ]
 
     return (
@@ -211,7 +158,7 @@ def segments_intersect(p1, q1, p2, q2):
     return False
 
 
-def route_intersects_flood(route, polygons):
+def route_intersects_flood(route):
 
     if route is None:
         return False
@@ -234,9 +181,9 @@ def route_intersects_flood(route, polygons):
     )
 
 
-    for polygon in polygons:
+    for point in coordinates:
 
-        if point_inside_polygon(point,polygon):
+        if point_inside_flood(point):
             return True
 
 
@@ -249,18 +196,24 @@ def route_intersects_flood(route, polygons):
 
 
         for j in range(
-            len(polygon) - 1
+            len(FLOOD_POLYGON) - 1
         ):
 
-    if segments_intersect(
-                       route_start,
-                       route_end,
-                       polygon[j],
-                       polygon[j + 1]
-                   ):
-                       return True
+            flood_start = FLOOD_POLYGON[j]
+            flood_end = FLOOD_POLYGON[j + 1]
 
-       return False
+
+            if segments_intersect(
+                route_start,
+                route_end,
+                flood_start,
+                flood_end
+            ):
+
+                return True
+
+
+    return False
 
 
 def geocode_address(address):
@@ -282,8 +235,11 @@ def geocode_address(address):
 
         "size": 1,
 
-       "focus.point.lat": FOCUS_LAT,
-       "focus.point.lon": FOCUS_LON
+        "focus.point.lat":
+            SENSOR_LAT,
+
+        "focus.point.lon":
+            SENSOR_LON
 
     }
 
@@ -337,11 +293,12 @@ def geocode_address(address):
 
     }
 
+
 def get_route(
     start,
     destination,
     mode,
-    avoid_polygons=None
+    avoid_flood=False
 ):
 
     if mode == "driving":
@@ -384,29 +341,20 @@ def get_route(
     }
 
 
-    if avoid_polygons:
-
-        if len(avoid_polygons) == 1:
-
-            geometry = {
-                "type": "Polygon",
-                "coordinates": [
-                    avoid_polygons[0]
-                ]
-            }
-
-        else:
-
-            geometry = {
-                "type": "MultiPolygon",
-                "coordinates": [
-                    [polygon]
-                    for polygon in avoid_polygons
-                ]
-            }
+    if avoid_flood:
 
         body["options"] = {
-            "avoid_polygons": geometry
+
+            "avoid_polygons": {
+
+                "type": "Polygon",
+
+                "coordinates": [
+                    FLOOD_POLYGON
+                ]
+
+            }
+
         }
 
 
@@ -474,10 +422,10 @@ def autocomplete():
         "size": 5,
 
         "focus.point.lat":
-            FOCUS_LAT,
+            SENSOR_LAT,
 
         "focus.point.lon":
-            FOCUS_LON
+            SENSOR_LON
 
     }
 
@@ -543,23 +491,7 @@ def autocomplete():
     return jsonify(
         results
     )
-def get_active_polygons():
 
-    polygons = []
-
-    for sensor in demo_sensors:
-
-        depth = sensor["depths"][
-            sensor["index"]
-        ]
-
-        if depth >= 0.4:
-
-            polygons.append(
-                sensor["polygon"]
-            )
-
-    return polygons
 
 @app.route("/routes")
 def routes():
@@ -700,23 +632,19 @@ def routes():
         }), 500
 
 
-   active_polygons = get_active_polygons()
+    intersects_flood = (
+        route_intersects_flood(
+            normal_route
+        )
+    )
 
 
-   intersects_flood = (
-       route_intersects_flood(
-           normal_route,
-           active_polygons
-       )
-   )
-
-
-   safe_route = get_route(
-       start,
-       destination,
-       mode,
-       active_polygons
-   )
+    safe_route = get_route(
+        start,
+        destination,
+        mode,
+        True
+    )
 
 
     if safe_route is None:
@@ -757,68 +685,76 @@ def routes():
 
     })
 
-@app.route("/hazards")
-def hazards():
 
-    hazards = []
+@app.route("/hazard")
+def hazard():
 
-    for sensor in demo_sensors:
-
-        depth = sensor["depths"][
-            sensor["index"]
-        ]
-
-        hazards.append({
-
-            "sensor_id":
-                sensor["sensor_id"],
-
-            "sensor_name":
-                sensor["sensor_name"],
-
-            "latitude":
-                sensor["latitude"],
-
-            "longitude":
-                sensor["longitude"],
-
-            "depth_inches":
-                depth,
-
-            "severity":
-                get_severity(depth),
-
-            "flood_active":
-                depth >= 0.4,
-
-            "polygon":
-                sensor["polygon"]
-
-        })
+    global current_depth_index
 
 
-        if (
-            sensor["index"]
-            < len(sensor["depths"]) - 1
-        ):
-
-            sensor["index"] += 1
+    depth = flood_depths[
+        current_depth_index
+    ]
 
 
-    return jsonify(
-        hazards
+    severity = get_severity(
+        depth
     )
-    @app.route("/reset")
-     def reset():
 
-         for sensor in demo_sensors:
 
-             sensor["index"] = 0
+    flood_active = (
+        depth >= 0.4
+    )
 
-         return jsonify({
-             "message":
-                 "Flood simulations reset"
-         })
+
+    if (
+        current_depth_index
+        < len(flood_depths) - 1
+    ):
+
+        current_depth_index += 1
+
+
+    return jsonify({
+
+        "sensor_id":
+            SENSOR_ID,
+
+        "sensor_name":
+            "Beach Channel Dr / Beach 59th St",
+
+        "latitude":
+            SENSOR_LAT,
+
+        "longitude":
+            SENSOR_LON,
+
+        "depth_inches":
+            depth,
+
+        "severity":
+            severity,
+
+        "flood_active":
+            flood_active
+
+    })
+
+
+@app.route("/reset")
+def reset():
+
+    global current_depth_index
+
+    current_depth_index = 0
+
+
+    return jsonify({
+
+        "message":
+            "Flood simulation reset"
+
+    })
 
 
 if __name__ == "__main__":

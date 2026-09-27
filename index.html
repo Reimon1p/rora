@@ -158,7 +158,9 @@
             color: #c62828;
             margin-top: 8px;
         }
-
+        .panel-handle {
+            display: none;
+        }
         @media (max-width: 600px) {
 
             .panel {
@@ -172,20 +174,38 @@
 
                 box-sizing: border-box;
                 border-radius: 22px 22px 0 0;
-                padding: 12px 14px 20px 14px;
+                padding: 8px 14px 20px 14px;
 
                 overflow-y: auto;
 
                 transform: translateY(0);
                 transition: transform 0.35s ease;
+
                 touch-action: pan-y;
             }
 
             .panel.collapsed {
-                transform: translateY(calc(62vh - 105px));
+                transform: translateY(calc(62vh - 78px));
+            }
+
+            .panel-handle {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 22px;
+                margin-bottom: 4px;
+                cursor: pointer;
+            }
+
+            .handle-bar {
+                width: 48px;
+                height: 5px;
+                background: #aaaaaa;
+                border-radius: 999px;
             }
 
             .panel h2 {
+                margin-top: 4px;
                 margin-bottom: 10px;
             }
 
@@ -210,11 +230,9 @@
                 font-size: 14px;
             }
 
-            #hazardStatus {
-                font-size: 14px;
-            }
-
         }
+
+
 
     </style>
 
@@ -225,6 +243,13 @@
 
 
 <div class="panel">
+    <div
+            id="panelHandle"
+            class="panel-handle"
+            onclick="togglePanel()"
+    >
+        <div class="handle-bar"></div>
+    </div>
 
     <h2>RORA</h2>
 
@@ -1053,6 +1078,7 @@
                                 [50, 50]
                         }
                     );
+                    collapsePanel();
 
                 }
             )
@@ -1170,6 +1196,52 @@
             }
 
         }
+
+    }
+    function isMobile() {
+
+        return window.innerWidth <= 600;
+
+    }
+
+
+    function collapsePanel() {
+
+        if (!isMobile()) {
+            return;
+        }
+
+        document.querySelector(
+            ".panel"
+        ).classList.add(
+            "collapsed"
+        );
+
+    }
+
+
+    function expandPanel() {
+
+        document.querySelector(
+            ".panel"
+        ).classList.remove(
+            "collapsed"
+        );
+
+    }
+
+
+    function togglePanel() {
+
+        if (!isMobile()) {
+            return;
+        }
+
+        document.querySelector(
+            ".panel"
+        ).classList.toggle(
+            "collapsed"
+        );
 
     }
 
@@ -1436,6 +1508,75 @@
         loadRoutes();
 
     }
+    const panel =
+        document.querySelector(
+            ".panel"
+        );
+
+    let panelTouchStartY =
+        null;
+
+
+    panel.addEventListener(
+        "touchstart",
+        function (event) {
+
+            panelTouchStartY =
+                event.touches[0].clientY;
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    panel.addEventListener(
+        "touchend",
+        function (event) {
+
+            if (
+                panelTouchStartY === null
+            ) {
+                return;
+            }
+
+
+            const touchEndY =
+                event.changedTouches[0].clientY;
+
+
+            const movement =
+                touchEndY
+                - panelTouchStartY;
+
+
+            if (
+                movement > 60
+            ) {
+
+                collapsePanel();
+
+            }
+
+
+            else if (
+                movement < -60
+            ) {
+
+                expandPanel();
+
+            }
+
+
+            panelTouchStartY =
+                null;
+
+        },
+        {
+            passive: true
+        }
+    );
 
 
     updateHazards();

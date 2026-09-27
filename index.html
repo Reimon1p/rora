@@ -7,266 +7,629 @@
     <title>RORA</title>
 
     <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
     <style>
 
+        * {
+            box-sizing: border-box;
+        }
+
+
         html,
         body {
             margin: 0;
-            padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
             font-family: Arial, sans-serif;
         }
+
+
         #map {
-            height: 100dvh;
+            height: 100vh;
             width: 100%;
         }
+
+
+        /* --------------------------------------------------
+           MAIN PANEL
+        -------------------------------------------------- */
 
         .panel {
             position: absolute;
+
             top: 20px;
-            left: 60px;
-            width: 330px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
+            left: 20px;
+
+            width: 350px;
+
+            max-height:
+                calc(100vh - 40px);
+
             background: white;
-            padding: 18px;
-            border-radius: 14px;
+
+            border-radius: 18px;
+
             z-index: 1000;
+
             box-shadow:
-                    0 3px 12px
-                    rgba(0, 0, 0, 0.25);
+                0 3px 14px
+                rgba(0, 0, 0, 0.22);
+
+            overflow: hidden;
+
+            transition:
+                transform 0.35s ease;
         }
 
-        .panel h2 {
-            margin-top: 0;
+
+        .panel-header {
+            position: relative;
+
+            min-height: 48px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding:
+                10px 48px
+                10px 18px;
+
+            background: white;
+
+            user-select: none;
         }
 
-        .location-label {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
+
+        .panel-header h2 {
+            margin: 0;
+
+            font-size: 22px;
         }
+
+
+        .panel-content {
+            padding:
+                0 18px 18px 18px;
+
+            max-height:
+                calc(100vh - 90px);
+
+            overflow-y: auto;
+
+            overscroll-behavior:
+                contain;
+        }
+
+
+        /* --------------------------------------------------
+           DESKTOP SIDE COLLAPSE
+        -------------------------------------------------- */
+
+        .desktop-toggle {
+            position: absolute;
+
+            right: 9px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 30px;
+            height: 24px;
+
+            padding: 0;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #eeeeee;
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 5;
+        }
+
+
+        .desktop-toggle:hover {
+            background: #dddddd;
+        }
+
+
+        .panel.desktop-collapsed {
+            transform:
+                translateX(
+                    calc(-100% + 46px)
+                );
+        }
+
+
+        .panel.desktop-collapsed
+        .panel-header h2 {
+
+            visibility: hidden;
+
+        }
+
+
+        /* --------------------------------------------------
+           SEARCH AREA
+        -------------------------------------------------- */
+
+        .search-section {
+            display: flex;
+
+            gap: 10px;
+
+            align-items: stretch;
+
+            margin-bottom: 10px;
+        }
+
+
+        .route-dots {
+            width: 22px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            padding-top: 18px;
+
+            flex-shrink: 0;
+        }
+
+
+        .start-dot {
+            width: 10px;
+            height: 10px;
+
+            border:
+                3px solid #4285F4;
+
+            border-radius: 50%;
+
+            background: white;
+        }
+
+
+        .route-line {
+            width: 2px;
+            height: 35px;
+
+            background: #cccccc;
+
+            margin:
+                3px 0;
+        }
+
+
+        .destination-dot {
+            width: 10px;
+            height: 10px;
+
+            background: #d93025;
+
+            border-radius: 2px;
+        }
+
+
+        .search-boxes {
+            flex: 1;
+            min-width: 0;
+        }
+
 
         .input-container {
             position: relative;
-            margin-bottom: 12px;
+
+            margin-bottom: 8px;
         }
 
-        input {
+
+        .search-input {
             width: 100%;
-            box-sizing: border-box;
-            padding: 11px;
-            border: 1px solid #cccccc;
-            border-radius: 8px;
+
+            border: none;
+
+            outline: none;
+
+            background: #f1f3f4;
+
+            border-radius: 12px;
+
+            padding:
+                12px 14px;
+
             font-size: 14px;
         }
+
+
+        .search-input:focus {
+            background: white;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(66, 133, 244, 0.22);
+        }
+
 
         .suggestions {
             position: absolute;
+
+            top:
+                calc(100% + 4px);
+
+            left: 0;
+
             width: 100%;
+
             background: white;
-            border: 1px solid #dddddd;
-            border-radius: 8px;
+
+            border:
+                1px solid #dddddd;
+
+            border-radius: 10px;
+
             box-shadow:
-                    0 4px 10px
-                    rgba(0, 0, 0, 0.15);
-            z-index: 2000;
+                0 4px 12px
+                rgba(0, 0, 0, 0.15);
+
+            z-index: 3000;
+
             max-height: 220px;
+
             overflow-y: auto;
+
             display: none;
         }
+
 
         .suggestion {
             padding: 10px;
+
             cursor: pointer;
+
             font-size: 13px;
-            border-bottom: 1px solid #eeeeee;
+
+            border-bottom:
+                1px solid #eeeeee;
         }
+
 
         .suggestion:hover {
-            background: #eeeeee;
-        }
-
-        #locationButton {
-            width: 100%;
-            background: #eeeeee;
-            margin-bottom: 12px;
-        }
-
-        .mode-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        button {
-            padding: 9px 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .active {
-            background: #4285F4;
-            color: white;
-        }
-
-        #routeButton {
-            width: 100%;
-            background: #0B1F3A;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .route-card {
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 8px;
-        }
-
-        .recommended-card {
-            border: 3px solid #0B1F3A;
-        }
-
-        .alternate-card {
-            border: 2px solid #4DA3FF;
-        }
-
-        .warning {
-            margin-top: 6px;
-            color: #c62828;
-            font-weight: bold;
-        }
-
-        #hazardStatus {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background: #eeeeee;
-        }
-
-        #errorMessage {
-            color: #c62828;
-            margin-top: 8px;
-        }
-        .panel-handle {
-            display: none;
-        }
-        #directionsBox {
-            margin-top: 12px;
-            padding-top: 8px;
-            border-top: 1px solid #dddddd;
-        }
-
-        #directionsBox h3 {
-            margin: 5px 0 10px 0;
-        }
-
-        .direction-step {
-            padding: 10px 4px;
-            border-bottom: 1px solid #eeeeee;
-            cursor: pointer;
-        }
-
-        .direction-step:hover {
             background: #f5f5f5;
         }
 
-        .direction-instruction {
-            font-weight: bold;
+
+        /* --------------------------------------------------
+           BUTTONS
+        -------------------------------------------------- */
+
+        button {
+            font-family: inherit;
+        }
+
+
+        #locationButton {
+            width: 100%;
+
+            border: none;
+
+            background: white;
+
+            color: #1a73e8;
+
+            padding:
+                8px 10px;
+
+            margin-top: 1px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+            font-size: 13px;
+        }
+
+
+        #locationButton:hover {
+            background: #f5f7fa;
+        }
+
+
+        .mode-buttons {
+            display: flex;
+
+            gap: 8px;
+
+            margin:
+                8px 0 12px 0;
+        }
+
+
+        .mode-buttons button {
+            border: none;
+
+            background: #f1f3f4;
+
+            color: #333333;
+
+            border-radius: 20px;
+
+            padding:
+                9px 16px;
+
+            cursor: pointer;
+
             font-size: 14px;
         }
 
-        .direction-distance {
-            font-size: 12px;
-            color: #666666;
-            margin-top: 3px;
+
+        .mode-buttons button:hover {
+            background: #e4e6e8;
         }
+
+
+        .mode-buttons button.active {
+            background: #dce8ff;
+
+            color: #174ea6;
+
+            font-weight: 600;
+        }
+
+
+        #routeButton {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 11px;
+
+            background: #1a73e8;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+        }
+
+
+        #routeButton:hover {
+            background: #1765cc;
+        }
+
+
+        /* --------------------------------------------------
+           ROUTE INFORMATION
+        -------------------------------------------------- */
+
+        .route-card {
+            padding: 10px;
+
+            margin-top: 10px;
+
+            border-radius: 10px;
+        }
+
+
+        .recommended-card {
+            border:
+                3px solid #0B1F3A;
+        }
+
+
+        .alternate-card {
+            border:
+                2px solid #4DA3FF;
+        }
+
+
+        .warning {
+            margin-top: 6px;
+
+            color: #c62828;
+
+            font-weight: bold;
+        }
+
+
+        #hazardStatus {
+            margin-top: 15px;
+
+            padding: 10px;
+
+            border-radius: 10px;
+
+            background: #f1f3f4;
+
+            font-size: 13px;
+        }
+
+
+        #errorMessage {
+            color: #c62828;
+
+            margin-top: 8px;
+
+            font-size: 13px;
+        }
+
+
+        /* --------------------------------------------------
+           MOBILE BOTTOM SHEET
+        -------------------------------------------------- */
+
+        .mobile-drag-handle {
+            display: none;
+        }
+
+
         @media (max-width: 600px) {
 
             .panel {
                 top: auto;
                 bottom: 0;
                 left: 0;
+
                 width: 100%;
 
-                height: 62dvh;
-                max-height: 62dvh;
+                height: 68vh;
+                max-height: 68vh;
 
-                box-sizing: border-box;
-                border-radius: 22px 22px 0 0;
-                padding: 8px 14px 20px 14px;
+                border-radius:
+                    22px 22px 0 0;
+
+                transform:
+                    translateY(
+                        calc(68vh - 105px)
+                    );
+
+                transition:
+                    transform 0.28s ease;
+
+                will-change: transform;
+            }
+
+
+            .panel.mobile-expanded {
+                transform:
+                    translateY(0);
+            }
+
+
+            .panel.desktop-collapsed {
+                transform:
+                    translateY(
+                        calc(68vh - 105px)
+                    );
+            }
+
+
+            .panel-header {
+                height: 58px;
+
+                min-height: 58px;
+
+                padding:
+                    17px 48px
+                    8px 18px;
+
+                cursor: grab;
+
+                touch-action: none;
+            }
+
+
+            .panel-header:active {
+                cursor: grabbing;
+            }
+
+
+            .panel-header h2 {
+                font-size: 20px;
+            }
+
+
+            .desktop-toggle {
+                display: none;
+            }
+
+
+            .mobile-drag-handle {
+                display: block;
+
+                position: absolute;
+
+                top: 7px;
+                left: 50%;
+
+                transform:
+                    translateX(-50%);
+
+                width: 42px;
+                height: 5px;
+
+                border-radius: 10px;
+
+                background: #bdbdbd;
+            }
+
+
+            .panel-content {
+                height:
+                    calc(68vh - 58px);
+
+                max-height: none;
+
+                overflow-y: hidden;
+
+                padding:
+                    4px 14px
+                    24px 14px;
+
+                overscroll-behavior:
+                    contain;
+            }
+
+
+            /*
+               IMPORTANT:
+               Content only becomes scrollable once
+               the entire sheet is fully open.
+            */
+
+            .panel.mobile-expanded
+            .panel-content {
 
                 overflow-y: auto;
 
-                transform: translateY(0);
-                transition: transform 0.35s ease;
+                -webkit-overflow-scrolling:
+                    touch;
 
-                touch-action: pan-y;
             }
 
-            .panel.collapsed {
-                transform: translateY(calc(62dvh - 78px));
+
+            .search-input {
+                font-size: 16px;
             }
 
-            .panel-handle {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 22px;
-                margin-bottom: 4px;
-                cursor: pointer;
-            }
-
-            .handle-bar {
-                width: 48px;
-                height: 5px;
-                background: #aaaaaa;
-                border-radius: 999px;
-            }
-
-            .panel h2 {
-                margin-top: 4px;
-                margin-bottom: 10px;
-            }
-
-            .mode-buttons {
-                gap: 8px;
-            }
 
             .mode-buttons button {
                 flex: 1;
             }
 
-            #locationButton,
-            #routeButton {
-                width: 100%;
-            }
-
-            input {
-                font-size: 16px;
-            }
-
-            .route-card {
-                font-size: 14px;
-            }
-
         }
-
-
 
     </style>
 
@@ -276,167 +639,197 @@
 <body>
 
 
-<div class="panel">
+<div
+    id="mainPanel"
+    class="panel"
+>
+
     <div
-            id="panelHandle"
-            class="panel-handle"
-            onclick="togglePanel()"
+        id="panelHeader"
+        class="panel-header"
     >
-        <div class="handle-bar"></div>
-    </div>
-
-    <h2>RORA</h2>
-
-
-    <label class="location-label">
-        Start
-    </label>
-
-
-    <div class="input-container">
-
-        <input
-                id="startInput"
-                type="text"
-                value="Beach 67th St, Queens, NY"
-                placeholder="Enter starting location"
-                autocomplete="off"
-        >
 
         <div
-                id="startSuggestions"
-                class="suggestions">
-        </div>
-
-    </div>
+            class="mobile-drag-handle"
+        ></div>
 
 
-    <button
-            id="locationButton"
-            onclick="useCurrentLocation()"
-    >
-        ◎ Use my current location
-    </button>
+        <h2>RORA</h2>
 
-
-    <label class="location-label">
-        Destination
-    </label>
-
-
-    <div class="input-container">
-
-        <input
-                id="destinationInput"
-                type="text"
-                value="Beach 44th St, Queens, NY"
-                placeholder="Where are you going?"
-                autocomplete="off"
-        >
-
-        <div
-                id="destinationSuggestions"
-                class="suggestions">
-        </div>
-
-    </div>
-
-
-    <div class="mode-buttons">
 
         <button
+            id="desktopToggle"
+            class="desktop-toggle"
+            type="button"
+            aria-label="Hide menu"
+        >
+            ◀
+        </button>
+
+    </div>
+
+
+    <div
+        id="panelContent"
+        class="panel-content"
+    >
+
+
+        <div class="search-section">
+
+
+            <div class="route-dots">
+
+                <div
+                    class="start-dot"
+                ></div>
+
+                <div
+                    class="route-line"
+                ></div>
+
+                <div
+                    class="destination-dot"
+                ></div>
+
+            </div>
+
+
+            <div class="search-boxes">
+
+
+                <div class="input-container">
+
+                    <input
+                        id="startInput"
+                        class="search-input"
+                        type="text"
+                        value="Beach 67th St, Queens, NY"
+                        placeholder="Choose starting point"
+                        autocomplete="off"
+                    >
+
+                    <div
+                        id="startSuggestions"
+                        class="suggestions"
+                    ></div>
+
+                </div>
+
+
+                <div class="input-container">
+
+                    <input
+                        id="destinationInput"
+                        class="search-input"
+                        type="text"
+                        value="Beach 44th St, Queens, NY"
+                        placeholder="Choose destination"
+                        autocomplete="off"
+                    >
+
+                    <div
+                        id="destinationSuggestions"
+                        class="suggestions"
+                    ></div>
+
+                </div>
+
+
+                <button
+                    id="locationButton"
+                    onclick="useCurrentLocation()"
+                >
+                    ◎ Use my current location
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="mode-buttons">
+
+            <button
                 id="driveButton"
                 class="active"
                 onclick="changeMode('driving')"
-        >
-            🚗 Drive
-        </button>
+            >
+                🚗 Drive
+            </button>
 
 
-        <button
+            <button
                 id="walkButton"
                 onclick="changeMode('walking')"
-        >
-            🚶 Walk
-        </button>
+            >
+                🚶 Walk
+            </button>
 
-    </div>
+        </div>
 
 
-    <button
+        <button
             id="routeButton"
             onclick="loadRoutes()"
-    >
-        Find route
-    </button>
-
-
-    <div id="errorMessage"></div>
-
-
-    <div
-            id="safeCard"
-            class="route-card alternate-card"
-    >
-
-        <strong id="safeTitle">
-            Flood-avoidance route
-        </strong>
-
-        <div id="safeInfo">
-            --
-        </div>
-        <button
-                id="chooseSafeButton"
-                onclick="chooseRoute('safe')"
         >
-            Choose this route
+            Directions
         </button>
 
-    </div>
 
-
-    <div
-            id="normalCard"
-            class="route-card recommended-card"
-    >
-
-        <strong id="normalTitle">
-            Recommended route
-        </strong>
-
-        <div id="normalInfo">
-            --
-        </div>
-        <button
-                id="chooseNormalButton"
-                onclick="chooseRoute('normal')"
-        >
-            Choose this route
-        </button>
+        <div id="errorMessage"></div>
 
 
         <div
+            id="safeCard"
+            class="route-card alternate-card"
+        >
+
+            <strong id="safeTitle">
+                Flood-avoidance route
+            </strong>
+
+            <div id="safeInfo">
+                --
+            </div>
+
+        </div>
+
+
+        <div
+            id="normalCard"
+            class="route-card recommended-card"
+        >
+
+            <strong id="normalTitle">
+                Recommended route
+            </strong>
+
+            <div id="normalInfo">
+                --
+            </div>
+
+
+            <div
                 id="normalWarning"
                 class="warning"
                 style="display: none;"
-        >
-            ⚠ This route crosses a flood hazard
+            >
+
+                ⚠ This route crosses a flood hazard
+
+            </div>
+
+        </div>
+
+
+        <div id="hazardStatus">
+            FloodNet sensors loading...
         </div>
 
 
     </div>
-
-    <div
-            id="directionsBox"
-            style="display: none;"
-    >
-        <h3>Directions</h3>
-        <div id="directionsList"></div>
-    </div>
-
-
-
 
 </div>
 
@@ -445,15 +838,30 @@
 
 
 <script
-        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
 
 
 <script>
 
+    /* --------------------------------------------------
+       MAP
+       Normal Leaflet zoom behavior,
+       but no visible +/- controls.
+    -------------------------------------------------- */
+
     const map =
-        L.map("map").setView(
-            [40.59408, -73.78921],
+        L.map(
+            "map",
+            {
+                zoomControl: false
+            }
+        )
+        .setView(
+            [
+                40.59408,
+                -73.78921
+            ],
             14
         );
 
@@ -466,6 +874,10 @@
         }
     ).addTo(map);
 
+
+    /* --------------------------------------------------
+       DESTINATION ICON
+    -------------------------------------------------- */
 
     const redDestinationIcon =
         L.icon({
@@ -491,9 +903,15 @@
         });
 
 
-    let startCoordinates = null;
+    /* --------------------------------------------------
+       STATE
+    -------------------------------------------------- */
 
-    let destinationCoordinates = null;
+    let startCoordinates =
+        null;
+
+    let destinationCoordinates =
+        null;
 
     let currentLocationMarker;
 
@@ -505,16 +923,19 @@
 
     let safeRoute;
 
-    let lastRouteData = null
+    let currentMode =
+        "driving";
 
-    let selectedRoute = null;
+    let floodActive =
+        false;
 
-    let currentMode = "driving";
+    let routeIntersectsFlood =
+        false;
 
-    let floodActive = false;
 
-    let routeIntersectsFlood = false;
-
+    /* --------------------------------------------------
+       AUTOCOMPLETE
+    -------------------------------------------------- */
 
     function setupAutocomplete(
         inputId,
@@ -587,113 +1008,114 @@
 
                             fetch(
                                 "/autocomplete?text="
-                                + encodeURIComponent(
+                                +
+                                encodeURIComponent(
                                     text
                                 )
                             )
 
-                                .then(
-                                    response =>
-                                        response.json()
-                                )
+                            .then(
+                                response =>
+                                    response.json()
+                            )
 
-                                .then(
-                                    results => {
-
-
-                                        suggestions.innerHTML =
-                                            "";
+                            .then(
+                                results => {
 
 
-                                        if (
-                                            results.length === 0
-                                        ) {
-
-                                            suggestions.style.display =
-                                                "none";
-
-                                            return;
-
-                                        }
+                                    suggestions.innerHTML =
+                                        "";
 
 
-                                        results.forEach(
-                                            result => {
-
-
-                                                const item =
-                                                    document.createElement(
-                                                        "div"
-                                                    );
-
-
-                                                item.className =
-                                                    "suggestion";
-
-
-                                                item.innerText =
-                                                    result.label;
-
-
-                                                item.onclick =
-                                                    function () {
-
-
-                                                        input.value =
-                                                            result.label;
-
-
-                                                        if (
-                                                            type ===
-                                                            "start"
-                                                        ) {
-
-                                                            startCoordinates = {
-
-                                                                latitude:
-                                                                result.latitude,
-
-                                                                longitude:
-                                                                result.longitude
-
-                                                            };
-
-                                                        }
-
-                                                        else {
-
-                                                            destinationCoordinates = {
-
-                                                                latitude:
-                                                                result.latitude,
-
-                                                                longitude:
-                                                                result.longitude
-
-                                                            };
-
-                                                        }
-
-
-                                                        suggestions.style.display =
-                                                            "none";
-
-                                                    };
-
-
-                                                suggestions.appendChild(
-                                                    item
-                                                );
-
-                                            }
-                                        );
-
+                                    if (
+                                        results.length === 0
+                                    ) {
 
                                         suggestions.style.display =
-                                            "block";
+                                            "none";
+
+                                        return;
 
                                     }
-                                );
+
+
+                                    results.forEach(
+                                        result => {
+
+
+                                            const item =
+                                                document.createElement(
+                                                    "div"
+                                                );
+
+
+                                            item.className =
+                                                "suggestion";
+
+
+                                            item.innerText =
+                                                result.label;
+
+
+                                            item.onclick =
+                                                function () {
+
+
+                                                    input.value =
+                                                        result.label;
+
+
+                                                    if (
+                                                        type ===
+                                                        "start"
+                                                    ) {
+
+                                                        startCoordinates = {
+
+                                                            latitude:
+                                                                result.latitude,
+
+                                                            longitude:
+                                                                result.longitude
+
+                                                        };
+
+                                                    }
+
+                                                    else {
+
+                                                        destinationCoordinates = {
+
+                                                            latitude:
+                                                                result.latitude,
+
+                                                            longitude:
+                                                                result.longitude
+
+                                                        };
+
+                                                    }
+
+
+                                                    suggestions.style.display =
+                                                        "none";
+
+                                                };
+
+
+                                            suggestions.appendChild(
+                                                item
+                                            );
+
+                                        }
+                                    );
+
+
+                                    suggestions.style.display =
+                                        "block";
+
+                                }
+                            );
 
                         },
 
@@ -720,6 +1142,10 @@
     );
 
 
+    /* --------------------------------------------------
+       CURRENT LOCATION
+    -------------------------------------------------- */
+
     function useCurrentLocation() {
 
         const errorBox =
@@ -744,7 +1170,8 @@
         }
 
 
-        navigator.geolocation.getCurrentPosition(
+        navigator.geolocation
+        .getCurrentPosition(
 
             function (position) {
 
@@ -752,10 +1179,10 @@
                 startCoordinates = {
 
                     latitude:
-                    position.coords.latitude,
+                        position.coords.latitude,
 
                     longitude:
-                    position.coords.longitude
+                        position.coords.longitude
 
                 };
 
@@ -791,16 +1218,17 @@
 
                             weight: 3,
 
-                            fillColor: "#4285F4",
+                            fillColor:
+                                "#4285F4",
 
                             fillOpacity: 1
 
                         }
                     )
-                        .addTo(map)
-                        .bindPopup(
-                            "Current Location"
-                        );
+                    .addTo(map)
+                    .bindPopup(
+                        "Current Location"
+                    );
 
 
                 map.setView(
@@ -826,8 +1254,11 @@
     }
 
 
+    /* --------------------------------------------------
+       LOAD ROUTES
+    -------------------------------------------------- */
+
     function loadRoutes() {
-        selectedRoute = null;
 
         const startText =
             document.getElementById(
@@ -849,17 +1280,22 @@
 
         let url =
             "/routes?mode="
-            + encodeURIComponent(
+            +
+            encodeURIComponent(
                 currentMode
             )
 
-            + "&start="
-            + encodeURIComponent(
+            +
+            "&start="
+            +
+            encodeURIComponent(
                 startText
             )
 
-            + "&destination="
-            + encodeURIComponent(
+            +
+            "&destination="
+            +
+            encodeURIComponent(
                 destinationText
             );
 
@@ -870,10 +1306,13 @@
 
             url +=
                 "&start_lat="
-                + startCoordinates.latitude
+                +
+                startCoordinates.latitude
 
-                + "&start_lon="
-                + startCoordinates.longitude;
+                +
+                "&start_lon="
+                +
+                startCoordinates.longitude;
 
         }
 
@@ -884,10 +1323,13 @@
 
             url +=
                 "&destination_lat="
-                + destinationCoordinates.latitude
+                +
+                destinationCoordinates.latitude
 
-                + "&destination_lon="
-                + destinationCoordinates.longitude;
+                +
+                "&destination_lon="
+                +
+                destinationCoordinates.longitude;
 
         }
 
@@ -896,373 +1338,353 @@
             url
         )
 
-            .then(
-                async response => {
+        .then(
+            async response => {
 
 
-                    const data =
-                        await response.json();
+                const data =
+                    await response.json();
 
 
-                    if (
-                        !response.ok
-                    ) {
+                if (
+                    !response.ok
+                ) {
 
-                        throw new Error(
-                            data.error
-                            ||
-                            "Route could not be calculated."
-                        );
-
-                    }
-
-
-                    return data;
+                    throw new Error(
+                        data.error
+                        ||
+                        "Route could not be calculated."
+                    );
 
                 }
-            )
-
-            .then(
-                data => {
-                    lastRouteData = data;
 
 
-                    routeIntersectsFlood =
-                        data.intersects_flood;
-                    const routeForDirections =
-                        (
-                            floodActive
-                            &&
-                            routeIntersectsFlood
-                        )
-                            ? data.safe
-                            : data.normal;
+                return data;
+
+            }
+        )
+
+        .then(
+            data => {
 
 
-                    showDirections(
-                        routeForDirections
+                routeIntersectsFlood =
+                    data.intersects_flood;
+
+
+                if (
+                    normalRoute
+                    &&
+                    map.hasLayer(
+                        normalRoute
+                    )
+                ) {
+
+                    map.removeLayer(
+                        normalRoute
+                    );
+
+                }
+
+
+                if (
+                    safeRoute
+                    &&
+                    map.hasLayer(
+                        safeRoute
+                    )
+                ) {
+
+                    map.removeLayer(
+                        safeRoute
+                    );
+
+                }
+
+
+                if (
+                    currentLocationMarker
+                    &&
+                    map.hasLayer(
+                        currentLocationMarker
+                    )
+                ) {
+
+                    map.removeLayer(
+                        currentLocationMarker
+                    );
+
+                }
+
+
+                if (
+                    destinationMarker
+                    &&
+                    map.hasLayer(
+                        destinationMarker
+                    )
+                ) {
+
+                    map.removeLayer(
+                        destinationMarker
+                    );
+
+                }
+
+
+                const start =
+                    data.start.coordinates;
+
+
+                const destination =
+                    data.destination.coordinates;
+
+
+                currentLocationMarker =
+                    L.circleMarker(
+                        [
+                            start[1],
+                            start[0]
+                        ],
+                        {
+
+                            radius: 8,
+
+                            color: "white",
+
+                            weight: 3,
+
+                            fillColor:
+                                "#4285F4",
+
+                            fillOpacity: 1
+
+                        }
+                    )
+                    .addTo(map)
+                    .bindPopup(
+                        data.start.label
                     );
 
 
-
-                    if (
-                        normalRoute
-                    ) {
-
-                        map.removeLayer(
-                            normalRoute
-                        );
-
-                    }
-
-
-                    if (
-                        safeRoute
-                    ) {
-
-                        map.removeLayer(
-                            safeRoute
-                        );
-
-                    }
-
-
-                    if (
-                        currentLocationMarker
-                    ) {
-
-                        map.removeLayer(
-                            currentLocationMarker
-                        );
-
-                    }
-
-
-                    if (
-                        destinationMarker
-                    ) {
-
-                        map.removeLayer(
-                            destinationMarker
-                        );
-
-                    }
-
-
-                    const start =
-                        data.start.coordinates;
-
-
-                    const destination =
-                        data.destination.coordinates;
-
-
-                    currentLocationMarker =
-                        L.circleMarker(
-                            [
-                                start[1],
-                                start[0]
-                            ],
-                            {
-
-                                radius: 8,
-
-                                color: "white",
-
-                                weight: 3,
-
-                                fillColor: "#4285F4",
-
-                                fillOpacity: 1
-
-                            }
-                        )
-                            .addTo(map)
-                            .bindPopup(
-                                data.start.label
-                            );
-
-
-                    destinationMarker =
-                        L.marker(
-                            [
-                                destination[1],
-                                destination[0]
-                            ],
-                            {
-                                icon:
-                                redDestinationIcon
-                            }
-                        )
-                            .addTo(map)
-                            .bindPopup(
-                                data.destination.label
-                            );
-
-
-                    normalRoute =
-                        L.geoJSON(
-                            data.normal,
-                            {
-
-                                style: {
-
-                                    color:
-                                        "#4DA3FF",
-
-                                    weight: 4,
-
-                                    opacity: 1
-
-                                }
-
-                            }
-                        )
-                            .addTo(map);
-
-
-                    safeRoute =
-                        L.geoJSON(
-                            data.safe,
-                            {
-
-                                style: {
-
-                                    color:
-                                        "#0B1F3A",
-
-                                    weight: 5,
-
-                                    opacity: 1
-
-                                }
-
-                            }
-                        )
-                            .addTo(map);
-
-
-                    const normalSummary =
-                        data.normal
-                            .features[0]
-                            .properties
-                            .summary;
-
-
-                    const safeSummary =
-                        data.safe
-                            .features[0]
-                            .properties
-                            .summary;
-
-
-                    document.getElementById(
-                        "normalInfo"
-                    ).innerHTML =
-
-                        Math.round(
-                            normalSummary.duration
-                            / 60
-                        )
-
-                        + " min • "
-
-                        + (
-                            normalSummary.distance
-                            / 1609.34
-                        ).toFixed(1)
-
-                        + " mi";
-
-
-                    document.getElementById(
-                        "safeInfo"
-                    ).innerHTML =
-
-                        Math.round(
-                            safeSummary.duration
-                            / 60
-                        )
-
-                        + " min • "
-
-                        + (
-                            safeSummary.distance
-                            / 1609.34
-                        ).toFixed(1)
-
-                        + " mi";
-
-
-                    updateRecommendation();
-
-
-                    const bounds =
-                        L.featureGroup([
-                            normalRoute,
-                            safeRoute,
-                            currentLocationMarker,
-                            destinationMarker
-                        ])
-                            .getBounds();
-
-
-                    map.fitBounds(
-                        bounds,
+                destinationMarker =
+                    L.marker(
+                        [
+                            destination[1],
+                            destination[0]
+                        ],
                         {
-                            padding:
-                                [40, 40]
+
+                            icon:
+                                redDestinationIcon
+
+                        }
+                    )
+                    .addTo(map)
+                    .bindPopup(
+                        data.destination.label
+                    );
+
+
+                normalRoute =
+                    L.geoJSON(
+                        data.normal,
+                        {
+
+                            style: {
+
+                                color:
+                                    "#4DA3FF",
+
+                                weight: 4,
+
+                                opacity: 1
+
+                            }
+
+                        }
+                    )
+                    .addTo(map);
+
+
+                safeRoute =
+                    L.geoJSON(
+                        data.safe,
+                        {
+
+                            style: {
+
+                                color:
+                                    "#0B1F3A",
+
+                                weight: 5,
+
+                                opacity: 1
+
+                            }
+
                         }
                     );
 
 
-                    setTimeout(
-                        function () {
+                /*
+                   Only display the second route
+                   when the normal route actually
+                   intersects a flood hazard.
+                */
 
-                            map.setView(
-                                [
-                                    start[1],
-                                    start[0]
-                                ],
-                                17
-                            );
+                if (
+                    routeIntersectsFlood
+                ) {
 
-                        },
-                        450
+                    safeRoute.addTo(
+                        map
                     );
-                    collapsePanel();
 
                 }
-            )
 
-            .catch(
-                error => {
 
-                    document.getElementById(
-                        "errorMessage"
-                    ).innerHTML =
-                        error.message;
+                const normalSummary =
+                    data.normal
+                        .features[0]
+                        .properties
+                        .summary;
+
+
+                const safeSummary =
+                    data.safe
+                        .features[0]
+                        .properties
+                        .summary;
+
+
+                document.getElementById(
+                    "normalInfo"
+                ).innerHTML =
+
+                    Math.round(
+                        normalSummary.duration
+                        / 60
+                    )
+
+                    +
+                    " min • "
+
+                    +
+                    (
+                        normalSummary.distance
+                        / 1609.34
+                    ).toFixed(1)
+
+                    +
+                    " mi";
+
+
+                document.getElementById(
+                    "safeInfo"
+                ).innerHTML =
+
+                    Math.round(
+                        safeSummary.duration
+                        / 60
+                    )
+
+                    +
+                    " min • "
+
+                    +
+                    (
+                        safeSummary.distance
+                        / 1609.34
+                    ).toFixed(1)
+
+                    +
+                    " mi";
+
+
+                updateRecommendation();
+
+
+                const layersForBounds = [
+
+                    normalRoute,
+
+                    currentLocationMarker,
+
+                    destinationMarker
+
+                ];
+
+
+                if (
+                    routeIntersectsFlood
+                    &&
+                    safeRoute
+                ) {
+
+                    layersForBounds.push(
+                        safeRoute
+                    );
 
                 }
-            );
+
+
+                const bounds =
+                    L.featureGroup(
+                        layersForBounds
+                    )
+                    .getBounds();
+
+
+                map.fitBounds(
+                    bounds,
+                    {
+
+                        padding:
+                            [50, 50],
+
+                        maxZoom:
+                            15
+
+                    }
+                );
+
+            }
+        )
+
+        .catch(
+            error => {
+
+
+                document.getElementById(
+                    "errorMessage"
+                ).innerHTML =
+                    error.message;
+
+
+            }
+        );
 
     }
-    function chooseRoute(type) {
-
-        if (!lastRouteData) {
-            return;
-        }
-
-        selectedRoute = type;
 
 
-        if (
-            type === "safe"
-        ) {
-
-            if (safeRoute) {
-
-                safeRoute.setStyle({
-                    weight: 7,
-                    opacity: 1
-                });
-
-                safeRoute.bringToFront();
-            }
-
-            if (normalRoute) {
-
-                normalRoute.setStyle({
-                    weight: 3,
-                    opacity: 0.35
-                });
-            }
-
-            showDirections(
-                lastRouteData.safe
-            );
-        }
-
-
-        else if (
-            type === "normal"
-        ) {
-
-            if (normalRoute) {
-
-                normalRoute.setStyle({
-                    weight: 7,
-                    opacity: 1
-                });
-
-                normalRoute.bringToFront();
-            }
-
-            if (safeRoute) {
-
-                safeRoute.setStyle({
-                    weight: 3,
-                    opacity: 0.35
-                });
-            }
-
-            showDirections(
-                lastRouteData.normal
-            );
-        }
-
-
-        updateRecommendation();
-
-        expandPanel();
-    }
+    /* --------------------------------------------------
+       ROUTE RECOMMENDATION
+    -------------------------------------------------- */
 
     function updateRecommendation() {
+
+        const hazardAffectsRoute =
+            floodActive
+            &&
+            routeIntersectsFlood;
+
 
         const safeCard =
             document.getElementById(
                 "safeCard"
             );
+
 
         const normalCard =
             document.getElementById(
@@ -1270,370 +1692,119 @@
             );
 
 
-        // If the user already chose a route,
-        // DO NOT override their choice.
-        if (
-            selectedRoute === "safe"
-        ) {
-
-            safeCard.className =
-                "route-card recommended-card";
-
-            normalCard.className =
-                "route-card alternate-card";
-
-            if (safeRoute) {
-
-                safeRoute.setStyle({
-                    weight: 7,
-                    opacity: 1
-                });
-
-                safeRoute.bringToFront();
-            }
-
-            if (normalRoute) {
-
-                normalRoute.setStyle({
-                    weight: 3,
-                    opacity: 0.35
-                });
-            }
-
-            if (lastRouteData) {
-
-                showDirections(
-                    lastRouteData.safe
-                );
-            }
-
-            return;
-        }
-
-
-        if (
-            selectedRoute === "normal"
-        ) {
-
-            normalCard.className =
-                "route-card recommended-card";
-
-            safeCard.className =
-                "route-card alternate-card";
-
-            if (normalRoute) {
-
-                normalRoute.setStyle({
-                    weight: 7,
-                    opacity: 1
-                });
-
-                normalRoute.bringToFront();
-            }
-
-            if (safeRoute) {
-
-                safeRoute.setStyle({
-                    weight: 3,
-                    opacity: 0.35
-                });
-            }
-
-            if (lastRouteData) {
-
-                showDirections(
-                    lastRouteData.normal
-                );
-            }
-
-            return;
-        }
-
-
-        // No user choice yet:
-        // automatically recommend based on hazard.
-        const hazardAffectsRoute =
-            floodActive
-            &&
-            routeIntersectsFlood;
-
-
         if (
             hazardAffectsRoute
         ) {
+
+
+            safeCard.style.display =
+                "block";
+
 
             document.getElementById(
                 "safeTitle"
             ).innerHTML =
                 "Recommended safer route";
 
+
             document.getElementById(
                 "normalTitle"
             ).innerHTML =
                 "Normal route";
+
 
             document.getElementById(
                 "normalWarning"
             ).style.display =
                 "block";
 
+
             safeCard.className =
                 "route-card recommended-card";
+
 
             normalCard.className =
                 "route-card alternate-card";
 
-            if (safeRoute) {
+
+            if (
+                safeRoute
+            ) {
+
+
+                if (
+                    !map.hasLayer(
+                        safeRoute
+                    )
+                ) {
+
+                    safeRoute.addTo(
+                        map
+                    );
+
+                }
+
+
                 safeRoute.bringToFront();
+
             }
 
         }
 
         else {
 
+
+            safeCard.style.display =
+                "none";
+
+
             document.getElementById(
                 "normalTitle"
             ).innerHTML =
                 "Recommended route";
 
-            document.getElementById(
-                "safeTitle"
-            ).innerHTML =
-                "Flood-avoidance route";
 
             document.getElementById(
                 "normalWarning"
             ).style.display =
                 "none";
 
+
             normalCard.className =
                 "route-card recommended-card";
 
-            safeCard.className =
-                "route-card alternate-card";
 
-            if (normalRoute) {
-                normalRoute.bringToFront();
-            }
+            if (
+                safeRoute
+                &&
+                map.hasLayer(
+                    safeRoute
+                )
+            ) {
 
-        }
-    }
-
-    function showDirections(routeData) {
-
-        const directionsBox =
-            document.getElementById(
-                "directionsBox"
-            );
-
-        const directionsList =
-            document.getElementById(
-                "directionsList"
-            );
-
-
-        directionsList.innerHTML =
-            "";
-
-
-        if (
-            !routeData
-            ||
-            !routeData.features
-            ||
-            routeData.features.length === 0
-        ) {
-
-            directionsBox.style.display =
-                "none";
-
-            return;
-
-        }
-
-
-        const feature =
-            routeData.features[0];
-
-
-        const coordinates =
-            feature.geometry.coordinates;
-
-
-        const segments =
-            feature.properties.segments;
-
-
-        if (
-            !segments
-            ||
-            segments.length === 0
-        ) {
-
-            directionsBox.style.display =
-                "none";
-
-            return;
-
-        }
-
-
-        segments.forEach(
-            segment => {
-
-                segment.steps.forEach(
-                    step => {
-
-                        const item =
-                            document.createElement(
-                                "div"
-                            );
-
-
-                        item.className =
-                            "direction-step";
-
-
-                        const miles =
-                            step.distance
-                            / 1609.34;
-
-
-                        let distanceText;
-
-
-                        if (
-                            miles < 0.1
-                        ) {
-
-                            distanceText =
-                                Math.round(
-                                    step.distance
-                                    * 3.28084
-                                )
-                                + " ft";
-
-                        }
-
-                        else {
-
-                            distanceText =
-                                miles.toFixed(1)
-                                + " mi";
-
-                        }
-
-
-                        item.innerHTML =
-
-                            "<div class='direction-instruction'>"
-
-                            + step.instruction
-
-                            + "</div>"
-
-                            + "<div class='direction-distance'>"
-
-                            + distanceText
-
-                            + "</div>";
-
-
-                        item.onclick =
-                            function () {
-
-                                if (
-                                    !step.way_points
-                                    ||
-                                    step.way_points.length === 0
-                                ) {
-                                    return;
-                                }
-
-
-                                const pointIndex =
-                                    step.way_points[0];
-
-
-                                const point =
-                                    coordinates[
-                                        pointIndex
-                                        ];
-
-
-                                map.setView(
-                                    [
-                                        point[1],
-                                        point[0]
-                                    ],
-                                    18
-                                );
-
-                            };
-
-
-                        directionsList.appendChild(
-                            item
-                        );
-
-                    }
+                map.removeLayer(
+                    safeRoute
                 );
 
             }
-        );
 
 
-        directionsBox.style.display =
-            "block";
+            if (
+                normalRoute
+            ) {
 
-    }
-    function isMobile() {
+                normalRoute.bringToFront();
 
-        return window.innerWidth <= 600;
+            }
 
-    }
-
-
-    function collapsePanel() {
-
-        if (!isMobile()) {
-            return;
         }
 
-        document.querySelector(
-            ".panel"
-        ).classList.add(
-            "collapsed"
-        );
-
     }
 
 
-    function expandPanel() {
-
-        document.querySelector(
-            ".panel"
-        ).classList.remove(
-            "collapsed"
-        );
-
-    }
-
-
-    function togglePanel() {
-
-        if (!isMobile()) {
-            return;
-        }
-
-        document.querySelector(
-            ".panel"
-        ).classList.toggle(
-            "collapsed"
-        );
-
-    }
-
+    /* --------------------------------------------------
+       FLOODNET HAZARDS
+    -------------------------------------------------- */
 
     function updateHazards() {
 
@@ -1641,203 +1812,320 @@
             "/hazards"
         )
 
-            .then(
-                response => {
+        .then(
+            response => {
 
-                    if (
-                        !response.ok
-                    ) {
 
-                        throw new Error(
-                            "Hazard data could not be loaded."
-                        );
+                if (
+                    !response.ok
+                ) {
 
-                    }
-
-                    return response.json();
+                    throw new Error(
+                        "Hazard data could not be loaded."
+                    );
 
                 }
-            )
-
-            .then(
-                hazards => {
 
 
-                    hazardLayers.forEach(
-                        layer => {
+                return response.json();
+
+            }
+        )
+
+        .then(
+            hazards => {
+
+
+                hazardLayers.forEach(
+                    layer => {
+
+
+                        if (
+                            map.hasLayer(
+                                layer
+                            )
+                        ) {
 
                             map.removeLayer(
                                 layer
                             );
 
                         }
+
+                    }
+                );
+
+
+                hazardLayers =
+                    [];
+
+
+                const activeHazards =
+                    hazards.filter(
+                        hazard =>
+                            hazard.flood_active
                     );
 
 
-                    hazardLayers = [];
+                floodActive =
+                    activeHazards.length > 0;
 
 
-                    const activeHazards =
-                        hazards.filter(
-                            hazard =>
-                                hazard.flood_active
-                        );
+                let statusText =
+
+                    "<strong>Historical FloodNet Replay</strong>"
+
+                    +
+                    "<br>"
+
+                    +
+                    hazards.length
+
+                    +
+                    " sensors loaded"
+
+                    +
+                    "<br>"
+
+                    +
+                    activeHazards.length
+
+                    +
+                    " active flood areas";
 
 
-                    floodActive =
-                        activeHazards.length > 0;
+                if (
+                    activeHazards.length > 0
+                ) {
+
+                    statusText +=
+                        "<br><br>";
 
 
-                    hazards.forEach(
+                    activeHazards.forEach(
                         hazard => {
 
 
-                            const marker =
-                                L.circleMarker(
-                                    [
-                                        hazard.latitude,
-                                        hazard.longitude
-                                    ],
-                                    {
+                            statusText +=
 
-                                        radius: 7,
+                                hazard.sensor_name
 
-                                        color:
-                                            hazard.flood_active
-                                                ? "#8B0000"
-                                                : "#666666",
+                                +
+                                ": "
 
-                                        weight: 2,
+                                +
+                                Number(
+                                    hazard.depth_inches
+                                ).toFixed(2)
 
-                                        fillColor:
-                                            hazard.flood_active
-                                                ? "#FF0000"
-                                                : "#AAAAAA",
+                                +
+                                " in"
 
-                                        fillOpacity: 1
+                                +
+                                " ("
 
-                                    }
-                                )
-                                    .addTo(map)
-                                    .bindPopup(
+                                +
+                                hazard.severity
 
-                                        "<strong>FloodNet Sensor</strong>"
+                                +
+                                ")"
 
-                                        + "<br>"
-
-                                        + hazard.sensor_name
-
-                                        + "<br><br>"
-
-                                        + "Flood depth: "
-
-                                        + Number(
-                                            hazard.depth_inches
-                                        ).toFixed(2)
-
-                                        + " inches"
-
-                                        + "<br>"
-
-                                        + "Severity: "
-
-                                        + hazard.severity
-
-                                    );
-
-
-                            hazardLayers.push(
-                                marker
-                            );
-
-
-                            if (
-                                hazard.flood_active
-                                &&
-                                hazard.polygon
-                            ) {
-
-
-                                const leafletPolygon =
-                                    hazard.polygon.map(
-                                        coordinate => [
-
-                                            coordinate[1],
-
-                                            coordinate[0]
-
-                                        ]
-                                    );
-
-
-                                const zone =
-                                    L.polygon(
-                                        leafletPolygon,
-                                        {
-
-                                            color:
-                                                "#d32f2f",
-
-                                            fillColor:
-                                                "#f44336",
-
-                                            fillOpacity:
-                                                0.25,
-
-                                            weight:
-                                                2
-
-                                        }
-                                    )
-                                        .addTo(map)
-                                        .bindPopup(
-
-                                            "<strong>Flood Hazard</strong>"
-
-                                            + "<br>"
-
-                                            + hazard.sensor_name
-
-                                            + "<br>"
-
-                                            + Number(
-                                                hazard.depth_inches
-                                            ).toFixed(2)
-
-                                            + " inches"
-
-                                        );
-
-
-                                hazardLayers.push(
-                                    zone
-                                );
-
-                            }
+                                +
+                                "<br>";
 
                         }
                     );
 
-
-                    updateRecommendation();
-
                 }
-            )
-
-            .catch(
-                error => {
-
-                    console.error(
-                        "Hazard loading error:",
-                        error
-                    );
 
 
-                }
-            );
+                document.getElementById(
+                    "hazardStatus"
+                ).innerHTML =
+                    statusText;
+
+
+                hazards.forEach(
+                    hazard => {
+
+
+                        const marker =
+                            L.circleMarker(
+                                [
+                                    hazard.latitude,
+                                    hazard.longitude
+                                ],
+                                {
+
+                                    radius: 7,
+
+                                    color:
+                                        hazard.flood_active
+                                            ?
+                                            "#8B0000"
+                                            :
+                                            "#666666",
+
+                                    weight: 2,
+
+                                    fillColor:
+                                        hazard.flood_active
+                                            ?
+                                            "#FF0000"
+                                            :
+                                            "#AAAAAA",
+
+                                    fillOpacity: 1
+
+                                }
+                            )
+                            .addTo(map)
+                            .bindPopup(
+
+                                "<strong>FloodNet Sensor</strong>"
+
+                                +
+                                "<br>"
+
+                                +
+                                hazard.sensor_name
+
+                                +
+                                "<br><br>"
+
+                                +
+                                "Flood depth: "
+
+                                +
+                                Number(
+                                    hazard.depth_inches
+                                ).toFixed(2)
+
+                                +
+                                " inches"
+
+                                +
+                                "<br>Severity: "
+
+                                +
+                                hazard.severity
+
+                            );
+
+
+                        hazardLayers.push(
+                            marker
+                        );
+
+
+                        if (
+                            hazard.flood_active
+                            &&
+                            hazard.polygon
+                        ) {
+
+
+                            const leafletPolygon =
+                                hazard.polygon.map(
+                                    coordinate => [
+
+                                        coordinate[1],
+
+                                        coordinate[0]
+
+                                    ]
+                                );
+
+
+                            const zone =
+                                L.polygon(
+                                    leafletPolygon,
+                                    {
+
+                                        color:
+                                            "#d32f2f",
+
+                                        fillColor:
+                                            "#f44336",
+
+                                        fillOpacity:
+                                            0.25,
+
+                                        weight: 2
+
+                                    }
+                                )
+                                .addTo(map)
+                                .bindPopup(
+
+                                    "<strong>Flood Hazard</strong>"
+
+                                    +
+                                    "<br>"
+
+                                    +
+                                    hazard.sensor_name
+
+                                    +
+                                    "<br>"
+
+                                    +
+                                    Number(
+                                        hazard.depth_inches
+                                    ).toFixed(2)
+
+                                    +
+                                    " inches"
+
+                                );
+
+
+                            hazardLayers.push(
+                                zone
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                updateRecommendation();
+
+            }
+        )
+
+        .catch(
+            error => {
+
+
+                console.error(
+                    "Hazard loading error:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "hazardStatus"
+                ).innerHTML =
+
+                    "<strong>FloodNet</strong>"
+
+                    +
+                    "<br>"
+
+                    +
+                    "Hazard data could not be loaded.";
+
+            }
+        );
 
     }
 
+
+    /* --------------------------------------------------
+       TRAVEL MODE
+    -------------------------------------------------- */
 
     function changeMode(
         mode
@@ -1887,78 +2175,768 @@
         loadRoutes();
 
     }
+
+
+    /* --------------------------------------------------
+       DESKTOP SIDE DRAWER
+    -------------------------------------------------- */
+
     const panel =
-        document.querySelector(
-            ".panel"
+        document.getElementById(
+            "mainPanel"
         );
 
-    let panelTouchStartY =
-        null;
+
+    const desktopToggle =
+        document.getElementById(
+            "desktopToggle"
+        );
 
 
-    panel.addEventListener(
+    desktopToggle.addEventListener(
+        "click",
+        function () {
+
+
+            panel.classList.toggle(
+                "desktop-collapsed"
+            );
+
+
+            if (
+                panel.classList.contains(
+                    "desktop-collapsed"
+                )
+            ) {
+
+                desktopToggle.innerHTML =
+                    "▶";
+
+
+                desktopToggle.setAttribute(
+                    "aria-label",
+                    "Open menu"
+                );
+
+            }
+
+            else {
+
+                desktopToggle.innerHTML =
+                    "◀";
+
+
+                desktopToggle.setAttribute(
+                    "aria-label",
+                    "Hide menu"
+                );
+
+            }
+
+
+            setTimeout(
+                function () {
+
+                    map.invalidateSize();
+
+                },
+
+                360
+            );
+
+        }
+    );
+
+
+    /* --------------------------------------------------
+       MOBILE GOOGLE-MAPS-STYLE SHEET
+    -------------------------------------------------- */
+
+    const panelHeader =
+        document.getElementById(
+            "panelHeader"
+        );
+
+
+    const panelContent =
+        document.getElementById(
+            "panelContent"
+        );
+
+
+    let draggingSheet =
+        false;
+
+
+    let dragStartY =
+        0;
+
+
+    let dragStartOffset =
+        0;
+
+
+    let currentSheetOffset =
+        0;
+
+
+    function isMobile() {
+
+        return window.innerWidth <= 600;
+
+    }
+
+
+    function getCollapsedOffset() {
+
+        return (
+            panel.offsetHeight
+            -
+            105
+        );
+
+    }
+
+
+    function setSheetPosition(
+        offset,
+        animate = false
+    ) {
+
+        if (
+            !isMobile()
+        ) {
+
+            return;
+
+        }
+
+
+        const maximum =
+            getCollapsedOffset();
+
+
+        offset =
+            Math.max(
+                0,
+                Math.min(
+                    maximum,
+                    offset
+                )
+            );
+
+
+        currentSheetOffset =
+            offset;
+
+
+        panel.style.transition =
+            animate
+                ?
+                "transform 0.28s ease"
+                :
+                "none";
+
+
+        panel.style.transform =
+            "translateY("
+            +
+            offset
+            +
+            "px)";
+
+
+        if (
+            offset <= 2
+        ) {
+
+            panel.classList.add(
+                "mobile-expanded"
+            );
+
+
+            panelContent.style.overflowY =
+                "auto";
+
+        }
+
+        else {
+
+            panel.classList.remove(
+                "mobile-expanded"
+            );
+
+
+            panelContent.style.overflowY =
+                "hidden";
+
+        }
+
+    }
+
+
+    function expandMobileSheet() {
+
+        if (
+            !isMobile()
+        ) {
+
+            return;
+
+        }
+
+
+        setSheetPosition(
+            0,
+            true
+        );
+
+    }
+
+
+    function collapseMobileSheet() {
+
+        if (
+            !isMobile()
+        ) {
+
+            return;
+
+        }
+
+
+        setSheetPosition(
+            getCollapsedOffset(),
+            true
+        );
+
+    }
+
+
+    function beginSheetDrag(
+        clientY
+    ) {
+
+        if (
+            !isMobile()
+        ) {
+
+            return;
+
+        }
+
+
+        draggingSheet =
+            true;
+
+
+        dragStartY =
+            clientY;
+
+
+        dragStartOffset =
+            currentSheetOffset;
+
+
+        panel.style.transition =
+            "none";
+
+
+        panelContent.style.overflowY =
+            "hidden";
+
+    }
+
+
+    function moveSheetDrag(
+        clientY
+    ) {
+
+        if (
+            !draggingSheet
+        ) {
+
+            return;
+
+        }
+
+
+        const difference =
+            clientY
+            -
+            dragStartY;
+
+
+        setSheetPosition(
+            dragStartOffset
+            +
+            difference,
+            false
+        );
+
+    }
+
+
+    function finishSheetDrag() {
+
+        if (
+            !draggingSheet
+        ) {
+
+            return;
+
+        }
+
+
+        draggingSheet =
+            false;
+
+
+        const collapsedOffset =
+            getCollapsedOffset();
+
+
+        const halfway =
+            collapsedOffset / 2;
+
+
+        if (
+            currentSheetOffset
+            <
+            halfway
+        ) {
+
+            expandMobileSheet();
+
+        }
+
+        else {
+
+            collapseMobileSheet();
+
+        }
+
+    }
+
+
+    /*
+       Dragging from the header always
+       moves the whole sheet.
+    */
+
+    panelHeader.addEventListener(
+        "pointerdown",
+        function (event) {
+
+
+            if (
+                !isMobile()
+            ) {
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            panelHeader.setPointerCapture(
+                event.pointerId
+            );
+
+
+            beginSheetDrag(
+                event.clientY
+            );
+
+        }
+    );
+
+
+    panelHeader.addEventListener(
+        "pointermove",
+        function (event) {
+
+
+            if (
+                !draggingSheet
+            ) {
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            moveSheetDrag(
+                event.clientY
+            );
+
+        }
+    );
+
+
+    panelHeader.addEventListener(
+        "pointerup",
+        function () {
+
+            finishSheetDrag();
+
+        }
+    );
+
+
+    panelHeader.addEventListener(
+        "pointercancel",
+        function () {
+
+            finishSheetDrag();
+
+        }
+    );
+
+
+    /*
+       When the sheet is NOT fully open,
+       touching anywhere in the content
+       moves the entire sheet instead
+       of scrolling its contents.
+    */
+
+    panelContent.addEventListener(
         "touchstart",
         function (event) {
 
-            panelTouchStartY =
-                event.touches[0].clientY;
+
+            if (
+                !isMobile()
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                panel.classList.contains(
+                    "mobile-expanded"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                event.touches.length !== 1
+            ) {
+
+                return;
+
+            }
+
+
+            beginSheetDrag(
+                event.touches[0].clientY
+            );
 
         },
+
         {
             passive: true
         }
     );
 
 
-    panel.addEventListener(
-        "touchend",
+    panelContent.addEventListener(
+        "touchmove",
         function (event) {
 
+
             if (
-                panelTouchStartY === null
+                !draggingSheet
             ) {
+
                 return;
-            }
-
-
-            const touchEndY =
-                event.changedTouches[0].clientY;
-
-
-            const movement =
-                touchEndY
-                - panelTouchStartY;
-
-
-            if (
-                movement > 60
-            ) {
-
-                collapsePanel();
 
             }
 
 
-            else if (
-                movement < -60
-            ) {
-
-                expandPanel();
-
-            }
+            event.preventDefault();
 
 
-            panelTouchStartY =
-                null;
+            moveSheetDrag(
+                event.touches[0].clientY
+            );
 
         },
+
+        {
+            passive: false
+        }
+    );
+
+
+    panelContent.addEventListener(
+        "touchend",
+        function () {
+
+            finishSheetDrag();
+
+        }
+    );
+
+
+    /*
+       When fully expanded and the user
+       is already at the very top of the
+       content, dragging DOWN pulls the
+       entire sheet down again.
+    */
+
+    let expandedTouchStartY =
+        null;
+
+
+    panelContent.addEventListener(
+        "touchstart",
+        function (event) {
+
+
+            if (
+                !isMobile()
+                ||
+                !panel.classList.contains(
+                    "mobile-expanded"
+                )
+            ) {
+
+                expandedTouchStartY =
+                    null;
+
+                return;
+
+            }
+
+
+            if (
+                panelContent.scrollTop <= 0
+                &&
+                event.touches.length === 1
+            ) {
+
+                expandedTouchStartY =
+                    event.touches[0].clientY;
+
+            }
+
+            else {
+
+                expandedTouchStartY =
+                    null;
+
+            }
+
+        },
+
         {
             passive: true
         }
     );
+
+
+    panelContent.addEventListener(
+        "touchmove",
+        function (event) {
+
+
+            if (
+                expandedTouchStartY === null
+            ) {
+
+                return;
+
+            }
+
+
+            const currentY =
+                event.touches[0].clientY;
+
+
+            const difference =
+                currentY
+                -
+                expandedTouchStartY;
+
+
+            if (
+                difference > 8
+                &&
+                panelContent.scrollTop <= 0
+            ) {
+
+                event.preventDefault();
+
+
+                if (
+                    !draggingSheet
+                ) {
+
+                    beginSheetDrag(
+                        expandedTouchStartY
+                    );
+
+                }
+
+
+                moveSheetDrag(
+                    currentY
+                );
+
+            }
+
+        },
+
+        {
+            passive: false
+        }
+    );
+
+
+    panelContent.addEventListener(
+        "touchend",
+        function () {
+
+
+            expandedTouchStartY =
+                null;
+
+
+            if (
+                draggingSheet
+            ) {
+
+                finishSheetDrag();
+
+            }
+
+        }
+    );
+
+
+    /*
+       Set correct panel state when the
+       page loads or switches orientation.
+    */
+
+    function configurePanelForScreen() {
+
+
+        if (
+            isMobile()
+        ) {
+
+            panel.classList.remove(
+                "desktop-collapsed"
+            );
+
+
+            desktopToggle.innerHTML =
+                "◀";
+
+
+            requestAnimationFrame(
+                function () {
+
+                    collapseMobileSheet();
+
+                }
+            );
+
+        }
+
+        else {
+
+            panel.style.transform =
+                "";
+
+
+            panel.style.transition =
+                "";
+
+
+            panel.classList.remove(
+                "mobile-expanded"
+            );
+
+
+            panelContent.style.overflowY =
+                "auto";
+
+
+            currentSheetOffset =
+                0;
+
+        }
+
+
+        setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+
+            100
+        );
+
+    }
+
+
+    let previousMobileState =
+        isMobile();
+
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+
+            const newMobileState =
+                isMobile();
+
+
+            if (
+                newMobileState
+                !==
+                previousMobileState
+            ) {
+
+                previousMobileState =
+                    newMobileState;
+
+
+                configurePanelForScreen();
+
+            }
+
+        }
+    );
+
+
+    /* --------------------------------------------------
+       START APP
+    -------------------------------------------------- */
+
+    configurePanelForScreen();
 
 
     updateHazards();
+
 
     loadRoutes();
 

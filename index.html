@@ -414,13 +414,7 @@
         >
             Choose this route
         </button>
-        <div
-                id="directionsBox"
-                style="display: none;"
-        >
-            <h3>Directions</h3>
-            <div id="directionsList"></div>
-        </div>
+
 
         <div
                 id="normalWarning"
@@ -430,6 +424,15 @@
             ⚠ This route crosses a flood hazard
         </div>
 
+
+    </div>
+
+    <div
+            id="directionsBox"
+            style="display: none;"
+    >
+        <h3>Directions</h3>
+        <div id="directionsList"></div>
     </div>
 
 
@@ -502,7 +505,9 @@
 
     let safeRoute;
 
-    let lastRouteData = null;
+    let lastRouteData = null
+
+    let selectedRoute = null;
 
     let currentMode = "driving";
 
@@ -822,6 +827,7 @@
 
 
     function loadRoutes() {
+        selectedRoute = null;
 
         const startText =
             document.getElementById(
@@ -1187,13 +1193,17 @@
             return;
         }
 
+        selectedRoute = type;
+
         if (
-            type === "safe"
-            &&
             safeRoute
+            &&
+            selectedRoute === null
         ) {
 
             safeRoute.bringToFront();
+
+        }
 
             document.getElementById(
                 "safeCard"
@@ -1211,12 +1221,14 @@
         }
 
         else if (
-            type === "normal"
-            &&
-            normalRoute
-        ) {
+        normalRoute
+        &&
+        selectedRoute === null
+    ) {
 
-            normalRoute.bringToFront();
+        normalRoute.bringToFront();
+
+    }
 
             document.getElementById(
                 "normalCard"
@@ -1233,7 +1245,7 @@
             );
         }
 
-        collapsePanel();
+        expandPanel();
     }
 
 
@@ -1750,7 +1762,7 @@
                         "Hazard loading error:",
                         error
                     );
-                    
+
 
                 }
             );

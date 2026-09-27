@@ -1195,67 +1195,74 @@
 
         selectedRoute = type;
 
-        if (type === "safe") {
+
+        if (
+            type === "safe"
+        ) {
 
             if (safeRoute) {
+
+                safeRoute.setStyle({
+                    weight: 7,
+                    opacity: 1
+                });
+
                 safeRoute.bringToFront();
             }
 
-            document.getElementById(
-                "safeCard"
-            ).className =
-                "route-card recommended-card";
+            if (normalRoute) {
 
-            document.getElementById(
-                "normalCard"
-            ).className =
-                "route-card alternate-card";
+                normalRoute.setStyle({
+                    weight: 3,
+                    opacity: 0.35
+                });
+            }
 
             showDirections(
                 lastRouteData.safe
             );
-
         }
 
-        else if (type === "normal") {
+
+        else if (
+            type === "normal"
+        ) {
 
             if (normalRoute) {
+
+                normalRoute.setStyle({
+                    weight: 7,
+                    opacity: 1
+                });
+
                 normalRoute.bringToFront();
             }
 
-            document.getElementById(
-                "normalCard"
-            ).className =
-                "route-card recommended-card";
+            if (safeRoute) {
 
-            document.getElementById(
-                "safeCard"
-            ).className =
-                "route-card alternate-card";
+                safeRoute.setStyle({
+                    weight: 3,
+                    opacity: 0.35
+                });
+            }
 
             showDirections(
                 lastRouteData.normal
             );
-
         }
+
+
+        updateRecommendation();
 
         expandPanel();
     }
 
-
     function updateRecommendation() {
-
-        const hazardAffectsRoute =
-            floodActive
-            &&
-            routeIntersectsFlood;
-
 
         const safeCard =
             document.getElementById(
                 "safeCard"
             );
-
 
         const normalCard =
             document.getElementById(
@@ -1263,87 +1270,155 @@
             );
 
 
+        // If the user already chose a route,
+        // DO NOT override their choice.
+        if (
+            selectedRoute === "safe"
+        ) {
+
+            safeCard.className =
+                "route-card recommended-card";
+
+            normalCard.className =
+                "route-card alternate-card";
+
+            if (safeRoute) {
+
+                safeRoute.setStyle({
+                    weight: 7,
+                    opacity: 1
+                });
+
+                safeRoute.bringToFront();
+            }
+
+            if (normalRoute) {
+
+                normalRoute.setStyle({
+                    weight: 3,
+                    opacity: 0.35
+                });
+            }
+
+            if (lastRouteData) {
+
+                showDirections(
+                    lastRouteData.safe
+                );
+            }
+
+            return;
+        }
+
+
+        if (
+            selectedRoute === "normal"
+        ) {
+
+            normalCard.className =
+                "route-card recommended-card";
+
+            safeCard.className =
+                "route-card alternate-card";
+
+            if (normalRoute) {
+
+                normalRoute.setStyle({
+                    weight: 7,
+                    opacity: 1
+                });
+
+                normalRoute.bringToFront();
+            }
+
+            if (safeRoute) {
+
+                safeRoute.setStyle({
+                    weight: 3,
+                    opacity: 0.35
+                });
+            }
+
+            if (lastRouteData) {
+
+                showDirections(
+                    lastRouteData.normal
+                );
+            }
+
+            return;
+        }
+
+
+        // No user choice yet:
+        // automatically recommend based on hazard.
+        const hazardAffectsRoute =
+            floodActive
+            &&
+            routeIntersectsFlood;
+
+
         if (
             hazardAffectsRoute
         ) {
-
 
             document.getElementById(
                 "safeTitle"
             ).innerHTML =
                 "Recommended safer route";
 
-
             document.getElementById(
                 "normalTitle"
             ).innerHTML =
                 "Normal route";
-
 
             document.getElementById(
                 "normalWarning"
             ).style.display =
                 "block";
 
-
             safeCard.className =
                 "route-card recommended-card";
-
 
             normalCard.className =
                 "route-card alternate-card";
 
-
-            if (
-                safeRoute
-            ) {
-
+            if (safeRoute) {
                 safeRoute.bringToFront();
-
             }
 
         }
 
         else {
 
-
             document.getElementById(
                 "normalTitle"
             ).innerHTML =
                 "Recommended route";
-
 
             document.getElementById(
                 "safeTitle"
             ).innerHTML =
                 "Flood-avoidance route";
 
-
             document.getElementById(
                 "normalWarning"
             ).style.display =
                 "none";
 
-
             normalCard.className =
                 "route-card recommended-card";
-
 
             safeCard.className =
                 "route-card alternate-card";
 
-
-            if (
-                normalRoute
-            ) {
-
+            if (normalRoute) {
                 normalRoute.bringToFront();
-
             }
 
         }
-
     }
+
     function showDirections(routeData) {
 
         const directionsBox =

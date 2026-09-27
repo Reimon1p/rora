@@ -1195,15 +1195,11 @@
 
         selectedRoute = type;
 
-        if (
-            safeRoute
-            &&
-            selectedRoute === null
-        ) {
+        if (type === "safe") {
 
-            safeRoute.bringToFront();
-
-        }
+            if (safeRoute) {
+                safeRoute.bringToFront();
+            }
 
             document.getElementById(
                 "safeCard"
@@ -1218,17 +1214,14 @@
             showDirections(
                 lastRouteData.safe
             );
+
         }
 
-        else if (
-        normalRoute
-        &&
-        selectedRoute === null
-    ) {
+        else if (type === "normal") {
 
-        normalRoute.bringToFront();
-
-    }
+            if (normalRoute) {
+                normalRoute.bringToFront();
+            }
 
             document.getElementById(
                 "normalCard"
@@ -1243,6 +1236,7 @@
             showDirections(
                 lastRouteData.normal
             );
+
         }
 
         expandPanel();

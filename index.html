@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
+
     <title>RORA</title>
 
     <meta
@@ -20,58 +22,68 @@
             box-sizing: border-box;
         }
 
+
         html,
         body {
             margin: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: Arial, sans-serif;
+
+            font-family:
+                Arial,
+                sans-serif;
         }
+
 
         #map {
             width: 100%;
             height: 100vh;
         }
 
-        /* ==============================
+
+        /* =====================================
            MAIN PANEL
-        ============================== */
+        ===================================== */
 
         .panel {
             position: absolute;
+
             top: 20px;
             left: 20px;
 
-            width: 350px;
-            max-height: calc(100vh - 40px);
+            width: 370px;
+
+            max-height:
+                calc(100vh - 40px);
 
             background: white;
 
             border-radius: 18px;
 
-            box-shadow:
-                0 3px 14px
-                rgba(0, 0, 0, 0.22);
-
             overflow: hidden;
 
             z-index: 1000;
+
+            box-shadow:
+                0 3px 14px
+                rgba(0, 0, 0, 0.22);
 
             transition:
                 transform 0.35s ease;
         }
 
+
         .panel-header {
-            height: 52px;
+            position: relative;
+
+            height: 54px;
 
             display: flex;
             align-items: center;
 
-            position: relative;
-
             padding:
-                10px 48px
+                10px 50px
                 10px 18px;
 
             background: white;
@@ -79,34 +91,38 @@
             user-select: none;
         }
 
+
         .panel-header h2 {
             margin: 0;
 
             font-size: 22px;
         }
 
-        .panel-content {
-            padding:
-                2px 18px
-                18px 18px;
 
+        .panel-content {
             max-height:
-                calc(100vh - 92px);
+                calc(100vh - 94px);
 
             overflow-y: auto;
 
-            overscroll-behavior: contain;
+            padding:
+                2px 18px
+                20px 18px;
+
+            overscroll-behavior:
+                contain;
         }
 
-        /* ==============================
-           DESKTOP SIDE MENU
-        ============================== */
+
+        /* =====================================
+           DESKTOP SIDE COLLAPSE
+        ===================================== */
 
         .desktop-toggle {
             position: absolute;
 
-            top: 50%;
             right: 9px;
+            top: 50%;
 
             transform:
                 translateY(-50%);
@@ -122,18 +138,16 @@
 
             cursor: pointer;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 0;
 
             font-size: 12px;
-
-            padding: 0;
         }
+
 
         .desktop-toggle:hover {
             background: #dddddd;
         }
+
 
         .panel.desktop-collapsed {
             transform:
@@ -142,22 +156,25 @@
                 );
         }
 
+
         .panel.desktop-collapsed
         .panel-header h2 {
             visibility: hidden;
         }
 
-        /* ==============================
+
+        /* =====================================
            START / DESTINATION
-        ============================== */
+        ===================================== */
 
         .search-section {
             display: flex;
 
             gap: 10px;
 
-            margin-bottom: 8px;
+            margin-bottom: 7px;
         }
+
 
         .route-dots {
             width: 22px;
@@ -171,6 +188,7 @@
             flex-shrink: 0;
         }
 
+
         .start-dot {
             width: 11px;
             height: 11px;
@@ -178,10 +196,11 @@
             border:
                 3px solid #4285F4;
 
-            background: white;
-
             border-radius: 50%;
+
+            background: white;
         }
+
 
         .route-line {
             width: 2px;
@@ -193,6 +212,7 @@
                 3px 0;
         }
 
+
         .destination-dot {
             width: 10px;
             height: 10px;
@@ -202,10 +222,13 @@
             border-radius: 2px;
         }
 
+
         .search-boxes {
             flex: 1;
+
             min-width: 0;
         }
+
 
         .input-container {
             position: relative;
@@ -213,44 +236,57 @@
             margin-bottom: 8px;
         }
 
+
         .search-input {
             width: 100%;
 
-            padding:
-                12px 14px;
-
             border: none;
-
             outline: none;
 
             border-radius: 12px;
 
             background: #f1f3f4;
 
+            padding:
+                12px 14px;
+
             font-size: 14px;
         }
+
 
         .search-input:focus {
             background: white;
 
             box-shadow:
                 0 0 0 2px
-                rgba(66, 133, 244, 0.22);
+                rgba(
+                    66,
+                    133,
+                    244,
+                    0.22
+                );
         }
 
-        /* ==============================
+
+        /* =====================================
            AUTOCOMPLETE
-        ============================== */
+        ===================================== */
 
         .suggestions {
-            display: none;
-
             position: absolute;
 
-            top: calc(100% + 4px);
+            top:
+                calc(100% + 4px);
+
             left: 0;
 
             width: 100%;
+
+            display: none;
+
+            max-height: 220px;
+
+            overflow-y: auto;
 
             background: white;
 
@@ -261,14 +297,16 @@
 
             box-shadow:
                 0 4px 12px
-                rgba(0, 0, 0, 0.15);
-
-            max-height: 220px;
-
-            overflow-y: auto;
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.15
+                );
 
             z-index: 3000;
         }
+
 
         .suggestion {
             padding: 10px;
@@ -281,23 +319,25 @@
                 1px solid #eeeeee;
         }
 
+
         .suggestion:hover {
             background: #f5f5f5;
         }
 
-        /* ==============================
+
+        /* =====================================
            CURRENT LOCATION
-        ============================== */
+        ===================================== */
 
         #locationButton {
             width: 100%;
 
-            padding:
-                8px 10px;
-
             border: none;
 
             border-radius: 10px;
+
+            padding:
+                8px 10px;
 
             background: white;
 
@@ -310,13 +350,15 @@
             font-size: 13px;
         }
 
+
         #locationButton:hover {
             background: #f5f7fa;
         }
 
-        /* ==============================
-           DRIVE / WALK
-        ============================== */
+
+        /* =====================================
+           TRAVEL MODE
+        ===================================== */
 
         .mode-buttons {
             display: flex;
@@ -326,6 +368,7 @@
             margin:
                 10px 0 12px 0;
         }
+
 
         .mode-buttons button {
             padding:
@@ -337,16 +380,13 @@
 
             background: #f1f3f4;
 
-            color: #333333;
-
             cursor: pointer;
+
+            color: #333333;
 
             font-size: 14px;
         }
 
-        .mode-buttons button:hover {
-            background: #e4e6e8;
-        }
 
         .mode-buttons button.active {
             background: #dce8ff;
@@ -356,18 +396,19 @@
             font-weight: 600;
         }
 
-        /* ==============================
-           DIRECTIONS
-        ============================== */
+
+        /* =====================================
+           DIRECTIONS BUTTON
+        ===================================== */
 
         #routeButton {
             width: 100%;
 
-            padding: 11px;
-
             border: none;
 
             border-radius: 12px;
+
+            padding: 11px;
 
             background: #1a73e8;
 
@@ -381,53 +422,238 @@
             margin-bottom: 10px;
         }
 
+
         #routeButton:hover {
             background: #1765cc;
         }
 
-        /* ==============================
-           ROUTE CARDS
-        ============================== */
 
-        .route-card {
-            padding: 11px;
+        #errorMessage {
+            color: #c62828;
+
+            font-size: 13px;
+
+            margin-top: 8px;
+        }
+
+
+        /* =====================================
+           ROUTE CHOICES
+        ===================================== */
+
+        #routeChoices {
+            margin-top: 5px;
+        }
+
+
+        .route-choice {
+            position: relative;
+
+            padding: 13px;
 
             margin-top: 10px;
 
-            border-radius: 11px;
-        }
+            background: white;
 
-        .recommended-card {
             border:
-                3px solid #0B1F3A;
+                2px solid #dddddd;
+
+            border-radius: 13px;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.18s ease,
+                background 0.18s ease,
+                box-shadow 0.18s ease;
         }
 
-        .alternate-card {
-            border:
-                2px solid #4DA3FF;
+
+        .route-choice:hover {
+            background: #f8f9fa;
         }
 
-        #safeCard {
-            display: none;
+
+        .route-choice.selected {
+            border-color: #1a73e8;
+
+            background: #f5f9ff;
+
+            box-shadow:
+                0 2px 8px
+                rgba(
+                    26,
+                    115,
+                    232,
+                    0.15
+                );
         }
 
-        .warning {
+
+        .route-choice.safe.selected {
+            border-color: #0B1F3A;
+
+            background: #f6f8fa;
+        }
+
+
+        .route-choice-title {
+            font-size: 15px;
+
+            font-weight: 700;
+
+            margin-bottom: 4px;
+        }
+
+
+        .route-choice-info {
+            color: #555555;
+
+            font-size: 14px;
+        }
+
+
+        .route-badge {
+            display: inline-block;
+
+            padding:
+                4px 7px;
+
             margin-top: 7px;
 
-            color: #c62828;
+            border-radius: 8px;
 
-            font-weight: bold;
+            background: #e6f4ea;
 
-            font-size: 13px;
+            color: #137333;
+
+            font-size: 11px;
+
+            font-weight: 700;
         }
 
-        #errorMessage {
-            margin-top: 8px;
 
+        .warning {
             color: #c62828;
 
-            font-size: 13px;
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-top: 7px;
         }
+
+
+        /* =====================================
+           TURN BY TURN
+        ===================================== */
+
+        .directions-container {
+            margin-top: 14px;
+
+            border-top:
+                1px solid #eeeeee;
+
+            padding-top: 13px;
+        }
+
+
+        .directions-header {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            margin-bottom: 7px;
+        }
+
+
+        .directions-header h3 {
+            margin: 0;
+
+            font-size: 16px;
+        }
+
+
+        #selectedRouteLabel {
+            color: #777777;
+
+            font-size: 12px;
+        }
+
+
+        .direction-step {
+            display: flex;
+
+            gap: 10px;
+
+            padding:
+                10px 2px;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+
+        .step-number {
+            width: 25px;
+            height: 25px;
+
+            border-radius: 50%;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f1f3f4;
+
+            color: #444444;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .step-text {
+            flex: 1;
+
+            min-width: 0;
+
+            font-size: 13px;
+
+            line-height: 1.35;
+        }
+
+
+        .step-distance {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #777777;
+
+            font-size: 11px;
+        }
+
+
+        .no-directions {
+            color: #777777;
+
+            font-size: 13px;
+
+            padding:
+                9px 0;
+        }
+
+
+        /* =====================================
+           FLOOD INFO
+        ===================================== */
 
         #hazardStatus {
             margin-top: 15px;
@@ -441,51 +667,60 @@
             font-size: 13px;
         }
 
-        /* ==============================
-           MOBILE SHEET
-        ============================== */
+
+        /* =====================================
+           MOBILE BOTTOM SHEET
+        ===================================== */
 
         .mobile-drag-handle {
             display: none;
         }
 
-        @media (max-width: 600px) {
+
+        @media (
+            max-width: 600px
+        ) {
 
             .panel {
                 top: auto;
-                left: 0;
+
                 bottom: 0;
+                left: 0;
 
                 width: 100%;
 
-                height: 68vh;
-                max-height: 68vh;
+                height: 72vh;
+                max-height: 72vh;
 
                 border-radius:
                     22px 22px 0 0;
 
                 transform:
                     translateY(
-                        calc(68vh - 110px)
+                        calc(72vh - 110px)
                     );
 
                 transition:
                     transform 0.28s ease;
 
-                will-change: transform;
+                will-change:
+                    transform;
             }
+
 
             .panel.mobile-expanded {
                 transform:
                     translateY(0);
             }
 
+
             .panel.desktop-collapsed {
                 transform:
                     translateY(
-                        calc(68vh - 110px)
+                        calc(72vh - 110px)
                     );
             }
+
 
             .panel-header {
                 height: 58px;
@@ -499,17 +734,11 @@
                 touch-action: none;
             }
 
-            .panel-header:active {
-                cursor: grabbing;
-            }
-
-            .panel-header h2 {
-                font-size: 20px;
-            }
 
             .desktop-toggle {
                 display: none;
             }
+
 
             .mobile-drag-handle {
                 display: block;
@@ -525,30 +754,25 @@
                 width: 42px;
                 height: 5px;
 
-                background: #bdbdbd;
-
                 border-radius: 10px;
+
+                background: #bdbdbd;
             }
+
 
             .panel-content {
                 height:
-                    calc(68vh - 58px);
+                    calc(72vh - 58px);
 
                 max-height: none;
 
-                padding:
-                    4px 14px
-                    24px 14px;
-
                 overflow-y: hidden;
 
-                overscroll-behavior: contain;
+                padding:
+                    4px 14px
+                    25px 14px;
             }
 
-            /*
-                Only scroll information once
-                drawer is completely expanded.
-            */
 
             .panel.mobile-expanded
             .panel-content {
@@ -560,9 +784,11 @@
 
             }
 
+
             .search-input {
                 font-size: 16px;
             }
+
 
             .mode-buttons button {
                 flex: 1;
@@ -583,6 +809,7 @@
     class="panel"
 >
 
+
     <div
         id="panelHeader"
         class="panel-header"
@@ -592,7 +819,9 @@
             class="mobile-drag-handle"
         ></div>
 
+
         <h2>RORA</h2>
+
 
         <button
             id="desktopToggle"
@@ -611,9 +840,8 @@
     >
 
 
-        <!-- START / DESTINATION -->
-
         <div class="search-section">
+
 
             <div class="route-dots">
 
@@ -634,7 +862,10 @@
 
             <div class="search-boxes">
 
-                <div class="input-container">
+
+                <div
+                    class="input-container"
+                >
 
                     <input
                         id="startInput"
@@ -653,7 +884,9 @@
                 </div>
 
 
-                <div class="input-container">
+                <div
+                    class="input-container"
+                >
 
                     <input
                         id="destinationInput"
@@ -679,12 +912,11 @@
                     ◎ Use my current location
                 </button>
 
+
             </div>
 
         </div>
 
-
-        <!-- MODE -->
 
         <div class="mode-buttons">
 
@@ -696,6 +928,7 @@
                 🚗 Drive
             </button>
 
+
             <button
                 id="walkButton"
                 onclick="changeMode('walking')"
@@ -706,8 +939,6 @@
         </div>
 
 
-        <!-- DIRECTIONS -->
-
         <button
             id="routeButton"
             onclick="loadRoutes()"
@@ -716,48 +947,110 @@
         </button>
 
 
-        <div id="errorMessage"></div>
-
-
-        <!-- SAFER ROUTE -->
-
         <div
-            id="safeCard"
-            class="route-card recommended-card"
-        >
+            id="errorMessage"
+        ></div>
 
-            <strong id="safeTitle">
-                Recommended safer route
-            </strong>
 
-            <div id="safeInfo">
-                --
+        <!-- ROUTE OPTIONS -->
+
+        <div id="routeChoices">
+
+
+            <div
+                id="normalChoice"
+                class="route-choice selected"
+                onclick="selectRoute('normal')"
+            >
+
+                <div
+                    id="normalTitle"
+                    class="route-choice-title"
+                >
+                    Recommended route
+                </div>
+
+                <div
+                    id="normalInfo"
+                    class="route-choice-info"
+                >
+                    --
+                </div>
+
+                <div
+                    id="normalWarning"
+                    class="warning"
+                    style="display: none;"
+                >
+                    ⚠ This route crosses a flood hazard
+                </div>
+
             </div>
+
+
+            <div
+                id="safeChoice"
+                class="route-choice safe"
+                onclick="selectRoute('safe')"
+                style="display: none;"
+            >
+
+                <div
+                    id="safeTitle"
+                    class="route-choice-title"
+                >
+                    Safer route
+                </div>
+
+                <div
+                    id="safeInfo"
+                    class="route-choice-info"
+                >
+                    --
+                </div>
+
+                <div
+                    class="route-badge"
+                >
+                    Avoids detected flood areas
+                </div>
+
+            </div>
+
 
         </div>
 
 
-        <!-- NORMAL ROUTE -->
+        <!-- TURN-BY-TURN -->
 
         <div
-            id="normalCard"
-            class="route-card recommended-card"
+            id="directionsContainer"
+            class="directions-container"
         >
 
-            <strong id="normalTitle">
-                Recommended route
-            </strong>
+            <div
+                class="directions-header"
+            >
 
-            <div id="normalInfo">
-                --
+                <h3>Directions</h3>
+
+                <span
+                    id="selectedRouteLabel"
+                >
+                    Recommended route
+                </span>
+
             </div>
 
-            <div
-                id="normalWarning"
-                class="warning"
-                style="display: none;"
-            >
-                ⚠ This route crosses a flood hazard
+
+            <div id="directionsList">
+
+                <div
+                    class="no-directions"
+                >
+                    Loading directions...
+                </div>
+
             </div>
 
         </div>
@@ -783,15 +1076,17 @@
 
 <script>
 
-    /* ==============================
+
+    /* =====================================
        MAP
-    ============================== */
+    ===================================== */
 
     const map =
         L.map(
             "map",
             {
-                zoomControl: false
+                zoomControl:
+                    false
             }
         )
         .setView(
@@ -806,8 +1101,10 @@
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
+
             attribution:
                 "&copy; OpenStreetMap contributors"
+
         }
     ).addTo(map);
 
@@ -836,30 +1133,65 @@
         });
 
 
-    let startCoordinates = null;
+    /* =====================================
+       STATE
+    ===================================== */
 
-    let destinationCoordinates = null;
-
-    let currentLocationMarker = null;
-
-    let destinationMarker = null;
-
-    let normalRoute = null;
-
-    let safeRoute = null;
-
-    let hazardLayers = [];
-
-    let currentMode = "driving";
-
-    let floodActive = false;
-
-    let routeIntersectsFlood = false;
+    let startCoordinates =
+        null;
 
 
-    /* ==============================
+    let destinationCoordinates =
+        null;
+
+
+    let currentLocationMarker =
+        null;
+
+
+    let destinationMarker =
+        null;
+
+
+    let normalRoute =
+        null;
+
+
+    let safeRoute =
+        null;
+
+
+    let currentMode =
+        "driving";
+
+
+    let routeIntersectsFlood =
+        false;
+
+
+    let selectedRoute =
+        "normal";
+
+
+    let normalRouteData =
+        null;
+
+
+    let safeRouteData =
+        null;
+
+
+    let hazardLayers =
+        [];
+
+
+    let floodActive =
+        false;
+
+
+    /* =====================================
        AUTOCOMPLETE
-    ============================== */
+    ===================================== */
 
     function setupAutocomplete(
         inputId,
@@ -886,7 +1218,10 @@
             "input",
             function () {
 
-                clearTimeout(timer);
+
+                clearTimeout(
+                    timer
+                );
 
 
                 if (
@@ -926,6 +1261,7 @@
                     setTimeout(
                         function () {
 
+
                             fetch(
                                 "/autocomplete?text="
                                 +
@@ -941,6 +1277,7 @@
 
                             .then(
                                 results => {
+
 
                                     suggestions.innerHTML =
                                         "";
@@ -961,6 +1298,7 @@
                                     results.forEach(
                                         result => {
 
+
                                             const item =
                                                 document.createElement(
                                                     "div"
@@ -977,6 +1315,7 @@
 
                                             item.onclick =
                                                 function () {
+
 
                                                     input.value =
                                                         result.label;
@@ -1055,9 +1394,9 @@
     );
 
 
-    /* ==============================
+    /* =====================================
        CURRENT LOCATION
-    ============================== */
+    ===================================== */
 
     function useCurrentLocation() {
 
@@ -1067,25 +1406,16 @@
             );
 
 
-        errorBox.innerHTML = "";
-
-
-        if (
-            !navigator.geolocation
-        ) {
-
-            errorBox.innerHTML =
-                "Your browser does not support location.";
-
-            return;
-
-        }
+        errorBox.innerHTML =
+            "";
 
 
         navigator.geolocation
         .getCurrentPosition(
 
-            function (position) {
+            function (
+                position
+            ) {
 
                 startCoordinates = {
 
@@ -1114,7 +1444,6 @@
 
             },
 
-
             function () {
 
                 errorBox.innerHTML =
@@ -1127,9 +1456,9 @@
     }
 
 
-    /* ==============================
-       ROUTING
-    ============================== */
+    /* =====================================
+       ROUTES
+    ===================================== */
 
     function loadRoutes() {
 
@@ -1147,7 +1476,8 @@
 
         document.getElementById(
             "errorMessage"
-        ).innerHTML = "";
+        ).innerHTML =
+            "";
 
 
         let url =
@@ -1206,10 +1536,13 @@
         }
 
 
-        fetch(url)
+        fetch(
+            url
+        )
 
         .then(
             async response => {
+
 
                 const data =
                     await response.json();
@@ -1236,265 +1569,55 @@
         .then(
             data => {
 
+
+                normalRouteData =
+                    data.normal;
+
+
+                safeRouteData =
+                    data.safe;
+
+
                 routeIntersectsFlood =
-                    data.intersects_flood;
-
-
-                if (
-                    normalRoute
-                    &&
-                    map.hasLayer(
-                        normalRoute
-                    )
-                ) {
-
-                    map.removeLayer(
-                        normalRoute
-                    );
-
-                }
-
-
-                if (
-                    safeRoute
-                    &&
-                    map.hasLayer(
-                        safeRoute
-                    )
-                ) {
-
-                    map.removeLayer(
-                        safeRoute
-                    );
-
-                }
-
-
-                if (
-                    currentLocationMarker
-                    &&
-                    map.hasLayer(
-                        currentLocationMarker
-                    )
-                ) {
-
-                    map.removeLayer(
-                        currentLocationMarker
-                    );
-
-                }
-
-
-                if (
-                    destinationMarker
-                    &&
-                    map.hasLayer(
-                        destinationMarker
-                    )
-                ) {
-
-                    map.removeLayer(
-                        destinationMarker
-                    );
-
-                }
-
-
-                const start =
-                    data.start.coordinates;
-
-
-                const destination =
-                    data.destination.coordinates;
-
-
-                currentLocationMarker =
-                    L.circleMarker(
-                        [
-                            start[1],
-                            start[0]
-                        ],
-                        {
-
-                            radius: 8,
-
-                            color: "white",
-
-                            weight: 3,
-
-                            fillColor:
-                                "#4285F4",
-
-                            fillOpacity: 1
-
-                        }
-                    )
-                    .addTo(map)
-                    .bindPopup(
-                        data.start.label
+                    Boolean(
+                        data.intersects_flood
                     );
 
 
-                destinationMarker =
-                    L.marker(
-                        [
-                            destination[1],
-                            destination[0]
-                        ],
-                        {
-                            icon:
-                                redDestinationIcon
-                        }
-                    )
-                    .addTo(map)
-                    .bindPopup(
-                        data.destination.label
-                    );
+                removeOldRoutes();
 
 
-                normalRoute =
-                    L.geoJSON(
-                        data.normal,
-                        {
-
-                            style: {
-
-                                color:
-                                    "#4DA3FF",
-
-                                weight: 5,
-
-                                opacity: 1
-
-                            }
-
-                        }
-                    )
-                    .addTo(map);
+                drawMarkers(
+                    data
+                );
 
 
-                safeRoute =
-                    L.geoJSON(
-                        data.safe,
-                        {
-
-                            style: {
-
-                                color:
-                                    "#0B1F3A",
-
-                                weight: 5,
-
-                                opacity: 1
-
-                            }
-
-                        }
-                    );
+                drawRoutes();
 
 
-                const normalSummary =
-                    data.normal
-                    .features[0]
-                    .properties
-                    .summary;
-
-
-                const safeSummary =
-                    data.safe
-                    .features[0]
-                    .properties
-                    .summary;
-
-
-                document.getElementById(
-                    "normalInfo"
-                ).innerHTML =
-
-                    Math.round(
-                        normalSummary.duration
-                        /
-                        60
-                    )
-
-                    +
-                    " min • "
-
-                    +
-                    (
-                        normalSummary.distance
-                        /
-                        1609.34
-                    ).toFixed(1)
-
-                    +
-                    " mi";
-
-
-                document.getElementById(
-                    "safeInfo"
-                ).innerHTML =
-
-                    Math.round(
-                        safeSummary.duration
-                        /
-                        60
-                    )
-
-                    +
-                    " min • "
-
-                    +
-                    (
-                        safeSummary.distance
-                        /
-                        1609.34
-                    ).toFixed(1)
-
-                    +
-                    " mi";
-
-
-                updateRecommendation();
-
-
-                const layers =
-                    [
-                        normalRoute,
-                        currentLocationMarker,
-                        destinationMarker
-                    ];
+                updateRouteCards();
 
 
                 if (
                     routeIntersectsFlood
                 ) {
 
-                    layers.push(
-                        safeRoute
+                    selectRoute(
+                        "safe"
+                    );
+
+                }
+
+                else {
+
+                    selectRoute(
+                        "normal"
                     );
 
                 }
 
 
-                const bounds =
-                    L.featureGroup(
-                        layers
-                    )
-                    .getBounds();
-
-
-                map.fitBounds(
-                    bounds,
-                    {
-
-                        padding:
-                            [50, 50],
-
-                        maxZoom: 15
-
-                    }
-                );
+                fitMapToRoutes();
 
             }
         )
@@ -1513,42 +1636,293 @@
     }
 
 
-    /* ==============================
-       ROUTE DISPLAY
-    ============================== */
+    function removeOldRoutes() {
 
-    function updateRecommendation() {
-
-        const hazardAffectsRoute =
-            floodActive
+        if (
+            normalRoute
             &&
-            routeIntersectsFlood;
+            map.hasLayer(
+                normalRoute
+            )
+        ) {
+
+            map.removeLayer(
+                normalRoute
+            );
+
+        }
 
 
-        const safeCard =
-            document.getElementById(
-                "safeCard"
+        if (
+            safeRoute
+            &&
+            map.hasLayer(
+                safeRoute
+            )
+        ) {
+
+            map.removeLayer(
+                safeRoute
+            );
+
+        }
+
+
+        if (
+            currentLocationMarker
+            &&
+            map.hasLayer(
+                currentLocationMarker
+            )
+        ) {
+
+            map.removeLayer(
+                currentLocationMarker
+            );
+
+        }
+
+
+        if (
+            destinationMarker
+            &&
+            map.hasLayer(
+                destinationMarker
+            )
+        ) {
+
+            map.removeLayer(
+                destinationMarker
+            );
+
+        }
+
+    }
+
+
+    function drawMarkers(
+        data
+    ) {
+
+        const start =
+            data.start.coordinates;
+
+
+        const destination =
+            data.destination.coordinates;
+
+
+        currentLocationMarker =
+            L.circleMarker(
+                [
+                    start[1],
+                    start[0]
+                ],
+                {
+
+                    radius: 8,
+
+                    color: "white",
+
+                    weight: 3,
+
+                    fillColor:
+                        "#4285F4",
+
+                    fillOpacity: 1
+
+                }
+            )
+            .addTo(map)
+            .bindPopup(
+                data.start.label
             );
 
 
-        const normalCard =
+        destinationMarker =
+            L.marker(
+                [
+                    destination[1],
+                    destination[0]
+                ],
+                {
+
+                    icon:
+                        redDestinationIcon
+
+                }
+            )
+            .addTo(map)
+            .bindPopup(
+                data.destination.label
+            );
+
+    }
+
+
+    function drawRoutes() {
+
+        normalRoute =
+            L.geoJSON(
+                normalRouteData,
+                {
+
+                    style: {
+
+                        color:
+                            "#4DA3FF",
+
+                        weight: 5,
+
+                        opacity:
+                            0.75
+
+                    }
+
+                }
+            )
+            .addTo(map);
+
+
+        if (
+            routeIntersectsFlood
+        ) {
+
+            safeRoute =
+                L.geoJSON(
+                    safeRouteData,
+                    {
+
+                        style: {
+
+                            color:
+                                "#0B1F3A",
+
+                            weight: 5,
+
+                            opacity:
+                                0.75
+
+                        }
+
+                    }
+                )
+                .addTo(map);
+
+        }
+
+        else {
+
+            safeRoute =
+                null;
+
+        }
+
+
+        normalRoute.on(
+            "click",
+            function () {
+
+                selectRoute(
+                    "normal"
+                );
+
+            }
+        );
+
+
+        if (
+            safeRoute
+        ) {
+
+            safeRoute.on(
+                "click",
+                function () {
+
+                    selectRoute(
+                        "safe"
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+
+    function updateRouteCards() {
+
+        const normalSummary =
+            normalRouteData
+            .features[0]
+            .properties
+            .summary;
+
+
+        const safeSummary =
+            safeRouteData
+            .features[0]
+            .properties
+            .summary;
+
+
+        document.getElementById(
+            "normalInfo"
+        ).innerHTML =
+
+            formatDuration(
+                normalSummary.duration
+            )
+
+            +
+            " • "
+
+            +
+            formatDistance(
+                normalSummary.distance
+            );
+
+
+        document.getElementById(
+            "safeInfo"
+        ).innerHTML =
+
+            formatDuration(
+                safeSummary.duration
+            )
+
+            +
+            " • "
+
+            +
+            formatDistance(
+                safeSummary.distance
+            );
+
+
+        const safeChoice =
             document.getElementById(
-                "normalCard"
+                "safeChoice"
+            );
+
+
+        const normalWarning =
+            document.getElementById(
+                "normalWarning"
             );
 
 
         if (
-            hazardAffectsRoute
+            routeIntersectsFlood
         ) {
 
-            safeCard.style.display =
+            safeChoice.style.display =
                 "block";
 
 
-            document.getElementById(
-                "safeTitle"
-            ).innerHTML =
-                "Recommended safer route";
+            normalWarning.style.display =
+                "block";
 
 
             document.getElementById(
@@ -1558,45 +1932,19 @@
 
 
             document.getElementById(
-                "normalWarning"
-            ).style.display =
-                "block";
-
-
-            safeCard.className =
-                "route-card recommended-card";
-
-
-            normalCard.className =
-                "route-card alternate-card";
-
-
-            if (
-                safeRoute
-                &&
-                !map.hasLayer(
-                    safeRoute
-                )
-            ) {
-
-                safeRoute.addTo(map);
-
-            }
-
-
-            if (
-                safeRoute
-            ) {
-
-                safeRoute.bringToFront();
-
-            }
+                "safeTitle"
+            ).innerHTML =
+                "Recommended safer route";
 
         }
 
         else {
 
-            safeCard.style.display =
+            safeChoice.style.display =
+                "none";
+
+
+            normalWarning.style.display =
                 "none";
 
 
@@ -1605,28 +1953,142 @@
             ).innerHTML =
                 "Recommended route";
 
+        }
+
+    }
+
+
+    /* =====================================
+       SELECT ROUTE
+    ===================================== */
+
+    function selectRoute(
+        routeName
+    ) {
+
+        if (
+            routeName === "safe"
+            &&
+            !routeIntersectsFlood
+        ) {
+
+            routeName =
+                "normal";
+
+        }
+
+
+        selectedRoute =
+            routeName;
+
+
+        const normalChoice =
+            document.getElementById(
+                "normalChoice"
+            );
+
+
+        const safeChoice =
+            document.getElementById(
+                "safeChoice"
+            );
+
+
+        normalChoice.classList.remove(
+            "selected"
+        );
+
+
+        safeChoice.classList.remove(
+            "selected"
+        );
+
+
+        if (
+            routeName === "normal"
+        ) {
+
+            normalChoice.classList.add(
+                "selected"
+            );
+
 
             document.getElementById(
-                "normalWarning"
-            ).style.display =
-                "none";
+                "selectedRouteLabel"
+            ).innerText =
+                routeIntersectsFlood
+                    ?
+                    "Normal route"
+                    :
+                    "Recommended route";
 
 
-            normalCard.className =
-                "route-card recommended-card";
+            if (
+                normalRoute
+            ) {
+
+                normalRoute.setStyle({
+
+                    weight: 7,
+
+                    opacity: 1
+
+                });
+
+
+                normalRoute.bringToFront();
+
+            }
 
 
             if (
                 safeRoute
-                &&
-                map.hasLayer(
-                    safeRoute
-                )
             ) {
 
-                map.removeLayer(
-                    safeRoute
-                );
+                safeRoute.setStyle({
+
+                    weight: 4,
+
+                    opacity: 0.4
+
+                });
+
+            }
+
+
+            renderDirections(
+                normalRouteData
+            );
+
+        }
+
+        else {
+
+            safeChoice.classList.add(
+                "selected"
+            );
+
+
+            document.getElementById(
+                "selectedRouteLabel"
+            ).innerText =
+                "Safer route";
+
+
+            if (
+                safeRoute
+            ) {
+
+                safeRoute.setStyle({
+
+                    weight: 7,
+
+                    opacity: 1
+
+                });
+
+
+                safeRoute.bringToFront();
 
             }
 
@@ -1635,169 +2097,194 @@
                 normalRoute
             ) {
 
-                normalRoute.bringToFront();
+                normalRoute.setStyle({
+
+                    weight: 4,
+
+                    opacity: 0.4
+
+                });
 
             }
+
+
+            renderDirections(
+                safeRouteData
+            );
 
         }
 
     }
 
 
-    /* ==============================
-       HAZARDS
-    ============================== */
+    /* =====================================
+       TURN-BY-TURN DIRECTIONS
+    ===================================== */
 
-    function updateHazards() {
+    function renderDirections(
+        routeData
+    ) {
 
-        fetch(
-            "/hazards"
-        )
+        const container =
+            document.getElementById(
+                "directionsList"
+            );
 
-        .then(
-            response => {
+
+        container.innerHTML =
+            "";
+
+
+        if (
+            !routeData
+            ||
+            !routeData.features
+            ||
+            routeData.features.length === 0
+        ) {
+
+            container.innerHTML =
+
+                '<div class="no-directions">'
+                +
+                'Directions unavailable.'
+                +
+                '</div>';
+
+            return;
+
+        }
+
+
+        const properties =
+            routeData
+            .features[0]
+            .properties;
+
+
+        const segments =
+            properties.segments
+            ||
+            [];
+
+
+        const steps =
+            [];
+
+
+        segments.forEach(
+            segment => {
 
                 if (
-                    !response.ok
+                    segment.steps
                 ) {
 
-                    throw new Error(
-                        "Hazard data could not be loaded."
-                    );
+                    segment.steps.forEach(
+                        step => {
 
-                }
-
-
-                return response.json();
-
-            }
-        )
-
-        .then(
-            hazards => {
-
-                hazardLayers.forEach(
-                    layer => {
-
-                        if (
-                            map.hasLayer(
-                                layer
-                            )
-                        ) {
-
-                            map.removeLayer(
-                                layer
+                            steps.push(
+                                step
                             );
 
                         }
-
-                    }
-                );
-
-
-                hazardLayers = [];
-
-
-                const activeHazards =
-                    hazards.filter(
-                        hazard =>
-                            hazard.flood_active
-                    );
-
-
-                floodActive =
-                    activeHazards.length > 0;
-
-
-                let statusText =
-
-                    "<strong>Historical FloodNet Replay</strong>"
-
-                    +
-                    "<br>"
-
-                    +
-                    hazards.length
-
-                    +
-                    " sensors loaded"
-
-                    +
-                    "<br>"
-
-                    +
-                    activeHazards.length
-
-                    +
-                    " active flood areas";
-
-
-                if (
-                    activeHazards.length > 0
-                ) {
-
-                    statusText +=
-                        "<br><br>";
-
-
-                    activeHazards.forEach(
-                        hazard => {
-
-                            statusText +=
-
-                                hazard.sensor_name
-
-                                +
-                                ": "
-
-                                +
-                                Number(
-                                    hazard.depth_inches
-                                ).toFixed(2)
-
-                                +
-                                " in"
-
-                                +
-                                " ("
-
-                                +
-                                hazard.severity
-
-                                +
-                                ")"
-
-                                +
-                                "<br>";
-
-                        }
                     );
 
                 }
 
-
-                document.getElementById(
-                    "hazardStatus"
-                ).innerHTML =
-                    statusText;
-
-
-                updateRecommendation();
-
             }
-        )
+        );
 
-        .catch(
-            error => {
 
-                console.error(
-                    error
+        if (
+            steps.length === 0
+        ) {
+
+            container.innerHTML =
+
+                '<div class="no-directions">'
+                +
+                'Turn-by-turn directions are unavailable for this route.'
+                +
+                '</div>';
+
+            return;
+
+        }
+
+
+        steps.forEach(
+            (
+                step,
+                index
+            ) => {
+
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "direction-step";
+
+
+                const number =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                number.className =
+                    "step-number";
+
+
+                number.innerText =
+                    index + 1;
+
+
+                const text =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                text.className =
+                    "step-text";
+
+
+                text.innerHTML =
+
+                    escapeHtml(
+                        step.instruction
+                        ||
+                        "Continue"
+                    )
+
+                    +
+
+                    '<span class="step-distance">'
+                    +
+                    formatStepDistance(
+                        step.distance
+                    )
+                    +
+                    '</span>';
+
+
+                row.appendChild(
+                    number
                 );
 
-                document.getElementById(
-                    "hazardStatus"
-                ).innerHTML =
-                    "FloodNet hazard data could not be loaded.";
+
+                row.appendChild(
+                    text
+                );
+
+
+                container.appendChild(
+                    row
+                );
 
             }
         );
@@ -1805,9 +2292,157 @@
     }
 
 
-    /* ==============================
+    function escapeHtml(
+        text
+    ) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.innerText =
+            text;
+
+
+        return div.innerHTML;
+
+    }
+
+
+    function formatDuration(
+        seconds
+    ) {
+
+        const minutes =
+            Math.round(
+                seconds / 60
+            );
+
+
+        return (
+            minutes
+            +
+            " min"
+        );
+
+    }
+
+
+    function formatDistance(
+        meters
+    ) {
+
+        const miles =
+            meters
+            /
+            1609.34;
+
+
+        return (
+            miles.toFixed(1)
+            +
+            " mi"
+        );
+
+    }
+
+
+    function formatStepDistance(
+        meters
+    ) {
+
+        if (
+            meters === undefined
+            ||
+            meters === null
+        ) {
+
+            return "";
+
+        }
+
+
+        if (
+            meters < 160.934
+        ) {
+
+            const feet =
+                Math.round(
+                    meters
+                    *
+                    3.28084
+                );
+
+
+            return (
+                feet
+                +
+                " ft"
+            );
+
+        }
+
+
+        return (
+            (
+                meters
+                /
+                1609.34
+            ).toFixed(1)
+            +
+            " mi"
+        );
+
+    }
+
+
+    function fitMapToRoutes() {
+
+        const layers = [
+            normalRoute,
+            currentLocationMarker,
+            destinationMarker
+        ];
+
+
+        if (
+            safeRoute
+        ) {
+
+            layers.push(
+                safeRoute
+            );
+
+        }
+
+
+        const bounds =
+            L.featureGroup(
+                layers
+            )
+            .getBounds();
+
+
+        map.fitBounds(
+            bounds,
+            {
+
+                padding:
+                    [50, 50],
+
+                maxZoom: 15
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
        MODE
-    ============================== */
+    ===================================== */
 
     function changeMode(
         mode
@@ -1859,9 +2494,87 @@
     }
 
 
-    /* ==============================
-       DESKTOP SIDE COLLAPSE
-    ============================== */
+    /* =====================================
+       FLOODNET STATUS
+    ===================================== */
+
+    function updateHazards() {
+
+        fetch(
+            "/hazards"
+        )
+
+        .then(
+            response =>
+                response.json()
+        )
+
+        .then(
+            hazards => {
+
+
+                const activeHazards =
+                    hazards.filter(
+                        hazard =>
+                            hazard.flood_active
+                    );
+
+
+                floodActive =
+                    activeHazards.length > 0;
+
+
+                let status =
+
+                    "<strong>"
+                    +
+                    "Historical FloodNet Replay"
+                    +
+                    "</strong>"
+
+                    +
+                    "<br>"
+
+                    +
+                    hazards.length
+
+                    +
+                    " sensors loaded"
+
+                    +
+                    "<br>"
+
+                    +
+                    activeHazards.length
+
+                    +
+                    " active flood areas";
+
+
+                document.getElementById(
+                    "hazardStatus"
+                ).innerHTML =
+                    status;
+
+            }
+        )
+
+        .catch(
+            error => {
+
+                console.error(
+                    error
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
+       DESKTOP DRAWER
+    ===================================== */
 
     const panel =
         document.getElementById(
@@ -1879,6 +2592,7 @@
         "click",
         function () {
 
+
             panel.classList.toggle(
                 "desktop-collapsed"
             );
@@ -1890,14 +2604,14 @@
                 )
             ) {
 
-                desktopToggle.innerHTML =
+                desktopToggle.innerText =
                     "▶";
 
             }
 
             else {
 
-                desktopToggle.innerHTML =
+                desktopToggle.innerText =
                     "◀";
 
             }
@@ -1906,9 +2620,9 @@
     );
 
 
-    /* ==============================
-       MOBILE DRAWER
-    ============================== */
+    /* =====================================
+       MOBILE GOOGLE MAPS STYLE DRAWER
+    ===================================== */
 
     const panelHeader =
         document.getElementById(
@@ -1962,7 +2676,7 @@
 
     function setSheetPosition(
         offset,
-        animate
+        animate = false
     ) {
 
         if (
@@ -2001,6 +2715,7 @@
 
 
         panel.style.transform =
+
             "translateY("
             +
             offset
@@ -2058,7 +2773,7 @@
 
 
     function beginSheetDrag(
-        y
+        clientY
     ) {
 
         if (
@@ -2075,25 +2790,25 @@
 
 
         dragStartY =
-            y;
+            clientY;
 
 
         dragStartOffset =
             currentSheetOffset;
 
 
-        panelContent.style.overflowY =
-            "hidden";
-
-
         panel.style.transition =
             "none";
+
+
+        panelContent.style.overflowY =
+            "hidden";
 
     }
 
 
     function moveSheetDrag(
-        y
+        clientY
     ) {
 
         if (
@@ -2106,7 +2821,7 @@
 
 
         const difference =
-            y
+            clientY
             -
             dragStartY;
 
@@ -2159,14 +2874,11 @@
     }
 
 
-    /*
-        Header always moves
-        the entire sheet.
-    */
-
     panelHeader.addEventListener(
         "pointerdown",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
                 !isMobile()
@@ -2190,7 +2902,9 @@
 
     panelHeader.addEventListener(
         "pointermove",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
                 !draggingSheet
@@ -2225,14 +2939,16 @@
 
 
     /*
-        While partially closed,
-        touching content moves
-        the entire drawer.
+        If the sheet is only partly open,
+        scrolling its content moves the
+        entire sheet first.
     */
 
     panelContent.addEventListener(
         "touchstart",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
                 !isMobile()
@@ -2255,9 +2971,7 @@
 
 
             if (
-                event.touches.length
-                !==
-                1
+                event.touches.length !== 1
             ) {
 
                 return;
@@ -2266,8 +2980,7 @@
 
 
             beginSheetDrag(
-                event.touches[0]
-                .clientY
+                event.touches[0].clientY
             );
 
         },
@@ -2280,7 +2993,9 @@
 
     panelContent.addEventListener(
         "touchmove",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
                 !draggingSheet
@@ -2295,8 +3010,7 @@
 
 
             moveSheetDrag(
-                event.touches[0]
-                .clientY
+                event.touches[0].clientY
             );
 
         },
@@ -2314,21 +3028,22 @@
 
 
     /*
-        When expanded:
-        scrolling normally works.
+        Once fully expanded, content scrolls.
 
-        But if information is at
-        the very top and user pulls
-        downward, drawer closes.
+        If content is already at the top
+        and user pulls downward, the whole
+        drawer starts closing.
     */
 
-    let expandedStartY =
+    let expandedTouchStartY =
         null;
 
 
     panelContent.addEventListener(
         "touchstart",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
                 !isMobile()
@@ -2338,7 +3053,7 @@
                 )
             ) {
 
-                expandedStartY =
+                expandedTouchStartY =
                     null;
 
                 return;
@@ -2347,14 +3062,13 @@
 
 
             if (
-                panelContent.scrollTop
-                <=
-                0
+                panelContent.scrollTop <= 0
+                &&
+                event.touches.length === 1
             ) {
 
-                expandedStartY =
-                    event.touches[0]
-                    .clientY;
+                expandedTouchStartY =
+                    event.touches[0].clientY;
 
             }
 
@@ -2368,12 +3082,12 @@
 
     panelContent.addEventListener(
         "touchmove",
-        function (event) {
+        function (
+            event
+        ) {
 
             if (
-                expandedStartY
-                ===
-                null
+                expandedTouchStartY === null
             ) {
 
                 return;
@@ -2382,22 +3096,19 @@
 
 
             const currentY =
-                event.touches[0]
-                .clientY;
+                event.touches[0].clientY;
 
 
             const difference =
                 currentY
                 -
-                expandedStartY;
+                expandedTouchStartY;
 
 
             if (
                 difference > 8
                 &&
-                panelContent.scrollTop
-                <=
-                0
+                panelContent.scrollTop <= 0
             ) {
 
                 event.preventDefault();
@@ -2408,7 +3119,7 @@
                 ) {
 
                     beginSheetDrag(
-                        expandedStartY
+                        expandedTouchStartY
                     );
 
                 }
@@ -2432,19 +3143,22 @@
         "touchend",
         function () {
 
-            expandedStartY =
+
+            expandedTouchStartY =
                 null;
 
 
-            finishSheetDrag();
+            if (
+                draggingSheet
+            ) {
+
+                finishSheetDrag();
+
+            }
 
         }
     );
 
-
-    /* ==============================
-       SCREEN SETUP
-    ============================== */
 
     function configurePanel() {
 
@@ -2494,7 +3208,7 @@
     }
 
 
-    let wasMobile =
+    let previousMobileState =
         isMobile();
 
 
@@ -2502,18 +3216,19 @@
         "resize",
         function () {
 
-            const nowMobile =
+
+            const mobileNow =
                 isMobile();
 
 
             if (
-                nowMobile
+                mobileNow
                 !==
-                wasMobile
+                previousMobileState
             ) {
 
-                wasMobile =
-                    nowMobile;
+                previousMobileState =
+                    mobileNow;
 
 
                 configurePanel();
@@ -2524,13 +3239,15 @@
     );
 
 
-    /* ==============================
-       START
-    ============================== */
+    /* =====================================
+       START APP
+    ===================================== */
 
     configurePanel();
 
+
     updateHazards();
+
 
     loadRoutes();
 
@@ -2539,6 +3256,7 @@
         updateHazards,
         2000
     );
+
 
 </script>
 

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -17,7 +16,6 @@
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
-
 
     <style>
 
@@ -420,43 +418,58 @@
 
 
         .flood-marker {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    overflow: visible;
+            position: relative;
+            width: 70px;
+            height: 70px;
+            overflow: visible;
 
-    --dot-size: 10px;
-    --square-size: 25px;
-    --ripple-size: 18px;
-}
+            --dot-size: 10px;
+            --square-size: 25px;
+            --ripple-size: 18px;
+        }
 
 
         .flood-dot {
             position: absolute;
             left: 50%;
             top: 50%;
+
             width: var(--dot-size);
             height: var(--dot-size);
+
             transform: translate(-50%, -50%);
+
             background: #ff0000;
+
             border: 2px solid #8B0000;
+
             border-radius: 50%;
+
             z-index: 4;
+
             box-shadow: 0 0 6px rgba(255, 0, 0, 0.55);
         }
 
 
         .flood-square {
             position: absolute;
+
             left: 50%;
             top: 50%;
+
             width: var(--square-size);
             height: var(--square-size);
+
             transform: translate(-50%, -50%);
+
             border: 2px solid rgba(213, 0, 0, 0.75);
+
             background: rgba(255, 51, 51, 0.13);
+
             z-index: 1;
+
             display: none;
+
             pointer-events: none;
         }
 
@@ -468,19 +481,21 @@
 
         .flood-ring {
             position: absolute;
+
             left: 50%;
             top: 50%;
+
             width: var(--ripple-size);
             height: var(--ripple-size);
+
             border: 2px solid rgba(255, 0, 0, 0.75);
+
             border-radius: 50%;
+
             pointer-events: none;
+
             animation: floodRipple 2.2s infinite ease-out;
         }
-
-        .map-is-moving .flood-ring {
-    display: none !important;
-}
 
 
         .flood-ring.second {
@@ -493,12 +508,18 @@
         }
 
 
+        .map-is-moving .flood-ring {
+            display: none !important;
+        }
+
+
         @keyframes floodRipple {
 
             0% {
                 transform: translate(-50%, -50%) scale(0.55);
                 opacity: 0.8;
             }
+
 
             100% {
                 transform: translate(-50%, -50%) scale(2.2);
@@ -513,9 +534,7 @@
         }
 
 
-        @media (
-            max-width: 600px
-        ) {
+        @media (max-width: 600px) {
 
             .desktop-toggle {
                 display: none;
@@ -526,10 +545,14 @@
                 top: auto;
                 bottom: 0;
                 left: 0;
+
                 width: 100%;
+
                 height: 78vh;
                 max-height: 78vh;
+
                 border-radius: 22px 22px 0 0;
+
                 transform: translateY(
                     calc(
                         78vh
@@ -537,6 +560,7 @@
                         110px
                     )
                 );
+
                 transition: transform 0.28s ease;
             }
 
@@ -559,8 +583,11 @@
 
             .panel-header {
                 height: 58px;
+
                 padding: 17px 18px 8px;
+
                 cursor: grab;
+
                 touch-action: none;
             }
 
@@ -572,27 +599,38 @@
 
             .mobile-drag-handle {
                 display: block;
+
                 position: absolute;
+
                 top: 7px;
+
                 left: 50%;
+
                 transform: translateX(-50%);
+
                 width: 42px;
                 height: 5px;
+
                 background: #bdbdbd;
+
                 border-radius: 10px;
             }
 
 
             .panel-content {
                 height: calc(78vh - 58px);
+
                 max-height: none;
+
                 padding: 5px 14px 28px;
+
                 overflow-y: hidden;
             }
 
 
             .panel.mobile-expanded .panel-content {
                 overflow-y: auto;
+
                 -webkit-overflow-scrolling: touch;
             }
 
@@ -604,16 +642,21 @@
 
             .route-choice {
                 padding: 11px;
+
                 margin-top: 8px;
             }
 
 
             #loadMoreFloodsButton {
                 top: 16px;
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        transform: translateX(-50%);
+
+                left: 50%;
+
+                right: auto;
+
+                bottom: auto;
+
+                transform: translateX(-50%);
             }
 
         }
@@ -660,11 +703,17 @@
                 class="route-dots"
             >
 
-                <div class="start-dot"></div>
+                <div
+                    class="start-dot"
+                ></div>
 
-                <div class="route-line"></div>
+                <div
+                    class="route-line"
+                ></div>
 
-                <div class="destination-dot"></div>
+                <div
+                    class="destination-dot"
+                ></div>
 
             </div>
 
@@ -913,7 +962,6 @@
 
 <script>
 
-
     const map =
         L.map(
             "map",
@@ -1053,17 +1101,6 @@
     let floodRequestRunning =
         false;
 
-
-    /*
-    FALSE:
-    normal browsing mode.
-    Show cached floods inside the viewport.
-
-    TRUE:
-    route mode.
-    Only show floods associated with the route.
-    */
-
     let routeSearchActive =
         false;
 
@@ -1168,9 +1205,7 @@
 
 
                                     if (
-                                        results.length
-                                        ===
-                                        0
+                                        !results.length
                                     ) {
 
                                         suggestions.style.display =
@@ -1463,13 +1498,6 @@
                     );
 
 
-                /*
-                Enter route-only flood mode.
-
-                We KEEP old hazard data cached in memory,
-                but they will no longer be rendered.
-                */
-
                 routeSearchActive =
                     true;
 
@@ -1541,20 +1569,11 @@
                 }
 
 
-                /*
-                Immediately hide all non-route floods.
-                */
-
                 renderVisibleFloods();
 
 
                 fitMap();
 
-
-                /*
-                fitMap changes the viewport.
-                Render again after the zoom finishes.
-                */
 
                 setTimeout(
                     function () {
@@ -2181,7 +2200,9 @@
 
         return (
             Math.round(
-                seconds / 60
+                seconds
+                /
+                60
             )
             +
             " min"
@@ -2196,7 +2217,9 @@
 
         return (
             (
-                meters / 1609.34
+                meters
+                /
+                1609.34
             )
             .toFixed(
                 1
@@ -2281,7 +2304,9 @@
                 )
                 *
                 1.4,
+
                 6,
+
                 18
             );
 
@@ -2291,7 +2316,9 @@
                 dotSize
                 *
                 1.8,
+
                 11,
+
                 30
             );
 
@@ -2301,7 +2328,9 @@
                 dotSize
                 *
                 2.5,
+
                 20,
+
                 44
             );
 
@@ -2546,14 +2575,6 @@
                     );
 
 
-                /*
-                ROUTE MODE:
-                only route hazards.
-
-                NORMAL MODE:
-                cached hazards inside viewport.
-                */
-
                 if (
                     routeSearchActive
                 ) {
@@ -2633,35 +2654,23 @@
 
                 else {
 
-    marker.setLatLng(
-        [
-            hazard.latitude,
-            hazard.longitude
-        ]
-    );
+                    marker.setLatLng(
+                        [
+                            hazard.latitude,
+                            hazard.longitude
+                        ]
+                    );
 
 
-    marker.setPopupContent(
-        makeFloodPopup(
-            hazard
-        )
-    );
+                    marker.setPopupContent(
+                        makeFloodPopup(
+                            hazard
+                        )
+                    );
 
-}
+                }
 
-function updateFloodMarkerSizes() {
 
-    hazardMarkers.forEach(
-        marker => {
-
-            marker.setIcon(
-                createFloodIcon()
-            );
-
-        }
-    );
-
-}
                 if (
                     !map.hasLayer(
                         marker
@@ -2677,13 +2686,6 @@ function updateFloodMarkerSizes() {
             }
         );
 
-
-        /*
-        Remove visual markers that should
-        no longer be displayed.
-
-        Their hazard DATA stays cached.
-        */
 
         hazardMarkers.forEach(
             (
@@ -2729,6 +2731,29 @@ function updateFloodMarkerSizes() {
             safeRoute.bringToFront();
 
         }
+
+    }
+
+
+    function updateFloodMarkerSizes() {
+
+        hazardMarkers.forEach(
+            marker => {
+
+                if (
+                    map.hasLayer(
+                        marker
+                    )
+                ) {
+
+                    marker.setIcon(
+                        createFloodIcon()
+                    );
+
+                }
+
+            }
+        );
 
     }
 
@@ -2816,10 +2841,6 @@ function updateFloodMarkerSizes() {
         }
 
 
-        /*
-        Pressing Load More exits route-only mode.
-        */
-
         routeSearchActive =
             false;
 
@@ -2839,11 +2860,6 @@ function updateFloodMarkerSizes() {
         loadMoreFloodsButton.innerText =
             "Loading floods...";
 
-
-        /*
-        Show anything already cached for
-        the current viewport immediately.
-        */
 
         renderVisibleFloods();
 
@@ -3008,12 +3024,6 @@ function updateFloodMarkerSizes() {
                     renderVisibleFloods();
 
 
-                    /*
-                    While route mode is active,
-                    zooming/panning NEVER brings
-                    old floods back automatically.
-                    */
-
                     if (
                         routeSearchActive
                     ) {
@@ -3079,66 +3089,79 @@ function updateFloodMarkerSizes() {
 
 
     map.on(
-        "moveend",
-        floodMapChanged
+        "movestart",
+        function () {
+
+            document
+                .getElementById(
+                    "map"
+                )
+                .classList
+                .add(
+                    "map-is-moving"
+                );
+
+        }
     );
+
+
     map.on(
-    "movestart",
-    function () {
+        "zoomstart",
+        function () {
 
-        document
-            .getElementById("map")
-            .classList
-            .add("map-is-moving");
+            document
+                .getElementById(
+                    "map"
+                )
+                .classList
+                .add(
+                    "map-is-moving"
+                );
 
-    }
-);
-
-
-map.on(
-    "zoomstart",
-    function () {
-
-        document
-            .getElementById("map")
-            .classList
-            .add("map-is-moving");
-
-    }
-);
+        }
+    );
 
 
-map.on(
-    "moveend",
-    function () {
+    map.on(
+        "moveend",
+        function () {
 
-        document
-            .getElementById("map")
-            .classList
-            .remove("map-is-moving");
-
-    }
-);
-
-
-map.on(
-    "zoomend",
-    function () {
-
-        document
-            .getElementById("map")
-            .classList
-            .remove("map-is-moving");
+            document
+                .getElementById(
+                    "map"
+                )
+                .classList
+                .remove(
+                    "map-is-moving"
+                );
 
 
-        updateFloodMarkerSizes();
+            floodMapChanged();
 
-    }
-);
+        }
+    );
+
 
     map.on(
         "zoomend",
-        floodMapChanged
+        function () {
+
+            document
+                .getElementById(
+                    "map"
+                )
+                .classList
+                .remove(
+                    "map-is-moving"
+                );
+
+
+            updateFloodMarkerSizes();
+
+
+            floodMapChanged();
+
+        }
     );
 
 
@@ -3170,9 +3193,7 @@ map.on(
 
 
         if (
-            layers.length
-            ===
-            0
+            !layers.length
         ) {
 
             return;
@@ -3250,8 +3271,11 @@ map.on(
             "driveButton"
         )
         .classList
-        .remove(
-            "active"
+        .toggle(
+            "active",
+            mode
+            ===
+            "driving"
         );
 
 
@@ -3259,38 +3283,12 @@ map.on(
             "walkButton"
         )
         .classList
-        .remove(
-            "active"
-        );
-
-
-        if (
+        .toggle(
+            "active",
             mode
             ===
-            "driving"
-        ) {
-
-            document.getElementById(
-                "driveButton"
-            )
-            .classList
-            .add(
-                "active"
-            );
-
-        }
-
-        else {
-
-            document.getElementById(
-                "walkButton"
-            )
-            .classList
-            .add(
-                "active"
-            );
-
-        }
+            "walking"
+        );
 
 
         loadRoutes();
@@ -3435,7 +3433,6 @@ map.on(
 
 
         panel.style.transform =
-
             "translateY("
             +
             offset
@@ -3574,7 +3571,9 @@ map.on(
         if (
             currentSheetOffset
             <
-            maximum / 2
+            maximum
+            /
+            2
         ) {
 
             expandMobileSheet();
@@ -3606,6 +3605,17 @@ map.on(
 
 
             event.preventDefault();
+
+
+            if (
+                panelHeader.setPointerCapture
+            ) {
+
+                panelHeader.setPointerCapture(
+                    event.pointerId
+                );
+
+            }
 
 
             beginSheetDrag(
@@ -3875,6 +3885,11 @@ map.on(
             );
 
 
+            desktopToggle.classList.remove(
+                "closed"
+            );
+
+
             requestAnimationFrame(
                 collapseMobileSheet
             );
@@ -3954,10 +3969,7 @@ map.on(
         }
     );
 
-
-
 </script>
-
 
 </body>
 

@@ -478,6 +478,10 @@
             animation: floodRipple 2.2s infinite ease-out;
         }
 
+        .map-is-moving .flood-ring {
+    display: none !important;
+}
+
 
         .flood-ring.second {
             animation-delay: 1.1s;
@@ -606,10 +610,10 @@
 
             #loadMoreFloodsButton {
                 top: 16px;
-                right: 14px;
-                left: auto;
-                bottom: auto;
-                transform: none;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        transform: translateX(-50%);
             }
 
         }
@@ -2629,28 +2633,35 @@
 
                 else {
 
-                    marker.setLatLng(
-                        [
-                            hazard.latitude,
-                            hazard.longitude
-                        ]
-                    );
+    marker.setLatLng(
+        [
+            hazard.latitude,
+            hazard.longitude
+        ]
+    );
 
 
-                    marker.setIcon(
-                        createFloodIcon()
-                    );
+    marker.setPopupContent(
+        makeFloodPopup(
+            hazard
+        )
+    );
 
+}
 
-                    marker.setPopupContent(
-                        makeFloodPopup(
-                            hazard
-                        )
-                    );
+function updateFloodMarkerSizes() {
 
-                }
+    hazardMarkers.forEach(
+        marker => {
 
+            marker.setIcon(
+                createFloodIcon()
+            );
 
+        }
+    );
+
+}
                 if (
                     !map.hasLayer(
                         marker
@@ -3071,7 +3082,59 @@
         "moveend",
         floodMapChanged
     );
+    map.on(
+    "movestart",
+    function () {
 
+        document
+            .getElementById("map")
+            .classList
+            .add("map-is-moving");
+
+    }
+);
+
+
+map.on(
+    "zoomstart",
+    function () {
+
+        document
+            .getElementById("map")
+            .classList
+            .add("map-is-moving");
+
+    }
+);
+
+
+map.on(
+    "moveend",
+    function () {
+
+        document
+            .getElementById("map")
+            .classList
+            .remove("map-is-moving");
+
+    }
+);
+
+
+map.on(
+    "zoomend",
+    function () {
+
+        document
+            .getElementById("map")
+            .classList
+            .remove("map-is-moving");
+
+
+        updateFloodMarkerSizes();
+
+    }
+);
 
     map.on(
         "zoomend",
@@ -3890,6 +3953,7 @@
 
         }
     );
+
 
 
 </script>

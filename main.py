@@ -8,10 +8,6 @@ from flask import Flask, jsonify, request, send_from_directory
 app = Flask(__name__)
 
 
-# =========================================================
-# CONFIGURATION
-# =========================================================
-
 api_key = os.getenv("ORS_API_KEY")
 
 FOCUS_LAT = 40.59408
@@ -27,10 +23,6 @@ METADATA_URL = (
 
 FLOOD_THRESHOLD = 0.4
 
-
-# =========================================================
-# FLOOD SEVERITY
-# =========================================================
 
 def get_severity(depth):
 
@@ -49,10 +41,6 @@ def get_severity(depth):
     else:
         return "severe"
 
-
-# =========================================================
-# HAZARD POLYGON
-# =========================================================
 
 def make_hazard_polygon(
     latitude,
@@ -86,17 +74,12 @@ def make_hazard_polygon(
     ]
 
 
-# =========================================================
-# PARSE FLOOD DEPTHS
-# =========================================================
-
 def parse_depth_profile(
     profile
 ):
 
     if not profile:
         return []
-
 
     try:
 
@@ -109,30 +92,20 @@ def parse_depth_profile(
                 profile
             )
 
-
         return [
             float(depth)
             for depth in profile
         ]
-
 
     except Exception:
 
         return []
 
 
-# =========================================================
-# LOAD FLOODNET SENSORS
-# =========================================================
-
 def load_demo_sensors():
 
     sensors = []
 
-
-    # -----------------------------------------------------
-    # LOAD METADATA
-    # -----------------------------------------------------
 
     try:
 
@@ -150,7 +123,6 @@ def load_demo_sensors():
         metadata_rows = (
             metadata_response.json()
         )
-
 
     except Exception as error:
 
@@ -194,10 +166,6 @@ def load_demo_sensors():
         ] = row
 
 
-    # -----------------------------------------------------
-    # LOAD FLOOD EVENTS
-    # -----------------------------------------------------
-
     events = []
 
     batch_size = 5000
@@ -211,7 +179,6 @@ def load_demo_sensors():
             response = requests.get(
                 EVENTS_URL,
                 params={
-
                     "$order":
                         "flood_start_time DESC",
 
@@ -220,18 +187,15 @@ def load_demo_sensors():
 
                     "$offset":
                         offset
-
                 },
                 timeout=30
             )
-
 
             response.raise_for_status()
 
             batch = (
                 response.json()
             )
-
 
         except Exception as error:
 
@@ -264,10 +228,6 @@ def load_demo_sensors():
         )
 
 
-    # -----------------------------------------------------
-    # BUILD SENSOR LIST
-    # -----------------------------------------------------
-
     used_sensor_ids = set()
 
 
@@ -297,15 +257,9 @@ def load_demo_sensors():
 
 
         flood_depths = [
-
             depth
-
             for depth in depths
-
-            if depth
-            >=
-            FLOOD_THRESHOLD
-
+            if depth >= FLOOD_THRESHOLD
         ]
 
 
@@ -333,7 +287,6 @@ def load_demo_sensors():
                     "longitude"
                 ]
             )
-
 
         except (
             KeyError,
@@ -404,10 +357,6 @@ demo_sensors = (
 )
 
 
-# =========================================================
-# GEOMETRY
-# =========================================================
-
 def point_inside_polygon(
     point,
     polygon
@@ -418,49 +367,27 @@ def point_inside_polygon(
 
 
     longitudes = [
-
         coordinate[0]
-
-        for coordinate
-        in polygon
-
+        for coordinate in polygon
     ]
 
 
     latitudes = [
-
         coordinate[1]
-
-        for coordinate
-        in polygon
-
+        for coordinate in polygon
     ]
 
 
     return (
-
-        min(
-            longitudes
-        )
-        <=
-        longitude
-        <=
-        max(
-            longitudes
-        )
+        min(longitudes)
+        <= longitude
+        <= max(longitudes)
 
         and
 
-        min(
-            latitudes
-        )
-        <=
-        latitude
-        <=
-        max(
-            latitudes
-        )
-
+        min(latitudes)
+        <= latitude
+        <= max(latitudes)
     )
 
 
@@ -471,37 +398,15 @@ def orientation(
 ):
 
     value = (
-
-        (
-            b[1]
-            -
-            a[1]
-        )
-
+        (b[1] - a[1])
         *
-
-        (
-            c[0]
-            -
-            b[0]
-        )
+        (c[0] - b[0])
 
         -
 
-        (
-            b[0]
-            -
-            a[0]
-        )
-
+        (b[0] - a[0])
         *
-
-        (
-            c[1]
-            -
-            b[1]
-        )
-
+        (c[1] - b[1])
     )
 
 
@@ -513,7 +418,6 @@ def orientation(
 
 
     if value > 0:
-
         return 1
 
 
@@ -527,7 +431,6 @@ def on_segment(
 ):
 
     return (
-
         min(
             a[0],
             c[0]
@@ -553,7 +456,6 @@ def on_segment(
             a[1],
             c[1]
         )
-
     )
 
 
@@ -653,10 +555,6 @@ def segments_intersect(
     return False
 
 
-# =========================================================
-# ROUTE BOUNDS
-# =========================================================
-
 def get_route_bounds(
     route
 ):
@@ -668,41 +566,29 @@ def get_route_bounds(
 
 
     if not features:
-
         return None
 
 
     coordinates = (
-
         features[0]
         ["geometry"]
         ["coordinates"]
-
     )
 
 
     if not coordinates:
-
         return None
 
 
     longitudes = [
-
         point[0]
-
-        for point
-        in coordinates
-
+        for point in coordinates
     ]
 
 
     latitudes = [
-
         point[1]
-
-        for point
-        in coordinates
-
+        for point in coordinates
     ]
 
 
@@ -727,15 +613,10 @@ def get_route_bounds(
             max(
                 latitudes
             )
-
     }
 
 
-# =========================================================
-# ACTIVE POLYGONS NEAR ROUTE
-# =========================================================
-
-def get_active_polygons_for_route(
+def get_route_hazards(
     route
 ):
 
@@ -747,11 +628,11 @@ def get_active_polygons_for_route(
 
 
     if route_bounds is None:
-
         return []
 
 
     buffer_size = 0.01
+
 
     min_lat = (
         route_bounds[
@@ -786,7 +667,7 @@ def get_active_polygons_for_route(
     )
 
 
-    polygons = []
+    results = []
 
 
     for sensor in demo_sensors:
@@ -805,7 +686,6 @@ def get_active_polygons_for_route(
 
 
         if not (
-
             min_lat
             <=
             latitude
@@ -819,7 +699,6 @@ def get_active_polygons_for_route(
             longitude
             <=
             max_lon
-
         ):
 
             continue
@@ -833,35 +712,43 @@ def get_active_polygons_for_route(
 
 
         depth = (
-
             sensor[
                 "depths"
             ]
-
             [
                 sensor[
                     "index"
                 ]
             ]
-
         )
 
 
-        if depth >= FLOOD_THRESHOLD:
+        if depth < FLOOD_THRESHOLD:
+            continue
 
-            polygons.append(
+
+        if route_intersects_flood(
+            route,
+            [
                 sensor[
                     "polygon"
                 ]
-            )
+            ]
+        ):
+
+            results.append({
+
+                "sensor":
+                    sensor,
+
+                "depth":
+                    depth
+
+            })
 
 
-    return polygons
+    return results
 
-
-# =========================================================
-# ROUTE / FLOOD INTERSECTION
-# =========================================================
 
 def route_intersects_flood(
     route,
@@ -869,7 +756,6 @@ def route_intersects_flood(
 ):
 
     if route is None:
-
         return False
 
 
@@ -880,16 +766,13 @@ def route_intersects_flood(
 
 
     if not features:
-
         return False
 
 
     coordinates = (
-
         features[0]
         ["geometry"]
         ["coordinates"]
-
     )
 
 
@@ -915,7 +798,9 @@ def route_intersects_flood(
         ):
 
             route_start = (
-                coordinates[i]
+                coordinates[
+                    i
+                ]
             )
 
             route_end = (
@@ -934,15 +819,14 @@ def route_intersects_flood(
             ):
 
                 if segments_intersect(
-
                     route_start,
                     route_end,
-
-                    polygon[j],
+                    polygon[
+                        j
+                    ],
                     polygon[
                         j + 1
                     ]
-
                 ):
 
                     return True
@@ -950,10 +834,6 @@ def route_intersects_flood(
 
     return False
 
-
-# =========================================================
-# GEOCODING
-# =========================================================
 
 def geocode_address(
     address
@@ -969,10 +849,8 @@ def geocode_address(
 
 
     url = (
-
         "https://api.heigit.org/"
         "pelias/v1/search"
-
     )
 
 
@@ -1013,7 +891,6 @@ def geocode_address(
             timeout=15
         )
 
-
     except Exception as error:
 
         print(
@@ -1034,9 +911,7 @@ def geocode_address(
         return None
 
 
-    data = (
-        response.json()
-    )
+    data = response.json()
 
 
     features = data.get(
@@ -1046,7 +921,6 @@ def geocode_address(
 
 
     if not features:
-
         return None
 
 
@@ -1056,7 +930,6 @@ def geocode_address(
 
 
     label = (
-
         feature[
             "properties"
         ]
@@ -1064,7 +937,6 @@ def geocode_address(
             "label",
             address
         )
-
     )
 
 
@@ -1083,7 +955,6 @@ def geocode_address(
     return {
 
         "coordinates":
-
             feature[
                 "geometry"
             ]
@@ -1096,10 +967,6 @@ def geocode_address(
 
     }
 
-
-# =========================================================
-# ROUTING
-# =========================================================
 
 def get_route(
     start,
@@ -1137,11 +1004,9 @@ def get_route(
 
 
     url = (
-
         "https://api.heigit.org/"
         "openrouteservice/v2/directions/"
         f"{profile}/geojson"
-
     )
 
 
@@ -1234,7 +1099,6 @@ def get_route(
             timeout=25
         )
 
-
     except Exception as error:
 
         print(
@@ -1264,10 +1128,6 @@ def get_route(
     )
 
 
-# =========================================================
-# HOME
-# =========================================================
-
 @app.route("/")
 def home():
 
@@ -1276,10 +1136,6 @@ def home():
         "index.html"
     )
 
-
-# =========================================================
-# AUTOCOMPLETE
-# =========================================================
 
 @app.route("/autocomplete")
 def autocomplete():
@@ -1302,10 +1158,8 @@ def autocomplete():
 
 
     url = (
-
         "https://api.heigit.org/"
         "pelias/v1/autocomplete"
-
     )
 
 
@@ -1346,13 +1200,7 @@ def autocomplete():
             timeout=15
         )
 
-
-    except Exception as error:
-
-        print(
-            "Autocomplete error:",
-            error
-        )
+    except Exception:
 
         return jsonify([])
 
@@ -1366,54 +1214,37 @@ def autocomplete():
 
 
     for feature in (
-
         response
         .json()
         .get(
             "features",
             []
         )
-
     ):
 
         coordinates = (
-
             feature[
                 "geometry"
             ]
             [
                 "coordinates"
             ]
-
         )
 
 
-        properties = feature.get(
-            "properties",
-            {}
-        )
-
-
-        country_code = (
-            properties.get(
-                "country_a",
-                ""
+        properties = (
+            feature.get(
+                "properties",
+                {}
             )
         )
 
 
-        if (
-            country_code
-            and
-            country_code != "USA"
-        ):
-
-            continue
-
-
-        label = properties.get(
-            "label",
-            "Unknown location"
+        label = (
+            properties.get(
+                "label",
+                "Unknown location"
+            )
         )
 
 
@@ -1447,10 +1278,6 @@ def autocomplete():
         results
     )
 
-
-# =========================================================
-# ROUTES
-# =========================================================
 
 @app.route("/routes")
 def routes():
@@ -1491,10 +1318,6 @@ def routes():
     )
 
 
-    # -----------------------------------------------------
-    # START
-    # -----------------------------------------------------
-
     if (
         start_lat
         and
@@ -1515,11 +1338,9 @@ def routes():
 
 
         start_label = (
-
             start_text
             or
             "Current location"
-
         )
 
 
@@ -1556,10 +1377,6 @@ def routes():
         )
 
 
-    # -----------------------------------------------------
-    # DESTINATION
-    # -----------------------------------------------------
-
     if (
         destination_lat
         and
@@ -1580,11 +1397,9 @@ def routes():
 
 
         destination_label = (
-
             destination_text
             or
             "Destination"
-
         )
 
 
@@ -1621,10 +1436,6 @@ def routes():
         )
 
 
-    # -----------------------------------------------------
-    # NORMAL ROUTE
-    # -----------------------------------------------------
-
     normal_route = get_route(
         start,
         destination,
@@ -1642,27 +1453,36 @@ def routes():
         }), 500
 
 
-    # Only use hazard polygons near this route.
-    # Much faster than sending every NYC flood polygon.
-
-    active_polygons = (
-        get_active_polygons_for_route(
+    route_hazards = (
+        get_route_hazards(
             normal_route
         )
     )
 
 
+    active_polygons = [
+
+        item[
+            "sensor"
+        ]
+        [
+            "polygon"
+        ]
+
+        for item
+        in route_hazards
+
+    ]
+
+
     intersects_flood = (
-        route_intersects_flood(
-            normal_route,
-            active_polygons
+        len(
+            route_hazards
         )
+        >
+        0
     )
 
-
-    # -----------------------------------------------------
-    # SAFE ROUTE
-    # -----------------------------------------------------
 
     if (
         intersects_flood
@@ -1692,6 +1512,63 @@ def routes():
         )
 
 
+    route_hazard_data = []
+
+
+    for item in route_hazards:
+
+        sensor = (
+            item[
+                "sensor"
+            ]
+        )
+
+        depth = (
+            item[
+                "depth"
+            ]
+        )
+
+
+        route_hazard_data.append({
+
+            "sensor_id":
+                sensor[
+                    "sensor_id"
+                ],
+
+            "sensor_name":
+                sensor[
+                    "sensor_name"
+                ],
+
+            "latitude":
+                sensor[
+                    "latitude"
+                ],
+
+            "longitude":
+                sensor[
+                    "longitude"
+                ],
+
+            "depth_inches":
+                depth,
+
+            "severity":
+                get_severity(
+                    depth
+                ),
+
+            "flood_active":
+                True,
+
+            "route_hazard":
+                True
+
+        })
+
+
     return jsonify({
 
         "normal":
@@ -1703,9 +1580,12 @@ def routes():
         "intersects_flood":
             intersects_flood,
 
+        "route_hazards":
+            route_hazard_data,
+
         "active_hazard_count":
             len(
-                active_polygons
+                route_hazard_data
             ),
 
         "start": {
@@ -1730,10 +1610,6 @@ def routes():
 
     })
 
-
-# =========================================================
-# VIEWPORT HAZARDS
-# =========================================================
 
 @app.route("/hazards")
 def hazards():
@@ -1784,7 +1660,6 @@ def hazards():
             )
         )
 
-
     except ValueError:
 
         return jsonify({
@@ -1823,7 +1698,6 @@ def hazards():
 
 
         if (
-
             min_lat
             <=
             latitude
@@ -1837,7 +1711,6 @@ def hazards():
             longitude
             <=
             max_lon
-
         ):
 
             matching_sensors.append(
@@ -1855,18 +1728,18 @@ def hazards():
     )
 
 
-    total = len(
-        matching_sensors
+    total = (
+        len(
+            matching_sensors
+        )
     )
 
 
     page = (
-
         matching_sensors[
             offset:
             offset + limit
         ]
-
     )
 
 
@@ -1883,17 +1756,14 @@ def hazards():
 
 
         depth = (
-
             sensor[
                 "depths"
             ]
-
             [
                 sensor[
                     "index"
                 ]
             ]
-
         )
 
 
@@ -1938,32 +1808,6 @@ def hazards():
         })
 
 
-        sensor[
-            "index"
-        ] += 1
-
-
-        if (
-
-            sensor[
-                "index"
-            ]
-
-            >=
-
-            len(
-                sensor[
-                    "depths"
-                ]
-            )
-
-        ):
-
-            sensor[
-                "index"
-            ] = 0
-
-
     next_offset = (
         offset
         +
@@ -1997,37 +1841,6 @@ def hazards():
     })
 
 
-# =========================================================
-# RESET
-# =========================================================
-
-@app.route("/reset")
-def reset():
-
-    for sensor in demo_sensors:
-
-        sensor[
-            "index"
-        ] = 0
-
-
-    return jsonify({
-
-        "message":
-            "Flood demonstrations reset",
-
-        "sensor_count":
-            len(
-                demo_sensors
-            )
-
-    })
-
-
-# =========================================================
-# HEALTH
-# =========================================================
-
 @app.route("/health")
 def health():
 
@@ -2048,10 +1861,6 @@ def health():
 
     })
 
-
-# =========================================================
-# RUN
-# =========================================================
 
 if __name__ == "__main__":
 

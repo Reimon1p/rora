@@ -61,10 +61,6 @@
         }
 
 
-        /* =================================================
-           MAIN PANEL
-        ================================================= */
-
         .panel {
 
             position:
@@ -184,15 +180,8 @@
             overflow-y:
                 auto;
 
-            overscroll-behavior:
-                contain;
-
         }
 
-
-        /* =================================================
-           DESKTOP TOGGLE
-        ================================================= */
 
         .desktop-toggle {
 
@@ -241,16 +230,8 @@
             justify-content:
                 center;
 
-            font-size:
-                15px;
-
             z-index:
                 2000;
-
-            transition:
-                left
-                0.35s
-                ease;
 
         }
 
@@ -274,10 +255,6 @@
 
         }
 
-
-        /* =================================================
-           SEARCH
-        ================================================= */
 
         .search-section {
 
@@ -309,9 +286,6 @@
 
             padding-top:
                 25px;
-
-            flex-shrink:
-                0;
 
         }
 
@@ -377,9 +351,6 @@
             flex:
                 1;
 
-            min-width:
-                0;
-
         }
 
 
@@ -421,23 +392,6 @@
         }
 
 
-        .search-input:focus {
-
-            background:
-                white;
-
-            box-shadow:
-                0 0 0 2px
-                rgba(
-                    66,
-                    133,
-                    244,
-                    0.22
-                );
-
-        }
-
-
         .suggestions {
 
             position:
@@ -475,15 +429,6 @@
             border-radius:
                 10px;
 
-            box-shadow:
-                0 4px 12px
-                rgba(
-                    0,
-                    0,
-                    0,
-                    0.15
-                );
-
             z-index:
                 3000;
 
@@ -500,18 +445,6 @@
 
             font-size:
                 13px;
-
-            border-bottom:
-                1px solid
-                #eeeeee;
-
-        }
-
-
-        .suggestion:hover {
-
-            background:
-                #f5f5f5;
 
         }
 
@@ -534,24 +467,14 @@
                 8px
                 10px;
 
-            border-radius:
-                10px;
-
             cursor:
                 pointer;
 
             text-align:
                 left;
 
-            font-size:
-                14px;
-
         }
 
-
-        /* =================================================
-           MODE
-        ================================================= */
 
         .mode-buttons {
 
@@ -577,9 +500,6 @@
             background:
                 #f1f3f4;
 
-            color:
-                #333333;
-
             border-radius:
                 28px;
 
@@ -589,9 +509,6 @@
 
             cursor:
                 pointer;
-
-            font-size:
-                15px;
 
         }
 
@@ -653,15 +570,8 @@
             margin-top:
                 8px;
 
-            font-size:
-                13px;
-
         }
 
-
-        /* =================================================
-           ROUTE CARDS
-        ================================================= */
 
         .route-choice {
 
@@ -703,9 +613,6 @@
             border-color:
                 #0B1F3A;
 
-            background:
-                #f6f8fa;
-
         }
 
 
@@ -717,19 +624,16 @@
             font-weight:
                 700;
 
-            margin-bottom:
-                5px;
-
         }
 
 
         .route-choice-info {
 
-            font-size:
-                15px;
-
             color:
                 #555555;
+
+            margin-top:
+                5px;
 
         }
 
@@ -781,10 +685,6 @@
         }
 
 
-        /* =================================================
-           DIRECTIONS
-        ================================================= */
-
         .directions-container {
 
             margin-top:
@@ -796,51 +696,6 @@
             border-top:
                 1px solid
                 #eeeeee;
-
-        }
-
-
-        .directions-header {
-
-            display:
-                flex;
-
-            justify-content:
-                space-between;
-
-            gap:
-                10px;
-
-            align-items:
-                center;
-
-            margin-bottom:
-                8px;
-
-        }
-
-
-        .directions-header h3 {
-
-            margin:
-                0;
-
-            font-size:
-                18px;
-
-        }
-
-
-        #selectedRouteLabel {
-
-            color:
-                #777777;
-
-            font-size:
-                12px;
-
-            text-align:
-                right;
 
         }
 
@@ -872,9 +727,6 @@
             height:
                 29px;
 
-            flex-shrink:
-                0;
-
             display:
                 flex;
 
@@ -890,12 +742,6 @@
             background:
                 #f1f3f4;
 
-            font-size:
-                12px;
-
-            font-weight:
-                700;
-
         }
 
 
@@ -903,12 +749,6 @@
 
             flex:
                 1;
-
-            font-size:
-                14px;
-
-            line-height:
-                1.4;
 
         }
 
@@ -918,21 +758,17 @@
             display:
                 block;
 
-            margin-top:
-                3px;
-
             color:
                 #777777;
 
             font-size:
                 12px;
 
+            margin-top:
+                3px;
+
         }
 
-
-        /* =================================================
-           LOAD MORE FLOODS
-        ================================================= */
 
         #loadMoreFloodsButton {
 
@@ -969,9 +805,6 @@
             border-radius:
                 24px;
 
-            font-size:
-                14px;
-
             font-weight:
                 700;
 
@@ -992,29 +825,6 @@
 
         }
 
-
-        #loadMoreFloodsButton:hover {
-
-            background:
-                #f5f5f5;
-
-        }
-
-
-        #loadMoreFloodsButton:disabled {
-
-            opacity:
-                0.65;
-
-            cursor:
-                default;
-
-        }
-
-
-        /* =================================================
-           FLOOD MARKER
-        ================================================= */
 
         .flood-marker {
 
@@ -1073,22 +883,8 @@
             z-index:
                 4;
 
-            box-shadow:
-                0 0 6px
-                rgba(
-                    255,
-                    0,
-                    0,
-                    0.55
-                );
-
         }
 
-
-        /*
-        Square, ripple and circle are all inside
-        ONE Leaflet marker.
-        */
 
         .flood-square {
 
@@ -1134,13 +930,7 @@
                     0.13
                 );
 
-            z-index:
-                1;
-
             display:
-                none;
-
-            pointer-events:
                 none;
 
         }
@@ -1176,15 +966,6 @@
                     --ripple-size
                 );
 
-            transform:
-                translate(
-                    -50%,
-                    -50%
-                )
-                scale(
-                    0.55
-                );
-
             border:
                 2px solid
                 rgba(
@@ -1197,8 +978,11 @@
             border-radius:
                 50%;
 
-            pointer-events:
-                none;
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
 
             animation:
                 floodRipple
@@ -1236,7 +1020,7 @@
                         -50%
                     )
                     scale(
-                        0.55
+                        0.6
                     );
 
                 opacity:
@@ -1264,23 +1048,10 @@
         }
 
 
-        /* =================================================
-           MOBILE
-        ================================================= */
-
-        .mobile-drag-handle {
-
-            display:
-                none;
-
-        }
-
-
         @media (
             max-width:
             600px
         ) {
-
 
             .desktop-toggle {
 
@@ -1325,25 +1096,6 @@
                         )
                     );
 
-                transition:
-                    transform
-                    0.28s
-                    ease;
-
-            }
-
-
-            .panel.desktop-collapsed {
-
-                transform:
-                    translateY(
-                        calc(
-                            78vh
-                            -
-                            110px
-                        )
-                    );
-
             }
 
 
@@ -1353,137 +1105,6 @@
                     translateY(
                         0
                     );
-
-            }
-
-
-            .panel-header {
-
-                height:
-                    58px;
-
-                padding:
-                    17px
-                    18px
-                    8px;
-
-                cursor:
-                    grab;
-
-                touch-action:
-                    none;
-
-            }
-
-
-            .panel-header h2 {
-
-                font-size:
-                    22px;
-
-            }
-
-
-            .mobile-drag-handle {
-
-                display:
-                    block;
-
-                position:
-                    absolute;
-
-                top:
-                    7px;
-
-                left:
-                    50%;
-
-                transform:
-                    translateX(
-                        -50%
-                    );
-
-                width:
-                    42px;
-
-                height:
-                    5px;
-
-                background:
-                    #bdbdbd;
-
-                border-radius:
-                    10px;
-
-            }
-
-
-            .panel-content {
-
-                height:
-                    calc(
-                        78vh
-                        -
-                        58px
-                    );
-
-                max-height:
-                    none;
-
-                padding:
-                    5px
-                    14px
-                    28px;
-
-                overflow-y:
-                    hidden;
-
-            }
-
-
-            .panel.mobile-expanded
-            .panel-content {
-
-                overflow-y:
-                    auto;
-
-                -webkit-overflow-scrolling:
-                    touch;
-
-            }
-
-
-            .mode-buttons button {
-
-                flex:
-                    1;
-
-            }
-
-
-            .route-choice {
-
-                padding:
-                    11px;
-
-                margin-top:
-                    8px;
-
-            }
-
-
-            .route-choice-title {
-
-                font-size:
-                    15px;
-
-            }
-
-
-            .route-choice-info {
-
-                font-size:
-                    14px;
 
             }
 
@@ -1510,15 +1131,10 @@
     class="panel"
 >
 
-
     <div
         id="panelHeader"
         class="panel-header"
     >
-
-        <div
-            class="mobile-drag-handle"
-        ></div>
 
         <h2>
             RORA
@@ -1532,11 +1148,9 @@
         class="panel-content"
     >
 
-
         <div
             class="search-section"
         >
-
 
             <div
                 class="route-dots"
@@ -1561,7 +1175,6 @@
                 class="search-boxes"
             >
 
-
                 <div
                     class="input-container"
                 >
@@ -1569,7 +1182,6 @@
                     <input
                         id="startInput"
                         class="search-input"
-                        type="text"
                         value="Beach 67th St, Queens, NY"
                         autocomplete="off"
                     >
@@ -1589,7 +1201,6 @@
                     <input
                         id="destinationInput"
                         class="search-input"
-                        type="text"
                         value="Beach 44th St, Queens, NY"
                         autocomplete="off"
                     >
@@ -1610,7 +1221,6 @@
                     ◎ Use my current location
 
                 </button>
-
 
             </div>
 
@@ -1674,7 +1284,6 @@
 
             </div>
 
-
             <div
                 id="normalInfo"
                 class="route-choice-info"
@@ -1683,7 +1292,6 @@
                 --
 
             </div>
-
 
             <div
                 id="normalWarning"
@@ -1714,7 +1322,6 @@
 
             </div>
 
-
             <div
                 id="safeInfo"
                 class="route-choice-info"
@@ -1723,7 +1330,6 @@
                 --
 
             </div>
-
 
             <div
                 class="route-badge"
@@ -1740,31 +1346,15 @@
             class="directions-container"
         >
 
-            <div
-                class="directions-header"
-            >
-
-                <h3>
-                    Directions
-                </h3>
-
-                <span
-                    id="selectedRouteLabel"
-                >
-
-                    Recommended route
-
-                </span>
-
-            </div>
-
+            <h3>
+                Directions
+            </h3>
 
             <div
                 id="directionsList"
             ></div>
 
         </div>
-
 
     </div>
 
@@ -1774,7 +1364,6 @@
 <button
     id="desktopToggle"
     class="desktop-toggle"
-    type="button"
 >
 
     ◀
@@ -1789,7 +1378,6 @@
 
 <button
     id="loadMoreFloodsButton"
-    type="button"
 >
 
     Load more floods
@@ -1805,21 +1393,15 @@
 <script>
 
 
-    // =====================================================
-    // MAP
-    // =====================================================
-
     const map =
         L.map(
             "map",
             {
-
                 zoomControl:
                     false,
 
                 preferCanvas:
                     true
-
             }
         )
         .setView(
@@ -1834,10 +1416,8 @@
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-
             attribution:
                 "&copy; OpenStreetMap contributors"
-
         }
     )
     .addTo(
@@ -1845,56 +1425,10 @@
     );
 
 
-    const redDestinationIcon =
-        L.icon({
-
-            iconUrl:
-                "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-
-            shadowUrl:
-                "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-
-            iconSize:
-                [
-                    25,
-                    41
-                ],
-
-            iconAnchor:
-                [
-                    12,
-                    41
-                ],
-
-            popupAnchor:
-                [
-                    1,
-                    -34
-                ],
-
-            shadowSize:
-                [
-                    41,
-                    41
-                ]
-
-        });
-
-
-    // =====================================================
-    // VARIABLES
-    // =====================================================
-
     let startCoordinates =
         null;
 
     let destinationCoordinates =
-        null;
-
-    let currentLocationMarker =
-        null;
-
-    let destinationMarker =
         null;
 
     let normalRoute =
@@ -1903,37 +1437,33 @@
     let safeRoute =
         null;
 
+    let currentLocationMarker =
+        null;
+
+    let destinationMarker =
+        null;
+
     let normalRouteData =
         null;
 
     let safeRouteData =
         null;
 
-    let selectedRoute =
-        "normal";
+    let routeIntersectsFlood =
+        false;
 
     let currentMode =
         "driving";
 
-    let routeIntersectsFlood =
-        false;
-
-
-    // =====================================================
-    // FLOOD CONFIGURATION
-    // =====================================================
 
     const FLOODS_PER_REQUEST =
         100;
 
-
     const VIEW_BUFFER =
         0.12;
 
-
     const SQUARE_MIN_ZOOM =
         15;
-
 
     const RIPPLE_MIN_ZOOM =
         12;
@@ -1943,6 +1473,10 @@
         new Map();
 
 
+    const forcedRouteHazards =
+        new Set();
+
+
     const hazardMarkers =
         new Map();
 
@@ -1950,17 +1484,14 @@
     let currentFloodOffset =
         0;
 
-
     let currentFloodViewKey =
         "";
 
+    let floodRequestRunning =
+        false;
 
     let floodMoveTimer =
         null;
-
-
-    let floodRequestRunning =
-        false;
 
 
     const loadMoreFloodsButton =
@@ -1969,16 +1500,11 @@
         );
 
 
-    // =====================================================
-    // AUTOCOMPLETE
-    // =====================================================
-
     function setupAutocomplete(
         inputId,
         suggestionId,
         type
     ) {
-
 
         const input =
             document.getElementById(
@@ -1998,7 +1524,6 @@
         input.addEventListener(
             "input",
             function () {
-
 
                 clearTimeout(
                     timer
@@ -2048,17 +1573,12 @@
                     setTimeout(
                         function () {
 
-
                             fetch(
-
                                 "/autocomplete?text="
-
                                 +
-
                                 encodeURIComponent(
                                     text
                                 )
-
                             )
 
                             .then(
@@ -2069,28 +1589,12 @@
                             .then(
                                 results => {
 
-
                                     suggestions.innerHTML =
                                         "";
 
 
-                                    if (
-                                        results.length
-                                        ===
-                                        0
-                                    ) {
-
-                                        suggestions.style.display =
-                                            "none";
-
-                                        return;
-
-                                    }
-
-
                                     results.forEach(
                                         result => {
-
 
                                             const item =
                                                 document.createElement(
@@ -2108,7 +1612,6 @@
 
                                             item.onclick =
                                                 function () {
-
 
                                                     input.value =
                                                         result.label;
@@ -2162,15 +1665,6 @@
                                         "block";
 
                                 }
-                            )
-
-                            .catch(
-                                () => {
-
-                                    suggestions.style.display =
-                                        "none";
-
-                                }
                             );
 
                         },
@@ -2198,30 +1692,10 @@
     );
 
 
-    // =====================================================
-    // LOCATION
-    // =====================================================
-
     function useCurrentLocation() {
 
-
-        if (
-            !navigator.geolocation
-        ) {
-
-            return;
-
-        }
-
-
-        navigator
-        .geolocation
-        .getCurrentPosition(
-
-            function (
-                position
-            ) {
-
+        navigator.geolocation.getCurrentPosition(
+            position => {
 
                 startCoordinates = {
 
@@ -2239,34 +1713,13 @@
                 ).value =
                     "Current location";
 
-
-                map.setView(
-                    [
-                        startCoordinates.latitude,
-                        startCoordinates.longitude
-                    ],
-                    15
-                );
-
             }
-
         );
 
     }
 
 
-    // =====================================================
-    // ROUTING
-    // =====================================================
-
     function loadRoutes() {
-
-
-        document.getElementById(
-            "errorMessage"
-        ).innerText =
-            "";
-
 
         const startText =
             document.getElementById(
@@ -2281,11 +1734,8 @@
 
 
         let url =
-
             "/routes?mode="
-
             +
-
             encodeURIComponent(
                 currentMode
             )
@@ -2293,9 +1743,7 @@
             +
 
             "&start="
-
             +
-
             encodeURIComponent(
                 startText
             )
@@ -2303,9 +1751,7 @@
             +
 
             "&destination="
-
             +
-
             encodeURIComponent(
                 destinationText
             );
@@ -2316,19 +1762,14 @@
         ) {
 
             url +=
-
                 "&start_lat="
-
                 +
-
                 startCoordinates.latitude
 
                 +
 
                 "&start_lon="
-
                 +
-
                 startCoordinates.longitude;
 
         }
@@ -2339,19 +1780,14 @@
         ) {
 
             url +=
-
                 "&destination_lat="
-
                 +
-
                 destinationCoordinates.latitude
 
                 +
 
                 "&destination_lon="
-
                 +
-
                 destinationCoordinates.longitude;
 
         }
@@ -2362,29 +1798,8 @@
         )
 
         .then(
-            async response => {
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !response.ok
-                ) {
-
-                    throw new Error(
-                        data.error
-                        ||
-                        "Route request failed."
-                    );
-
-                }
-
-
-                return data;
-
-            }
+            response =>
+                response.json()
         )
 
         .then(
@@ -2405,6 +1820,32 @@
                     );
 
 
+                forcedRouteHazards.clear();
+
+
+                if (
+                    data.route_hazards
+                ) {
+
+                    data.route_hazards.forEach(
+                        hazard => {
+
+                            loadedHazards.set(
+                                hazard.sensor_id,
+                                hazard
+                            );
+
+
+                            forcedRouteHazards.add(
+                                hazard.sensor_id
+                            );
+
+                        }
+                    );
+
+                }
+
+
                 removeRoutes();
 
 
@@ -2419,38 +1860,10 @@
                 updateCards();
 
 
-                if (
-                    routeIntersectsFlood
-                ) {
-
-                    selectRoute(
-                        "safe"
-                    );
-
-                }
-
-                else {
-
-                    selectRoute(
-                        "normal"
-                    );
-
-                }
+                renderVisibleFloods();
 
 
                 fitMap();
-
-            }
-        )
-
-        .catch(
-            error => {
-
-
-                document.getElementById(
-                    "errorMessage"
-                ).innerText =
-                    error.message;
 
             }
         );
@@ -2460,21 +1873,14 @@
 
     function removeRoutes() {
 
-
         [
-
             normalRoute,
-
             safeRoute,
-
             currentLocationMarker,
-
             destinationMarker
-
         ]
         .forEach(
             layer => {
-
 
                 if (
                     layer
@@ -2493,26 +1899,12 @@
             }
         );
 
-
-        normalRoute =
-            null;
-
-        safeRoute =
-            null;
-
-        currentLocationMarker =
-            null;
-
-        destinationMarker =
-            null;
-
     }
 
 
     function drawEndpoints(
         data
     ) {
-
 
         const start =
             data
@@ -2533,7 +1925,6 @@
                     start[0]
                 ],
                 {
-
                     radius:
                         8,
 
@@ -2548,7 +1939,6 @@
 
                     fillOpacity:
                         1
-
                 }
             )
             .addTo(
@@ -2561,13 +1951,7 @@
                 [
                     destination[1],
                     destination[0]
-                ],
-                {
-
-                    icon:
-                        redDestinationIcon
-
-                }
+                ]
             )
             .addTo(
                 map
@@ -2578,12 +1962,10 @@
 
     function drawRoutes() {
 
-
         normalRoute =
             L.geoJSON(
                 normalRouteData,
                 {
-
                     style: {
 
                         color:
@@ -2603,7 +1985,6 @@
                             null
 
                     }
-
                 }
             )
             .addTo(
@@ -2615,12 +1996,10 @@
             routeIntersectsFlood
         ) {
 
-
             safeRoute =
                 L.geoJSON(
                     safeRouteData,
                     {
-
                         style: {
 
                             color:
@@ -2633,7 +2012,6 @@
                                 0.95
 
                         }
-
                     }
                 )
                 .addTo(
@@ -2649,48 +2027,12 @@
 
         }
 
-
-        normalRoute.on(
-            "click",
-            function () {
-
-                selectRoute(
-                    "normal"
-                );
-
-            }
-        );
-
-
-        if (
-            safeRoute
-        ) {
-
-            safeRoute.on(
-                "click",
-                function () {
-
-                    selectRoute(
-                        "safe"
-                    );
-
-                }
-            );
-
-        }
-
     }
 
 
-    // =====================================================
-    // ROUTE CARDS
-    // =====================================================
-
     function updateCards() {
 
-
         const normalSummary =
-
             normalRouteData
             .features[0]
             .properties
@@ -2726,9 +2068,7 @@
             routeIntersectsFlood
         ) {
 
-
             const safeSummary =
-
                 safeRouteData
                 .features[0]
                 .properties
@@ -2763,16 +2103,9 @@
             ).style.display =
                 "block";
 
-
-            document.getElementById(
-                "normalTitle"
-            ).innerText =
-                "Normal route";
-
         }
 
         else {
-
 
             safeChoice.style.display =
                 "none";
@@ -2783,12 +2116,6 @@
             ).style.display =
                 "none";
 
-
-            document.getElementById(
-                "normalTitle"
-            ).innerText =
-                "Recommended route";
-
         }
 
     }
@@ -2798,16 +2125,6 @@
         routeName
     ) {
 
-
-        if (
-            !normalRoute
-        ) {
-
-            return;
-
-        }
-
-
         if (
             routeName
             ===
@@ -2815,169 +2132,33 @@
 
             &&
 
-            !routeIntersectsFlood
+            safeRoute
         ) {
-
-            routeName =
-                "normal";
-
-        }
-
-
-        selectedRoute =
-            routeName;
-
-
-        const normalChoice =
-            document.getElementById(
-                "normalChoice"
-            );
-
-
-        const safeChoice =
-            document.getElementById(
-                "safeChoice"
-            );
-
-
-        normalChoice
-        .classList
-        .remove(
-            "selected"
-        );
-
-
-        safeChoice
-        .classList
-        .remove(
-            "selected"
-        );
-
-
-        if (
-            routeName
-            ===
-            "normal"
-        ) {
-
-
-            normalChoice
-            .classList
-            .add(
-                "selected"
-            );
-
-
-            normalRoute.setStyle({
-
-                weight:
-                    7,
-
-                opacity:
-                    1
-
-            });
-
-
-            if (
-                safeRoute
-            ) {
-
-                safeRoute.setStyle({
-
-                    weight:
-                        5,
-
-                    opacity:
-                        0.6
-
-                });
-
-            }
-
-
-            normalRoute.bringToFront();
-
-
-            renderDirections(
-                normalRouteData
-            );
-
-
-            document.getElementById(
-                "selectedRouteLabel"
-            ).innerText =
-
-                routeIntersectsFlood
-
-                ?
-
-                "Normal route"
-
-                :
-
-                "Recommended route";
-
-        }
-
-        else {
-
-
-            safeChoice
-            .classList
-            .add(
-                "selected"
-            );
-
-
-            normalRoute.setStyle({
-
-                weight:
-                    5,
-
-                opacity:
-                    0.85
-
-            });
-
-
-            safeRoute.setStyle({
-
-                weight:
-                    7,
-
-                opacity:
-                    1
-
-            });
-
 
             safeRoute.bringToFront();
-
 
             renderDirections(
                 safeRouteData
             );
 
+        }
 
-            document.getElementById(
-                "selectedRouteLabel"
-            ).innerText =
-                "Safer route";
+        else {
+
+            normalRoute.bringToFront();
+
+            renderDirections(
+                normalRouteData
+            );
 
         }
 
     }
 
 
-    // =====================================================
-    // DIRECTIONS
-    // =====================================================
-
     function renderDirections(
         routeData
     ) {
-
 
         const list =
             document.getElementById(
@@ -2990,14 +2171,11 @@
 
 
         const segments =
-
             routeData
             .features[0]
             .properties
             .segments
-
             ||
-
             [];
 
 
@@ -3008,7 +2186,6 @@
         segments.forEach(
             segment => {
 
-
                 (
                     segment.steps
                     ||
@@ -3016,7 +2193,6 @@
                 )
                 .forEach(
                     step => {
-
 
                         const row =
                             document.createElement(
@@ -3031,43 +2207,25 @@
                         row.innerHTML =
 
                             '<div class="step-number">'
-
                             +
-
                             number
-
                             +
-
                             '</div>'
 
                             +
 
                             '<div class="step-text">'
-
                             +
-
-                            escapeHtml(
-                                step.instruction
-                                ||
-                                "Continue"
-                            )
-
+                            step.instruction
                             +
-
                             '<span class="step-distance">'
-
                             +
-
                             formatStepDistance(
                                 step.distance
                             )
-
                             +
-
                             '</span>'
-
                             +
-
                             '</div>';
 
 
@@ -3088,48 +2246,18 @@
     }
 
 
-    // =====================================================
-    // FORMATTING
-    // =====================================================
-
-    function escapeHtml(
-        value
-    ) {
-
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.innerText =
-            value;
-
-
-        return (
-            element.innerHTML
-        );
-
-    }
-
-
     function formatDuration(
         seconds
     ) {
 
         return (
-
             Math.round(
                 seconds
                 /
                 60
             )
-
             +
-
             " min"
-
         );
 
     }
@@ -3140,7 +2268,6 @@
     ) {
 
         return (
-
             (
                 meters
                 /
@@ -3149,11 +2276,8 @@
             .toFixed(
                 1
             )
-
             +
-
             " mi"
-
         );
 
     }
@@ -3163,7 +2287,6 @@
         meters
     ) {
 
-
         if (
             meters
             <
@@ -3171,24 +2294,19 @@
         ) {
 
             return (
-
                 Math.round(
                     meters
                     *
                     3.28084
                 )
-
                 +
-
                 " ft"
-
             );
 
         }
 
 
         return (
-
             (
                 meters
                 /
@@ -3197,19 +2315,12 @@
             .toFixed(
                 1
             )
-
             +
-
             " mi"
-
         );
 
     }
 
-
-    // =====================================================
-    // FLOOD MARKER SIZE
-    // =====================================================
 
     function clamp(
         value,
@@ -3230,91 +2341,66 @@
 
     function getFloodSizes() {
 
-
         const zoom =
             map.getZoom();
 
 
-        const dotSize =
-            clamp(
-
-                6
-
-                +
-
-                (
-                    zoom
-                    -
-                    9
-                )
-
-                *
-                1.45,
-
-                6,
-
-                18
-
-            );
-
-
-        const rippleSize =
-            clamp(
-
-                dotSize
-                *
-                1.8,
-
-                10,
-
-                30
-
-            );
-
-
-        const squareSize =
-            clamp(
-
-                dotSize
-                *
-                2.4,
-
-                18,
-
-                44
-
-            );
-
-
         return {
 
-            dotSize:
-                dotSize,
+            dot:
+                clamp(
+                    6
+                    +
+                    (
+                        zoom
+                        -
+                        9
+                    )
+                    *
+                    1.4,
+                    6,
+                    18
+                ),
 
-            rippleSize:
-                rippleSize,
+            ripple:
+                clamp(
+                    12
+                    +
+                    (
+                        zoom
+                        -
+                        9
+                    )
+                    *
+                    2,
+                    12,
+                    30
+                ),
 
-            squareSize:
-                squareSize
+            square:
+                clamp(
+                    20
+                    +
+                    (
+                        zoom
+                        -
+                        9
+                    )
+                    *
+                    3,
+                    20,
+                    44
+                )
 
         };
 
     }
 
 
-    // =====================================================
-    // FLOOD MARKER HTML
-    // =====================================================
-
-    function getFloodMarkerHtml() {
-
+    function createFloodIcon() {
 
         const sizes =
             getFloodSizes();
-
-
-        const zoom =
-            map.getZoom();
 
 
         let classes =
@@ -3322,7 +2408,7 @@
 
 
         if (
-            zoom
+            map.getZoom()
             >=
             SQUARE_MIN_ZOOM
         ) {
@@ -3334,7 +2420,7 @@
 
 
         if (
-            zoom
+            map.getZoom()
             <
             RIPPLE_MIN_ZOOM
         ) {
@@ -3345,215 +2431,103 @@
         }
 
 
-        return (
-
-            '<div class="'
-            +
-            classes
-            +
-            '" '
-
-            +
-
-            'style="'
-
-            +
-
-            '--dot-size:'
-            +
-            sizes.dotSize
-            +
-            'px;'
-
-            +
-
-            '--ripple-size:'
-            +
-            sizes.rippleSize
-            +
-            'px;'
-
-            +
-
-            '--square-size:'
-            +
-            sizes.squareSize
-            +
-            'px;'
-
-            +
-
-            '">'
-
-            +
-
-            '<div class="flood-square"></div>'
-
-            +
-
-            '<div class="flood-ring"></div>'
-
-            +
-
-            '<div class="flood-ring second"></div>'
-
-            +
-
-            '<div class="flood-dot"></div>'
-
-            +
-
-            '</div>'
-
-        );
-
-    }
-
-
-    function createFloodIcon() {
-
-
-        const size =
-            70;
-
-
         return L.divIcon({
 
             className:
                 "",
 
-            html:
-                getFloodMarkerHtml(),
-
             iconSize:
                 [
-                    size,
-                    size
+                    70,
+                    70
                 ],
 
             iconAnchor:
                 [
-                    size / 2,
-                    size / 2
+                    35,
+                    35
                 ],
 
-            popupAnchor:
-                [
-                    0,
-                    -12
-                ]
+            html:
+
+                '<div class="'
+                +
+                classes
+                +
+                '" '
+
+                +
+
+                'style="'
+
+                +
+
+                '--dot-size:'
+                +
+                sizes.dot
+                +
+                'px;'
+
+                +
+
+                '--ripple-size:'
+                +
+                sizes.ripple
+                +
+                'px;'
+
+                +
+
+                '--square-size:'
+                +
+                sizes.square
+                +
+                'px;'
+
+                +
+
+                '">'
+
+                +
+
+                '<div class="flood-square"></div>'
+
+                +
+
+                '<div class="flood-ring"></div>'
+
+                +
+
+                '<div class="flood-ring second"></div>'
+
+                +
+
+                '<div class="flood-dot"></div>'
+
+                +
+
+                '</div>'
 
         });
 
     }
 
 
-    // =====================================================
-    // FLOOD POPUP
-    // =====================================================
-
-    function makeFloodPopup(
-        hazard
-    ) {
-
-        return (
-
-            "<strong>FloodNet Sensor</strong>"
-
-            +
-
-            "<br>"
-
-            +
-
-            escapeHtml(
-                hazard.sensor_name
-                ||
-                hazard.sensor_id
-            )
-
-            +
-
-            "<br>"
-
-            +
-
-            Number(
-                hazard.depth_inches
-            )
-            .toFixed(
-                2
-            )
-
-            +
-
-            " inches"
-
-            +
-
-            "<br>Severity: "
-
-            +
-
-            escapeHtml(
-                hazard.severity
-                ||
-                "unknown"
-            )
-
-        );
-
-    }
-
-
-    // =====================================================
-    // VIEWPORT
-    // =====================================================
-
     function getBufferedFloodBounds() {
 
-        return (
-
-            map
+        return map
             .getBounds()
             .pad(
                 VIEW_BUFFER
-            )
-
-        );
+            );
 
     }
 
 
-    function hazardInsideCurrentView(
-        hazard
-    ) {
-
+    function renderVisibleFloods() {
 
         const bounds =
             getBufferedFloodBounds();
-
-
-        return bounds.contains(
-
-            L.latLng(
-
-                hazard.latitude,
-
-                hazard.longitude
-
-            )
-
-        );
-
-    }
-
-
-    // =====================================================
-    // RENDER FLOODS
-    // =====================================================
-
-    function renderVisibleFloods() {
 
 
         const visibleIds =
@@ -3562,7 +2536,6 @@
 
         loadedHazards.forEach(
             hazard => {
-
 
                 if (
                     !hazard.flood_active
@@ -3573,10 +2546,25 @@
                 }
 
 
+                const forced =
+                    forcedRouteHazards.has(
+                        hazard.sensor_id
+                    );
+
+
+                const inside =
+                    bounds.contains(
+                        L.latLng(
+                            hazard.latitude,
+                            hazard.longitude
+                        )
+                    );
+
+
                 if (
-                    !hazardInsideCurrentView(
-                        hazard
-                    )
+                    !inside
+                    &&
+                    !forced
                 ) {
 
                     return;
@@ -3599,7 +2587,6 @@
                     !marker
                 ) {
 
-
                     marker =
                         L.marker(
                             [
@@ -3607,24 +2594,41 @@
                                 hazard.longitude
                             ],
                             {
-
                                 icon:
-                                    createFloodIcon(),
-
-                                keyboard:
-                                    false,
-
-                                riseOnHover:
-                                    true
-
+                                    createFloodIcon()
                             }
                         );
 
 
                     marker.bindPopup(
-                        makeFloodPopup(
-                            hazard
+
+                        "<strong>FloodNet Sensor</strong>"
+
+                        +
+
+                        "<br>"
+
+                        +
+
+                        hazard.sensor_name
+
+                        +
+
+                        "<br>"
+
+                        +
+
+                        Number(
+                            hazard.depth_inches
                         )
+                        .toFixed(
+                            2
+                        )
+
+                        +
+
+                        " inches"
+
                     );
 
 
@@ -3637,16 +2641,16 @@
 
                 else {
 
-
-                    marker.setIcon(
-                        createFloodIcon()
+                    marker.setLatLng(
+                        [
+                            hazard.latitude,
+                            hazard.longitude
+                        ]
                     );
 
 
-                    marker.setPopupContent(
-                        makeFloodPopup(
-                            hazard
-                        )
+                    marker.setIcon(
+                        createFloodIcon()
                     );
 
                 }
@@ -3671,17 +2675,14 @@
         hazardMarkers.forEach(
             (
                 marker,
-                sensorId
+                id
             ) => {
-
 
                 if (
                     !visibleIds.has(
-                        sensorId
+                        id
                     )
-
                     &&
-
                     map.hasLayer(
                         marker
                     )
@@ -3696,33 +2697,10 @@
             }
         );
 
-
-        if (
-            normalRoute
-        ) {
-
-            normalRoute.bringToFront();
-
-        }
-
-
-        if (
-            safeRoute
-        ) {
-
-            safeRoute.bringToFront();
-
-        }
-
     }
 
 
-    // =====================================================
-    // VIEW KEY
-    // =====================================================
-
     function makeFloodViewKey() {
-
 
         const bounds =
             getBufferedFloodBounds();
@@ -3764,14 +2742,9 @@
     }
 
 
-    // =====================================================
-    // LOAD FLOODS
-    // =====================================================
-
     async function loadFloodsForCurrentView(
         resetOffset = false
     ) {
-
 
         if (
             floodRequestRunning
@@ -3786,23 +2759,20 @@
             getBufferedFloodBounds();
 
 
-        const newViewKey =
+        const key =
             makeFloodViewKey();
 
 
         if (
             resetOffset
-
             ||
-
-            newViewKey
+            key
             !==
             currentFloodViewKey
         ) {
 
             currentFloodViewKey =
-                newViewKey;
-
+                key;
 
             currentFloodOffset =
                 0;
@@ -3814,8 +2784,8 @@
             true;
 
 
-        loadMoreFloodsButton.disabled =
-            true;
+        loadMoreFloodsButton.style.display =
+            "block";
 
 
         loadMoreFloodsButton.innerText =
@@ -3829,78 +2799,46 @@
             +
 
             "?min_lat="
-
             +
-
-            encodeURIComponent(
-                bounds.getSouth()
-            )
+            bounds.getSouth()
 
             +
 
             "&max_lat="
-
             +
-
-            encodeURIComponent(
-                bounds.getNorth()
-            )
+            bounds.getNorth()
 
             +
 
             "&min_lon="
-
             +
-
-            encodeURIComponent(
-                bounds.getWest()
-            )
+            bounds.getWest()
 
             +
 
             "&max_lon="
-
             +
-
-            encodeURIComponent(
-                bounds.getEast()
-            )
+            bounds.getEast()
 
             +
 
             "&limit="
-
             +
-
             FLOODS_PER_REQUEST
 
             +
 
             "&offset="
-
             +
-
             currentFloodOffset;
 
 
         try {
 
-
             const response =
                 await fetch(
                     url
                 );
-
-
-            if (
-                !response.ok
-            ) {
-
-                throw new Error(
-                    "Flood request failed."
-                );
-
-            }
 
 
             const data =
@@ -3909,7 +2847,6 @@
 
             data.hazards.forEach(
                 hazard => {
-
 
                     loadedHazards.set(
                         hazard.sensor_id,
@@ -3931,7 +2868,6 @@
                 data.has_more
             ) {
 
-
                 loadMoreFloodsButton.style.display =
                     "block";
 
@@ -3943,12 +2879,10 @@
 
             else {
 
-
                 loadMoreFloodsButton.style.display =
                     "none";
 
             }
-
 
         }
 
@@ -3956,9 +2890,7 @@
             error
         ) {
 
-
             console.error(
-                "Flood loading error:",
                 error
             );
 
@@ -3972,27 +2904,14 @@
 
         }
 
-        finally {
 
-
-            floodRequestRunning =
-                false;
-
-
-            loadMoreFloodsButton.disabled =
-                false;
-
-        }
+        floodRequestRunning =
+            false;
 
     }
 
 
-    // =====================================================
-    // MAP MOVED / ZOOMED
-    // =====================================================
-
     function floodMapChanged() {
-
 
         clearTimeout(
             floodMoveTimer
@@ -4003,30 +2922,21 @@
             setTimeout(
                 function () {
 
-
-                    /*
-                    Render cached floods immediately.
-
-                    Do NOT download the new area
-                    automatically.
-                    */
-
                     renderVisibleFloods();
 
 
-                    const newViewKey =
+                    const key =
                         makeFloodViewKey();
 
 
                     if (
-                        newViewKey
+                        key
                         !==
                         currentFloodViewKey
                     ) {
 
-
                         currentFloodViewKey =
-                            newViewKey;
+                            key;
 
 
                         currentFloodOffset =
@@ -4054,7 +2964,6 @@
         "click",
         function () {
 
-
             loadFloodsForCurrentView(
                 false
             );
@@ -4075,36 +2984,17 @@
     );
 
 
-    // =====================================================
-    // FIT MAP
-    // =====================================================
-
     function fitMap() {
 
-
         const layers = [
-
             normalRoute,
-
+            safeRoute,
             currentLocationMarker,
-
             destinationMarker
-
         ]
         .filter(
             Boolean
         );
-
-
-        if (
-            safeRoute
-        ) {
-
-            layers.push(
-                safeRoute
-            );
-
-        }
 
 
         if (
@@ -4125,67 +3015,26 @@
             .getBounds();
 
 
-        if (
-            isMobile()
-        ) {
+        map.fitBounds(
+            bounds,
+            {
+                padding:
+                    [
+                        60,
+                        60
+                    ],
 
-
-            map.fitBounds(
-                bounds,
-                {
-
-                    paddingTopLeft:
-                        [
-                            25,
-                            25
-                        ],
-
-                    paddingBottomRight:
-                        [
-                            25,
-                            150
-                        ],
-
-                    maxZoom:
-                        15
-
-                }
-            );
-
-        }
-
-        else {
-
-
-            map.fitBounds(
-                bounds,
-                {
-
-                    padding:
-                        [
-                            60,
-                            60
-                        ],
-
-                    maxZoom:
-                        15
-
-                }
-            );
-
-        }
+                maxZoom:
+                    15
+            }
+        );
 
     }
 
 
-    // =====================================================
-    // DRIVE / WALK
-    // =====================================================
-
     function changeMode(
         mode
     ) {
-
 
         currentMode =
             mode;
@@ -4195,8 +3044,11 @@
             "driveButton"
         )
         .classList
-        .remove(
-            "active"
+        .toggle(
+            "active",
+            mode
+            ===
+            "driving"
         );
 
 
@@ -4204,50 +3056,18 @@
             "walkButton"
         )
         .classList
-        .remove(
-            "active"
-        );
-
-
-        if (
+        .toggle(
+            "active",
             mode
             ===
-            "driving"
-        ) {
-
-
-            document.getElementById(
-                "driveButton"
-            )
-            .classList
-            .add(
-                "active"
-            );
-
-        }
-
-        else {
-
-
-            document.getElementById(
-                "walkButton"
-            )
-            .classList
-            .add(
-                "active"
-            );
-
-        }
+            "walking"
+        );
 
 
         loadRoutes();
 
     }
 
-
-    // =====================================================
-    // DESKTOP PANEL
-    // =====================================================
 
     const panel =
         document.getElementById(
@@ -4261,22 +3081,9 @@
         );
 
 
-    const panelHeader =
-        document.getElementById(
-            "panelHeader"
-        );
-
-
-    const panelContent =
-        document.getElementById(
-            "panelContent"
-        );
-
-
     desktopToggle.addEventListener(
         "click",
         function () {
-
 
             const closing =
                 !panel
@@ -4286,19 +3093,22 @@
                 );
 
 
-            panel.classList.toggle(
+            panel
+            .classList
+            .toggle(
                 "desktop-collapsed"
             );
 
 
-            desktopToggle.classList.toggle(
+            desktopToggle
+            .classList
+            .toggle(
                 "closed",
                 closing
             );
 
 
             desktopToggle.innerText =
-
                 closing
                 ?
                 "▶"
@@ -4309,669 +3119,11 @@
     );
 
 
-    // =====================================================
-    // MOBILE DRAWER
-    // =====================================================
-
-    let draggingSheet =
-        false;
-
-
-    let dragStartY =
-        0;
-
-
-    let dragStartOffset =
-        0;
-
-
-    let currentSheetOffset =
-        0;
-
-
-    function isMobile() {
-
-        return (
-            window.innerWidth
-            <=
-            600
-        );
-
-    }
-
-
-    function getCollapsedOffset() {
-
-        return (
-            panel.offsetHeight
-            -
-            110
-        );
-
-    }
-
-
-    function setSheetPosition(
-        offset,
-        animate = false
-    ) {
-
-
-        if (
-            !isMobile()
-        ) {
-
-            return;
-
-        }
-
-
-        const maximum =
-            getCollapsedOffset();
-
-
-        offset =
-            Math.max(
-
-                0,
-
-                Math.min(
-                    maximum,
-                    offset
-                )
-
-            );
-
-
-        currentSheetOffset =
-            offset;
-
-
-        panel.style.transition =
-
-            animate
-            ?
-            "transform 0.28s ease"
-            :
-            "none";
-
-
-        panel.style.transform =
-
-            "translateY("
-
-            +
-
-            offset
-
-            +
-
-            "px)";
-
-
-        if (
-            offset
-            <=
-            2
-        ) {
-
-
-            panel
-            .classList
-            .add(
-                "mobile-expanded"
-            );
-
-
-            panelContent.style.overflowY =
-                "auto";
-
-        }
-
-        else {
-
-
-            panel
-            .classList
-            .remove(
-                "mobile-expanded"
-            );
-
-
-            panelContent.style.overflowY =
-                "hidden";
-
-        }
-
-    }
-
-
-    function expandMobileSheet() {
-
-        setSheetPosition(
-            0,
-            true
-        );
-
-    }
-
-
-    function collapseMobileSheet() {
-
-        setSheetPosition(
-            getCollapsedOffset(),
-            true
-        );
-
-    }
-
-
-    function beginSheetDrag(
-        y
-    ) {
-
-
-        draggingSheet =
-            true;
-
-
-        dragStartY =
-            y;
-
-
-        dragStartOffset =
-            currentSheetOffset;
-
-
-        panel.style.transition =
-            "none";
-
-
-        panelContent.style.overflowY =
-            "hidden";
-
-    }
-
-
-    function moveSheetDrag(
-        y
-    ) {
-
-
-        if (
-            !draggingSheet
-        ) {
-
-            return;
-
-        }
-
-
-        setSheetPosition(
-
-            dragStartOffset
-
-            +
-
-            (
-                y
-                -
-                dragStartY
-            ),
-
-            false
-
-        );
-
-    }
-
-
-    function finishSheetDrag() {
-
-
-        if (
-            !draggingSheet
-        ) {
-
-            return;
-
-        }
-
-
-        draggingSheet =
-            false;
-
-
-        const maximum =
-            getCollapsedOffset();
-
-
-        if (
-            currentSheetOffset
-            <
-            maximum / 2
-        ) {
-
-            expandMobileSheet();
-
-        }
-
-        else {
-
-            collapseMobileSheet();
-
-        }
-
-    }
-
-
-    panelHeader.addEventListener(
-        "pointerdown",
-        function (
-            event
-        ) {
-
-
-            if (
-                !isMobile()
-            ) {
-
-                return;
-
-            }
-
-
-            event.preventDefault();
-
-
-            beginSheetDrag(
-                event.clientY
-            );
-
-        }
-    );
-
-
-    panelHeader.addEventListener(
-        "pointermove",
-        function (
-            event
-        ) {
-
-
-            if (
-                !draggingSheet
-            ) {
-
-                return;
-
-            }
-
-
-            event.preventDefault();
-
-
-            moveSheetDrag(
-                event.clientY
-            );
-
-        }
-    );
-
-
-    panelHeader.addEventListener(
-        "pointerup",
-        finishSheetDrag
-    );
-
-
-    panelHeader.addEventListener(
-        "pointercancel",
-        finishSheetDrag
-    );
-
-
-    panelContent.addEventListener(
-        "touchstart",
-        function (
-            event
-        ) {
-
-
-            if (
-                !isMobile()
-
-                ||
-
-                panel
-                .classList
-                .contains(
-                    "mobile-expanded"
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            beginSheetDrag(
-                event.touches[
-                    0
-                ].clientY
-            );
-
-        },
-
-        {
-
-            passive:
-                true
-
-        }
-    );
-
-
-    panelContent.addEventListener(
-        "touchmove",
-        function (
-            event
-        ) {
-
-
-            if (
-                !draggingSheet
-            ) {
-
-                return;
-
-            }
-
-
-            event.preventDefault();
-
-
-            moveSheetDrag(
-                event.touches[
-                    0
-                ].clientY
-            );
-
-        },
-
-        {
-
-            passive:
-                false
-
-        }
-    );
-
-
-    panelContent.addEventListener(
-        "touchend",
-        finishSheetDrag
-    );
-
-
-    let expandedStartY =
-        null;
-
-
-    panelContent.addEventListener(
-        "touchstart",
-        function (
-            event
-        ) {
-
-
-            if (
-
-                isMobile()
-
-                &&
-
-                panel
-                .classList
-                .contains(
-                    "mobile-expanded"
-                )
-
-                &&
-
-                panelContent.scrollTop
-                <=
-                0
-
-            ) {
-
-
-                expandedStartY =
-                    event.touches[
-                        0
-                    ].clientY;
-
-            }
-
-            else {
-
-
-                expandedStartY =
-                    null;
-
-            }
-
-        },
-
-        {
-
-            passive:
-                true
-
-        }
-    );
-
-
-    panelContent.addEventListener(
-        "touchmove",
-        function (
-            event
-        ) {
-
-
-            if (
-                expandedStartY
-                ===
-                null
-            ) {
-
-                return;
-
-            }
-
-
-            const currentY =
-                event.touches[
-                    0
-                ].clientY;
-
-
-            if (
-
-                currentY
-                -
-                expandedStartY
-                >
-                8
-
-                &&
-
-                panelContent.scrollTop
-                <=
-                0
-
-            ) {
-
-
-                event.preventDefault();
-
-
-                if (
-                    !draggingSheet
-                ) {
-
-                    beginSheetDrag(
-                        expandedStartY
-                    );
-
-                }
-
-
-                moveSheetDrag(
-                    currentY
-                );
-
-            }
-
-        },
-
-        {
-
-            passive:
-                false
-
-        }
-    );
-
-
-    panelContent.addEventListener(
-        "touchend",
-        function () {
-
-
-            expandedStartY =
-                null;
-
-
-            if (
-                draggingSheet
-            ) {
-
-                finishSheetDrag();
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // SCREEN CONFIGURATION
-    // =====================================================
-
-    function configureScreen() {
-
-
-        if (
-            isMobile()
-        ) {
-
-
-            panel
-            .classList
-            .remove(
-                "desktop-collapsed"
-            );
-
-
-            desktopToggle
-            .classList
-            .remove(
-                "closed"
-            );
-
-
-            requestAnimationFrame(
-                collapseMobileSheet
-            );
-
-        }
-
-        else {
-
-
-            panel.style.transform =
-                "";
-
-
-            panel.style.transition =
-                "";
-
-
-            panel
-            .classList
-            .remove(
-                "mobile-expanded"
-            );
-
-
-            panelContent.style.overflowY =
-                "auto";
-
-
-            currentSheetOffset =
-                0;
-
-        }
-
-    }
-
-
-    let previousMobile =
-        isMobile();
-
-
-    window.addEventListener(
-        "resize",
-        function () {
-
-
-            const currentMobile =
-                isMobile();
-
-
-            if (
-                currentMobile
-                !==
-                previousMobile
-            ) {
-
-
-                previousMobile =
-                    currentMobile;
-
-
-                configureScreen();
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // START APP
-    // =====================================================
-
-    configureScreen();
-
-
     loadRoutes();
 
 
     map.whenReady(
         function () {
-
 
             loadFloodsForCurrentView(
                 true

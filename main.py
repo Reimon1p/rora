@@ -13,13 +13,8 @@ api_key = os.getenv("ORS_API_KEY")
 FOCUS_LAT = 40.59408
 FOCUS_LON = -73.78921
 
-EVENTS_URL = (
-    "https://data.cityofnewyork.us/resource/aq7i-eu5q.json"
-)
-
-METADATA_URL = (
-    "https://data.cityofnewyork.us/resource/kb2e-tjy3.json"
-)
+EVENTS_URL = "https://data.cityofnewyork.us/resource/aq7i-eu5q.json"
+METADATA_URL = "https://data.cityofnewyork.us/resource/kb2e-tjy3.json"
 
 FLOOD_THRESHOLD = 0.4
 
@@ -42,55 +37,29 @@ def get_severity(depth):
         return "severe"
 
 
-def make_hazard_polygon(
-    latitude,
-    longitude
-):
+def make_hazard_polygon(latitude, longitude):
 
     lat_size = 0.00033
     lon_size = 0.00039
 
     return [
-        [
-            longitude - lon_size,
-            latitude - lat_size
-        ],
-        [
-            longitude + lon_size,
-            latitude - lat_size
-        ],
-        [
-            longitude + lon_size,
-            latitude + lat_size
-        ],
-        [
-            longitude - lon_size,
-            latitude + lat_size
-        ],
-        [
-            longitude - lon_size,
-            latitude - lat_size
-        ]
+        [longitude - lon_size, latitude - lat_size],
+        [longitude + lon_size, latitude - lat_size],
+        [longitude + lon_size, latitude + lat_size],
+        [longitude - lon_size, latitude + lat_size],
+        [longitude - lon_size, latitude - lat_size]
     ]
 
 
-def parse_depth_profile(
-    profile
-):
+def parse_depth_profile(profile):
 
     if not profile:
         return []
 
     try:
 
-        if isinstance(
-            profile,
-            str
-        ):
-
-            profile = ast.literal_eval(
-                profile
-            )
+        if isinstance(profile, str):
+            profile = ast.literal_eval(profile)
 
         return [
             float(depth)
@@ -98,7 +67,6 @@ def parse_depth_profile(
         ]
 
     except Exception:
-
         return []
 
 
@@ -112,17 +80,14 @@ def load_demo_sensors():
         metadata_response = requests.get(
             METADATA_URL,
             params={
-                "$limit":
-                    50000
+                "$limit": 50000
             },
             timeout=30
         )
 
         metadata_response.raise_for_status()
 
-        metadata_rows = (
-            metadata_response.json()
-        )
+        metadata_rows = metadata_response.json()
 
     except Exception as error:
 
@@ -139,31 +104,19 @@ def load_demo_sensors():
 
     for row in metadata_rows:
 
-        sensor_id = row.get(
-            "sensor_id"
-        )
-
+        sensor_id = row.get("sensor_id")
 
         if not sensor_id:
             continue
 
-
         if (
-            not row.get(
-                "latitude"
-            )
+            not row.get("latitude")
             or
-            not row.get(
-                "longitude"
-            )
+            not row.get("longitude")
         ):
-
             continue
 
-
-        metadata_by_id[
-            sensor_id
-        ] = row
+        metadata_by_id[sensor_id] = row
 
 
     events = []
@@ -179,23 +132,16 @@ def load_demo_sensors():
             response = requests.get(
                 EVENTS_URL,
                 params={
-                    "$order":
-                        "flood_start_time DESC",
-
-                    "$limit":
-                        batch_size,
-
-                    "$offset":
-                        offset
+                    "$order": "flood_start_time DESC",
+                    "$limit": batch_size,
+                    "$offset": offset
                 },
                 timeout=30
             )
 
             response.raise_for_status()
 
-            batch = (
-                response.json()
-            )
+            batch = response.json()
 
         except Exception as error:
 
@@ -211,21 +157,14 @@ def load_demo_sensors():
             break
 
 
-        events.extend(
-            batch
-        )
+        events.extend(batch)
 
 
-        if len(
-            batch
-        ) < batch_size:
-
+        if len(batch) < batch_size:
             break
 
 
-        offset += (
-            batch_size
-        )
+        offset += batch_size
 
 
     used_sensor_ids = set()
@@ -233,9 +172,7 @@ def load_demo_sensors():
 
     for event in events:
 
-        sensor_id = event.get(
-            "sensor_id"
-        )
+        sensor_id = event.get("sensor_id")
 
 
         if (
@@ -245,7 +182,6 @@ def load_demo_sensors():
             or
             sensor_id not in metadata_by_id
         ):
-
             continue
 
 
@@ -267,25 +203,17 @@ def load_demo_sensors():
             continue
 
 
-        sensor_metadata = (
-            metadata_by_id[
-                sensor_id
-            ]
-        )
+        sensor_metadata = metadata_by_id[sensor_id]
 
 
         try:
 
             latitude = float(
-                sensor_metadata[
-                    "latitude"
-                ]
+                sensor_metadata["latitude"]
             )
 
             longitude = float(
-                sensor_metadata[
-                    "longitude"
-                ]
+                sensor_metadata["longitude"]
             )
 
         except (
@@ -293,7 +221,6 @@ def load_demo_sensors():
             TypeError,
             ValueError
         ):
-
             continue
 
 
@@ -337,9 +264,7 @@ def load_demo_sensors():
         })
 
 
-        used_sensor_ids.add(
-            sensor_id
-        )
+        used_sensor_ids.add(sensor_id)
 
 
     print(
@@ -352,15 +277,10 @@ def load_demo_sensors():
     return sensors
 
 
-demo_sensors = (
-    load_demo_sensors()
-)
+demo_sensors = load_demo_sensors()
 
 
-def point_inside_polygon(
-    point,
-    polygon
-):
+def point_inside_polygon(point, polygon):
 
     longitude = point[0]
     latitude = point[1]
@@ -391,11 +311,7 @@ def point_inside_polygon(
     )
 
 
-def orientation(
-    a,
-    b,
-    c
-):
+def orientation(a, b, c):
 
     value = (
         (b[1] - a[1])
@@ -410,10 +326,7 @@ def orientation(
     )
 
 
-    if abs(
-        value
-    ) < 0.000000001:
-
+    if abs(value) < 0.000000001:
         return 0
 
 
@@ -424,38 +337,18 @@ def orientation(
     return 2
 
 
-def on_segment(
-    a,
-    b,
-    c
-):
+def on_segment(a, b, c):
 
     return (
-        min(
-            a[0],
-            c[0]
-        )
-        <=
-        b[0]
-        <=
-        max(
-            a[0],
-            c[0]
-        )
+        min(a[0], c[0])
+        <= b[0]
+        <= max(a[0], c[0])
 
         and
 
-        min(
-            a[1],
-            c[1]
-        )
-        <=
-        b[1]
-        <=
-        max(
-            a[1],
-            c[1]
-        )
+        min(a[1], c[1])
+        <= b[1]
+        <= max(a[1], c[1])
     )
 
 
@@ -496,7 +389,6 @@ def segments_intersect(
         and
         o3 != o4
     ):
-
         return True
 
 
@@ -509,7 +401,6 @@ def segments_intersect(
             q1
         )
     ):
-
         return True
 
 
@@ -522,7 +413,6 @@ def segments_intersect(
             q1
         )
     ):
-
         return True
 
 
@@ -535,7 +425,6 @@ def segments_intersect(
             q2
         )
     ):
-
         return True
 
 
@@ -548,206 +437,10 @@ def segments_intersect(
             q2
         )
     ):
-
         return True
 
 
     return False
-
-
-def get_route_bounds(
-    route
-):
-
-    features = route.get(
-        "features",
-        []
-    )
-
-
-    if not features:
-        return None
-
-
-    coordinates = (
-        features[0]
-        ["geometry"]
-        ["coordinates"]
-    )
-
-
-    if not coordinates:
-        return None
-
-
-    longitudes = [
-        point[0]
-        for point in coordinates
-    ]
-
-
-    latitudes = [
-        point[1]
-        for point in coordinates
-    ]
-
-
-    return {
-
-        "min_lon":
-            min(
-                longitudes
-            ),
-
-        "max_lon":
-            max(
-                longitudes
-            ),
-
-        "min_lat":
-            min(
-                latitudes
-            ),
-
-        "max_lat":
-            max(
-                latitudes
-            )
-    }
-
-
-def get_route_hazards(
-    route
-):
-
-    route_bounds = (
-        get_route_bounds(
-            route
-        )
-    )
-
-
-    if route_bounds is None:
-        return []
-
-
-    buffer_size = 0.01
-
-
-    min_lat = (
-        route_bounds[
-            "min_lat"
-        ]
-        -
-        buffer_size
-    )
-
-    max_lat = (
-        route_bounds[
-            "max_lat"
-        ]
-        +
-        buffer_size
-    )
-
-    min_lon = (
-        route_bounds[
-            "min_lon"
-        ]
-        -
-        buffer_size
-    )
-
-    max_lon = (
-        route_bounds[
-            "max_lon"
-        ]
-        +
-        buffer_size
-    )
-
-
-    results = []
-
-
-    for sensor in demo_sensors:
-
-        latitude = (
-            sensor[
-                "latitude"
-            ]
-        )
-
-        longitude = (
-            sensor[
-                "longitude"
-            ]
-        )
-
-
-        if not (
-            min_lat
-            <=
-            latitude
-            <=
-            max_lat
-
-            and
-
-            min_lon
-            <=
-            longitude
-            <=
-            max_lon
-        ):
-
-            continue
-
-
-        if not sensor[
-            "depths"
-        ]:
-
-            continue
-
-
-        depth = (
-            sensor[
-                "depths"
-            ]
-            [
-                sensor[
-                    "index"
-                ]
-            ]
-        )
-
-
-        if depth < FLOOD_THRESHOLD:
-            continue
-
-
-        if route_intersects_flood(
-            route,
-            [
-                sensor[
-                    "polygon"
-                ]
-            ]
-        ):
-
-            results.append({
-
-                "sensor":
-                    sensor,
-
-                "depth":
-                    depth
-
-            })
-
-
-    return results
 
 
 def route_intersects_flood(
@@ -785,59 +478,185 @@ def route_intersects_flood(
                 point,
                 polygon
             ):
-
                 return True
 
 
         for i in range(
-            len(
-                coordinates
-            )
-            -
-            1
+            len(coordinates) - 1
         ):
 
-            route_start = (
-                coordinates[
-                    i
-                ]
-            )
-
-            route_end = (
-                coordinates[
-                    i + 1
-                ]
-            )
+            route_start = coordinates[i]
+            route_end = coordinates[i + 1]
 
 
             for j in range(
-                len(
-                    polygon
-                )
-                -
-                1
+                len(polygon) - 1
             ):
 
                 if segments_intersect(
                     route_start,
                     route_end,
-                    polygon[
-                        j
-                    ],
-                    polygon[
-                        j + 1
-                    ]
+                    polygon[j],
+                    polygon[j + 1]
                 ):
-
                     return True
 
 
     return False
 
 
-def geocode_address(
-    address
-):
+def get_route_bounds(route):
+
+    features = route.get(
+        "features",
+        []
+    )
+
+
+    if not features:
+        return None
+
+
+    coordinates = (
+        features[0]
+        ["geometry"]
+        ["coordinates"]
+    )
+
+
+    if not coordinates:
+        return None
+
+
+    longitudes = [
+        point[0]
+        for point in coordinates
+    ]
+
+
+    latitudes = [
+        point[1]
+        for point in coordinates
+    ]
+
+
+    return {
+
+        "min_lon":
+            min(longitudes),
+
+        "max_lon":
+            max(longitudes),
+
+        "min_lat":
+            min(latitudes),
+
+        "max_lat":
+            max(latitudes)
+
+    }
+
+
+def get_route_hazards(route):
+
+    route_bounds = get_route_bounds(
+        route
+    )
+
+
+    if route_bounds is None:
+        return []
+
+
+    buffer_size = 0.01
+
+
+    min_lat = (
+        route_bounds["min_lat"]
+        -
+        buffer_size
+    )
+
+    max_lat = (
+        route_bounds["max_lat"]
+        +
+        buffer_size
+    )
+
+    min_lon = (
+        route_bounds["min_lon"]
+        -
+        buffer_size
+    )
+
+    max_lon = (
+        route_bounds["max_lon"]
+        +
+        buffer_size
+    )
+
+
+    results = []
+
+
+    for sensor in demo_sensors:
+
+        latitude = sensor["latitude"]
+        longitude = sensor["longitude"]
+
+
+        if not (
+            min_lat
+            <= latitude
+            <= max_lat
+
+            and
+
+            min_lon
+            <= longitude
+            <= max_lon
+        ):
+            continue
+
+
+        if not sensor["depths"]:
+            continue
+
+
+        depth = (
+            sensor["depths"]
+            [
+                sensor["index"]
+            ]
+        )
+
+
+        if depth < FLOOD_THRESHOLD:
+            continue
+
+
+        if route_intersects_flood(
+            route,
+            [
+                sensor["polygon"]
+            ]
+        ):
+
+            results.append({
+
+                "sensor":
+                    sensor,
+
+                "depth":
+                    depth
+
+            })
+
+
+    return results
+
+
+def geocode_address(address):
 
     if not api_key:
 
@@ -924,15 +743,11 @@ def geocode_address(
         return None
 
 
-    feature = (
-        features[0]
-    )
+    feature = features[0]
 
 
     label = (
-        feature[
-            "properties"
-        ]
+        feature["properties"]
         .get(
             "label",
             address
@@ -957,8 +772,7 @@ def geocode_address(
         "coordinates":
             feature[
                 "geometry"
-            ]
-            [
+            ][
                 "coordinates"
             ],
 
@@ -986,17 +800,11 @@ def get_route(
 
     if mode == "driving":
 
-        profile = (
-            "driving-car"
-        )
-
+        profile = "driving-car"
 
     elif mode == "walking":
 
-        profile = (
-            "foot-walking"
-        )
-
+        profile = "foot-walking"
 
     else:
 
@@ -1058,7 +866,6 @@ def get_route(
 
             }
 
-
         else:
 
             geometry = {
@@ -1068,9 +875,7 @@ def get_route(
 
                 "coordinates": [
 
-                    [
-                        polygon
-                    ]
+                    [polygon]
 
                     for polygon
                     in avoid_polygons
@@ -1080,9 +885,7 @@ def get_route(
             }
 
 
-        body[
-            "options"
-        ] = {
+        body["options"] = {
 
             "avoid_polygons":
                 geometry
@@ -1123,9 +926,7 @@ def get_route(
         return None
 
 
-    return (
-        response.json()
-    )
+    return response.json()
 
 
 @app.route("/")
@@ -1201,12 +1002,10 @@ def autocomplete():
         )
 
     except Exception:
-
         return jsonify([])
 
 
     if response.status_code != 200:
-
         return jsonify([])
 
 
@@ -1225,26 +1024,21 @@ def autocomplete():
         coordinates = (
             feature[
                 "geometry"
-            ]
-            [
+            ][
                 "coordinates"
             ]
         )
 
 
-        properties = (
-            feature.get(
-                "properties",
-                {}
-            )
+        properties = feature.get(
+            "properties",
+            {}
         )
 
 
-        label = (
-            properties.get(
-                "label",
-                "Unknown location"
-            )
+        label = properties.get(
+            "label",
+            "Unknown location"
         )
 
 
@@ -1274,9 +1068,7 @@ def autocomplete():
         })
 
 
-    return jsonify(
-        results
-    )
+    return jsonify(results)
 
 
 @app.route("/routes")
@@ -1325,17 +1117,9 @@ def routes():
     ):
 
         start = [
-
-            float(
-                start_lon
-            ),
-
-            float(
-                start_lat
-            )
-
+            float(start_lon),
+            float(start_lat)
         ]
-
 
         start_label = (
             start_text
@@ -1343,13 +1127,10 @@ def routes():
             "Current location"
         )
 
-
     else:
 
-        start_result = (
-            geocode_address(
-                start_text
-            )
+        start_result = geocode_address(
+            start_text
         )
 
 
@@ -1363,18 +1144,13 @@ def routes():
             }), 400
 
 
-        start = (
-            start_result[
-                "coordinates"
-            ]
-        )
+        start = start_result[
+            "coordinates"
+        ]
 
-
-        start_label = (
-            start_result[
-                "label"
-            ]
-        )
+        start_label = start_result[
+            "label"
+        ]
 
 
     if (
@@ -1384,24 +1160,15 @@ def routes():
     ):
 
         destination = [
-
-            float(
-                destination_lon
-            ),
-
-            float(
-                destination_lat
-            )
-
+            float(destination_lon),
+            float(destination_lat)
         ]
-
 
         destination_label = (
             destination_text
             or
             "Destination"
         )
-
 
     else:
 
@@ -1428,7 +1195,6 @@ def routes():
             ]
         )
 
-
         destination_label = (
             destination_result[
                 "label"
@@ -1453,10 +1219,8 @@ def routes():
         }), 500
 
 
-    route_hazards = (
-        get_route_hazards(
-            normal_route
-        )
+    route_hazards = get_route_hazards(
+        normal_route
     )
 
 
@@ -1464,8 +1228,7 @@ def routes():
 
         item[
             "sensor"
-        ]
-        [
+        ][
             "polygon"
         ]
 
@@ -1500,16 +1263,11 @@ def routes():
 
         if safe_route is None:
 
-            safe_route = (
-                normal_route
-            )
-
+            safe_route = normal_route
 
     else:
 
-        safe_route = (
-            normal_route
-        )
+        safe_route = normal_route
 
 
     route_hazard_data = []
@@ -1517,40 +1275,28 @@ def routes():
 
     for item in route_hazards:
 
-        sensor = (
-            item[
-                "sensor"
-            ]
-        )
+        sensor = item[
+            "sensor"
+        ]
 
-        depth = (
-            item[
-                "depth"
-            ]
-        )
+        depth = item[
+            "depth"
+        ]
 
 
         route_hazard_data.append({
 
             "sensor_id":
-                sensor[
-                    "sensor_id"
-                ],
+                sensor["sensor_id"],
 
             "sensor_name":
-                sensor[
-                    "sensor_name"
-                ],
+                sensor["sensor_name"],
 
             "latitude":
-                sensor[
-                    "latitude"
-                ],
+                sensor["latitude"],
 
             "longitude":
-                sensor[
-                    "longitude"
-                ],
+                sensor["longitude"],
 
             "depth_inches":
                 depth,
@@ -1644,14 +1390,12 @@ def hazards():
             )
         )
 
-
         limit = int(
             request.args.get(
                 "limit",
                 100
             )
         )
-
 
         offset = int(
             request.args.get(
@@ -1684,33 +1428,25 @@ def hazards():
 
     for sensor in demo_sensors:
 
-        latitude = (
-            sensor[
-                "latitude"
-            ]
-        )
+        latitude = sensor[
+            "latitude"
+        ]
 
-        longitude = (
-            sensor[
-                "longitude"
-            ]
-        )
+        longitude = sensor[
+            "longitude"
+        ]
 
 
         if (
             min_lat
-            <=
-            latitude
-            <=
-            max_lat
+            <= latitude
+            <= max_lat
 
             and
 
             min_lon
-            <=
-            longitude
-            <=
-            max_lon
+            <= longitude
+            <= max_lon
         ):
 
             matching_sensors.append(
@@ -1728,19 +1464,15 @@ def hazards():
     )
 
 
-    total = (
-        len(
-            matching_sensors
-        )
+    total = len(
+        matching_sensors
     )
 
 
-    page = (
-        matching_sensors[
-            offset:
-            offset + limit
-        ]
-    )
+    page = matching_sensors[
+        offset:
+        offset + limit
+    ]
 
 
     hazards_list = []
@@ -1748,21 +1480,14 @@ def hazards():
 
     for sensor in page:
 
-        if not sensor[
-            "depths"
-        ]:
-
+        if not sensor["depths"]:
             continue
 
 
         depth = (
-            sensor[
-                "depths"
-            ]
+            sensor["depths"]
             [
-                sensor[
-                    "index"
-                ]
+                sensor["index"]
             ]
         )
 
@@ -1811,9 +1536,7 @@ def hazards():
     next_offset = (
         offset
         +
-        len(
-            page
-        )
+        len(page)
     )
 
 
